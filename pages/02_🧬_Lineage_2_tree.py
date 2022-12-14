@@ -1,6 +1,7 @@
-import streamlit as st  # 🎈 data web app development
-import streamlit.components.v1 as components
 import base64
+import streamlit as st
+import streamlit.components.v1 as components
+
 
 # TREE TEST
 st.header("Lineage 2 Phylogeny")

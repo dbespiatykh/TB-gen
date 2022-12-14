@@ -1,13 +1,6 @@
-import time
-from turtle import width  # to simulate a real time data, time loop
-
-import numpy as np  # np mean, np random
-import pandas as pd  # read csv, df manipulation
-import geopandas
+import pandas as pd
 import pickle
-import plotly.express as px  # interactive charts
-import streamlit as st  # 🎈 data web app development
-import streamlit.components.v1 as components
+import streamlit as st
 import leafmap.kepler as leafmap
 
 from st_aggrid import AgGrid, GridUpdateMode
@@ -156,7 +149,8 @@ if st.checkbox("Show Dataset"):
     go = builder.build()
     grid2 = AgGrid(df_sel, gridOptions=go, height=150, theme="streamlit")
 
-st.metric(
+sm1, mk = st.columns([2, 5])
+sm1.metric(
     label="Total Samples",
     value=int(df["Sample"].count()),
     help="""Number of currently availible samples in the database

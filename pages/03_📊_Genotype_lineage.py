@@ -1,16 +1,10 @@
-import streamlit as st  # 🎈 data web app development
-import streamlit.components.v1 as components
-
-# import os
-from vcf import Reader
+import streamlit as st
 import numpy as np
 import pandas as pd
 
-# from gzip import open as gzopen
+from vcf import Reader
 from collections import OrderedDict
 from tempfile import NamedTemporaryFile
-
-# from io import StringIO
 
 st.set_page_config(
     page_title="Genotype lineage from VCF",
@@ -27,6 +21,8 @@ from reads mapped to NC_000962.3 H37Rv genome
 """
 )
 
+levels_file = "levels.txt"
+
 
 @st.cache
 def get_levels_dictionary(input_df):
@@ -38,52 +34,53 @@ def get_levels_dictionary(input_df):
     for key in levelsDict.keys():
         levelsDict[key] = temp_df[:][temp_df["level"] == key]
 
-    return levelsDict
+    lvl1 = (
+        levelsDict[1]["POS"].values,
+        levelsDict[1]["REF"].values,
+        levelsDict[1]["ALT"].values,
+        levelsDict[1]["lineage"].values,
+    )
+    lvl2 = (
+        levelsDict[2]["POS"].values,
+        levelsDict[2]["REF"].values,
+        levelsDict[2]["ALT"].values,
+        levelsDict[2]["lineage"].values,
+    )
+    lvl3 = (
+        levelsDict[3]["POS"].values,
+        levelsDict[3]["REF"].values,
+        levelsDict[3]["ALT"].values,
+        levelsDict[3]["lineage"].values,
+    )
+    lvl4 = (
+        levelsDict[4]["POS"].values,
+        levelsDict[4]["REF"].values,
+        levelsDict[4]["ALT"].values,
+        levelsDict[4]["lineage"].values,
+    )
+    lvl5 = (
+        levelsDict[5]["POS"].values,
+        levelsDict[5]["REF"].values,
+        levelsDict[5]["ALT"].values,
+        levelsDict[5]["lineage"].values,
+    )
+
+    return lvl1, lvl2, lvl3, lvl4, lvl5
 
 
-levels = get_levels_dictionary("levels.txt")
+@st.cache
+def get_levels_pos(input_df):
 
-lvl1 = (
-    levels[1]["POS"].values,
-    levels[1]["REF"].values,
-    levels[1]["ALT"].values,
-    levels[1]["lineage"].values,
-)
-lvl2 = (
-    levels[2]["POS"].values,
-    levels[2]["REF"].values,
-    levels[2]["ALT"].values,
-    levels[2]["lineage"].values,
-)
-lvl3 = (
-    levels[3]["POS"].values,
-    levels[3]["REF"].values,
-    levels[3]["ALT"].values,
-    levels[3]["lineage"].values,
-)
-lvl4 = (
-    levels[4]["POS"].values,
-    levels[4]["REF"].values,
-    levels[4]["ALT"].values,
-    levels[4]["lineage"].values,
-)
-lvl5 = (
-    levels[5]["POS"].values,
-    levels[5]["REF"].values,
-    levels[5]["ALT"].values,
-    levels[5]["lineage"].values,
-)
-
-
-pos_all = np.concatenate((lvl1[0], lvl2[0], lvl3[0], lvl4[0], lvl5[0]))
+    temp_df = pd.read_csv(input_df, sep="\t")
+    pos = temp_df["POS"].values
+    return pos
 
 
 @st.cache
 def vcf_to_dataframe(vcf_file):
 
-    # file = open(vcf_file)
+    pos_all = get_levels_pos(levels_file)
     vcf_reader = Reader(vcf_file, "r")
-    # vcf_reader = vcf.Reader(filename=vcf_file)
     res = []
     cols = ["Sample", "REF", "ALT", "POS"]
 
@@ -100,12 +97,14 @@ def vcf_to_dataframe(vcf_file):
                 row = [sample.sample, rec.REF, sample.gt_bases] + x
 
             res.append(row)
-    # res = pd.DataFrame(res, columns=cols)
+
     res = pd.DataFrame(res, columns=cols)
     res = res[~res.POS.isnull()]
+
     res = res.astype(
         {"Sample": "object", "REF": "object", "ALT": "object", "POS": "int64"}
     )
+
     res = res.loc[res["POS"].isin(pos_all)]
     res = res.drop(res[res["REF"] == res["ALT"]].index)
     frames = [res]
@@ -123,7 +122,6 @@ def l4_decision(myList):
     for item in myList:
         if any(i in item for i in lin4):
             item = [x for x in item if x not in lin4]
-            # item = list(set(item) - set(lin2))
 
         else:
             item.extend(["L4" for i in range(2)])
@@ -142,7 +140,6 @@ def l4_9_decision(myList):
     for item in myList:
         if any(i in item for i in lin4_9):
             item = [x for x in item if x not in lin4_9]
-            # item = list(set(item) - set(lin2))
 
         else:
             item.extend(["L4.9" for i in range(2)])
@@ -220,7 +217,6 @@ def l2_decision(myList):
 
     for item in myList:
         if all(i in item for i in lin2) == True:
-            # item = [x for x in item if x not in lst2]
             item = list(set(item) - set(lin2))
             item.append("L2.2 (modern)")
         else:
@@ -231,24 +227,13 @@ def l2_decision(myList):
     return altList
 
 
-# with st.sidebar.header("1. Upload your CSV data"):
-#     uploaded_file = st.sidebar.file_uploader("Upload your input file", type=["vcf"])
-#     st.sidebar.markdown(
-#         """
-# [Example input file](https://raw.githubusercontent.com/dataprofessor/bioactivity-prediction-app/main/example_acetylcholinesterase.txt)
-# """
-#     )
-
-
 @st.cache
 def convert_df_to_tsv(df):
-    # IMPORTANT: Cache the conversion to prevent computation on every rerun
     return df.to_csv(sep="\t", index=False).encode("utf-8")
 
 
 @st.cache
 def convert_df_to_csv(df):
-    # IMPORTANT: Cache the conversion to prevent computation on every rerun
     return df.to_csv(index=False).encode("utf-8")
 
 
@@ -258,6 +243,8 @@ uploaded_file = st.sidebar.file_uploader("Upload VCF file", type=["vcf"])
 if st.sidebar.button("Genotype lineage"):
     if uploaded_file is not None:
         with st.spinner("Genotyping..."):
+
+            lvl1, lvl2, lvl3, lvl4, lvl5 = get_levels_dictionary(levels_file)
 
             with NamedTemporaryFile(
                 dir=".",

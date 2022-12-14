@@ -3,7 +3,6 @@ geopandas==0.11.1
 leafmap==0.10.5
 numpy==1.23.5
 pandas==1.5.0
-plotly==5.10.0
 PyVCF3==1.0.3
 streamlit==1.15.2
 streamlit_extras==0.2.4
