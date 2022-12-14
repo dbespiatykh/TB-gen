@@ -41,7 +41,7 @@ def get_levels_dictionary(input_df):
     return levelsDict
 
 
-levels = get_levels_dictionary("data/levels.txt")
+levels = get_levels_dictionary("levels.txt")
 
 lvl1 = (
     levels[1]["POS"].values,
