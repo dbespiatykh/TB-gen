@@ -7,3 +7,4 @@ plotly==5.10.0
 PyVCF3==1.0.3
 streamlit==1.15.2
 streamlit_extras==0.2.4
+streamlit-aggrid==0.3.3
