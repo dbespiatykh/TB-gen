@@ -41,9 +41,7 @@ def get_levels_dictionary(input_df):
     return levelsDict
 
 
-levels = get_levels_dictionary(
-    "/Volumes/Extreme_SSD/Work/Mycobacteria/TB_app/levels.txt"
-)
+levels = get_levels_dictionary("data/levels.txt")
 
 lvl1 = (
     levels[1]["POS"].values,

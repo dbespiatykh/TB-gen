@@ -68,7 +68,7 @@ html, body, [class*="css"]  {
 
 
 # Read .csv from a URL
-dataset_url = "/Volumes/Extreme_SSD/Work/Mycobacteria/TB_app/data/tb_data.csv"
+dataset_url = "data/tb_data.csv"
 
 
 @st.experimental_memo
@@ -99,9 +99,7 @@ dr_snps = (
 # Load Country Shapes file
 # country_url = 'https://raw.githubusercontent.com/python-visualization/folium/master/examples/data'
 # country_shapes = f'{country_url}/world-countries.json'
-country_shapes = (
-    "/Volumes/Extreme_SSD/Work/Mycobacteria/TB_app/data/world_countries.json"
-)
+country_shapes = "data/world_countries.json"
 country = geopandas.read_file(country_shapes)
 
 # Calculate number of samples per country
@@ -121,7 +119,7 @@ cnt_samples_poly = (
 )
 
 # Load configuration file for kepler
-with open("/Volumes/Extreme_SSD/Work/Mycobacteria/TB_app/data/config.pkl", "rb") as f:
+with open("data/config.pkl", "rb") as f:
     config = pickle.load(f)
 
 ####################################################################################################################
