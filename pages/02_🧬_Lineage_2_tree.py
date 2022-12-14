@@ -2,6 +2,35 @@ import base64
 import streamlit as st
 import streamlit.components.v1 as components
 
+st.set_page_config(
+    page_title="Phylogeny",
+    page_icon="🧬",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
+
+
+def sidebar_bg(side_bg):
+
+    side_bg_ext = "svg+xml"
+
+    st.markdown(
+        f"""
+      <style>
+      [data-testid="stSidebar"] > div:first-child {{
+          background: url(data:image/{side_bg_ext};base64,{base64.b64encode(open(side_bg, "rb").read()).decode()});
+          padding-top: 100px;
+          background-size: 300px;
+          background-repeat: no-repeat;
+          background-position: 4px 20px;
+      }}
+      </style>
+      """,
+        unsafe_allow_html=True,
+    )
+
+
+sidebar_bg("logo.svg")
 
 # TREE TEST
 st.header("Lineage 2 Phylogeny")

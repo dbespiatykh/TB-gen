@@ -1,3 +1,4 @@
+import base64
 import streamlit as st
 import numpy as np
 import pandas as pd
@@ -13,11 +14,37 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-st.markdown("# Genotype lineages from VCF file")
+
+def sidebar_bg(side_bg):
+
+    side_bg_ext = "svg+xml"
+
+    st.markdown(
+        f"""
+      <style>
+      [data-testid="stSidebar"] > div:first-child {{
+          background: url(data:image/{side_bg_ext};base64,{base64.b64encode(open(side_bg, "rb").read()).decode()});
+          padding-top: 100px;
+          background-size: 300px;
+          background-repeat: no-repeat;
+          background-position: 4px 20px;
+      }}
+      </style>
+      """,
+        unsafe_allow_html=True,
+    )
+
+
+sidebar_bg("logo.svg")
+
+st.markdown("# Genotype MTBC lineages from VCF file")
 st.markdown(
     """
-Use your VCF file as input, note that there are no filtering, so app expect already filtered VCF file
-from reads mapped to NC_000962.3 H37Rv genome
+Use your own .`VCF` file as input to call lineage
+
+- Use can use both single- or multi-sample `.vcf` files
+- Variants should be called by mapping to [NC_000962.3](https://www.ncbi.nlm.nih.gov/nuccore/NC_000962.3/) _M. tuberculosis_ H37Rv genome
+- Variants should be already filtered and contain only high quality calls
 """
 )
 

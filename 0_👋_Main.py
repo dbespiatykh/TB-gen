@@ -1,3 +1,4 @@
+import base64
 import pandas as pd
 import geopandas
 import pickle
@@ -15,6 +16,29 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
+
+def sidebar_bg(side_bg):
+
+    side_bg_ext = "svg+xml"
+
+    st.markdown(
+        f"""
+      <style>
+      [data-testid="stSidebar"] > div:first-child {{
+          background: url(data:image/{side_bg_ext};base64,{base64.b64encode(open(side_bg, "rb").read()).decode()});
+          padding-top: 100px;
+          background-size: 300px;
+          background-repeat: no-repeat;
+          background-position: 4px 20px;
+      }}
+      </style>
+      """,
+        unsafe_allow_html=True,
+    )
+
+
+sidebar_bg("logo.svg")
 
 st.sidebar.success("Select a page above.")
 
