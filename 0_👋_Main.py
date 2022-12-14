@@ -1,4 +1,5 @@
 import pandas as pd
+import geopandas
 import pickle
 import streamlit as st
 import leafmap.kepler as leafmap
