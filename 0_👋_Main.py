@@ -27,7 +27,7 @@ def sidebar_bg(side_bg):
       <style>
       [data-testid="stSidebar"] > div:first-child {{
           background: url(data:image/{side_bg_ext};base64,{base64.b64encode(open(side_bg, "rb").read()).decode()});
-          padding-top: 100px;
+          padding-top: 120px;
           background-size: 300px;
           background-repeat: no-repeat;
           background-position: 4px 20px;
