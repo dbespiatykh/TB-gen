@@ -53,7 +53,6 @@ Add description
 """
 )
 
-st.markdown("---")
 
 genotype_user_data = st.button("Genotype VCF")
 if genotype_user_data:
