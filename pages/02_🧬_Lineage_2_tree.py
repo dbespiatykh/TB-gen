@@ -9,6 +9,8 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+st.title("Lineage 2 Phylogeny")
+
 st.write(
     """
 <style>
@@ -45,7 +47,6 @@ def sidebar_background_image(image):
 sidebar_background_image("logo.svg")
 
 # TREE TEST
-st.header("Lineage 2 Phylogeny")
 
 HtmlTree = open("./data/tree-plot.html", "r", encoding="utf-8")
 source_code = HtmlTree.read()

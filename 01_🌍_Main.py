@@ -46,7 +46,7 @@ st.sidebar.success("Select a page above")
 st.sidebar.header("Header `ver 1`")
 st.sidebar.subheader("Sunheader")
 
-st.markdown("# Global _Mycobacterium tuberculosis_ data")
+st.title("Global _Mycobacterium tuberculosis_ data")
 st.markdown(
     """
 Add description

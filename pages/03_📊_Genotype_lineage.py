@@ -50,7 +50,7 @@ def sidebar_background_image(image):
 
 sidebar_background_image("logo.svg")
 
-st.markdown("# Genotype MTBC lineages from VCF file")
+st.title("Genotype MTBC lineages from VCF file")
 
 annotated_text(
     "Use your own ",
