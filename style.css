@@ -10,19 +10,19 @@
 /* Card */
 /* Adapted from https://startbootstrap.com/theme/sb-admin-2 */
 div.css-ocqkz7.e1tzin5v4 {
-  background-color: #0d1116;
-  border: 1px solid #cccccc;
+  background-color: #cad2dd;
+  border: 1px solid #1a5971;
   padding: 1% 0% 1% 5%;
   border-radius: 5px;
-  color: #c8d1d9;
+  /* color: #c8d1d9; */
 
-  border-left: 0.3rem solid #9ad8e1 !important;
-  box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
+  border-left: 0.3rem solid #1a5971 !important;
+  box-shadow: 0 0.1rem 0.3rem 0 #1a5971 !important;
 }
 
-div.css-50ug3q.e16fv1kl3 {
+/* div.css-50ug3q.e16fv1kl3 {
   color: #c8d1d9;
-}
+} */
 
 /* div.css-115gedg.e1tzin5v2 {
   background-color: #ffffff;
@@ -44,19 +44,19 @@ div.css-1r6slb0.e1tzin5v2 {
   box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
 } */
 
-label.css-mkogse.e16fv1kl2 {
+/* label.css-mkogse.e16fv1kl2 {
   color: #36b9cc !important;
   font-weight: 700 !important;
   text-transform: uppercase !important;
-}
+} */
 
 /* Move block container higher */
 div.block-container.css-18e3th9.egzxvld2 {
-  margin-top: -5em;
+  margin-top: -4em;
 }
 
 /* Hide hamburger menu and footer */
-div.css-r698ls.e8zbici2 {
+/* div.css-r698ls.e8zbici2 {
   display: none;
 }
 
@@ -70,4 +70,4 @@ footer.css-12gp8ed.eknhn3m4 {
 
 div.vg-tooltip-element {
   display: none;
-}
+} */

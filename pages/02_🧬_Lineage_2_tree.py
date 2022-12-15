@@ -9,6 +9,18 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+st.write(
+    """
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
+html, body, [class*="css"]  {
+   font-family: 'Montserrat';
+}
+</style>
+""",
+    unsafe_allow_html=True,
+)
+
 
 def sidebar_background_image(image):
 
@@ -40,11 +52,11 @@ source_code = HtmlTree.read()
 components.html(source_code, height=1500, scrolling=True)
 
 
-def show_pdf(file_path):
-    with open(file_path, "rb") as f:
-        base64_pdf = base64.b64encode(f.read()).decode("utf-8")
-    pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="1100" height="900" type="application/pdf"></iframe>'
-    st.markdown(pdf_display, unsafe_allow_html=True)
+# def show_pdf(file_path):
+#     with open(file_path, "rb") as f:
+#         base64_pdf = base64.b64encode(f.read()).decode("utf-8")
+#     pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="1100" height="900" type="application/pdf"></iframe>'
+#     st.markdown(pdf_display, unsafe_allow_html=True)
 
 
-show_pdf("l2_tree.pdf")
+# show_pdf("l2_tree.pdf")

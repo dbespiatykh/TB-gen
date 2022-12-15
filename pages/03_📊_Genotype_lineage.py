@@ -14,6 +14,18 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+st.write(
+    """
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
+html, body, [class*="css"]  {
+   font-family: 'Montserrat';
+}
+</style>
+""",
+    unsafe_allow_html=True,
+)
+
 
 def sidebar_background_image(image):
 

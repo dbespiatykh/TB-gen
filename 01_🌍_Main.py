@@ -8,6 +8,7 @@ import leafmap.kepler as leafmap
 from st_aggrid import AgGrid, GridUpdateMode
 from st_aggrid.grid_options_builder import GridOptionsBuilder
 from streamlit_extras.switch_page_button import switch_page
+from streamlit_extras.add_vertical_space import add_vertical_space
 
 
 st.set_page_config(
@@ -75,9 +76,9 @@ with open("style.css") as f:
 st.write(
     """
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Roboto');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
 html, body, [class*="css"]  {
-   font-family: 'Roboto';
+   font-family: 'Montserrat';
 }
 </style>
 """,
@@ -181,6 +182,8 @@ sm1.metric(
         """,
 )
 
+add_vertical_space(3)
+
 
 def sample_stats(df):
     # Dataframe filter
@@ -277,6 +280,8 @@ sample_stats(df)
 #     _M. tuberculosis_ H37Rv genome
 #     (GenBank accession no. [NC_000962.3](https://www.ncbi.nlm.nih.gov/nuccore/NC_000962.3/))
 # """)
+
+add_vertical_space(5)
 
 # Plot two barplots side by side
 fig_col1, fig_col2 = st.columns(2, gap="large")
