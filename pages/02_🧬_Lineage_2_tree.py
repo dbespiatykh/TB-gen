@@ -11,6 +11,8 @@ st.set_page_config(
 
 st.title("Lineage 2 Phylogeny")
 
+st.markdown("---")
+
 st.write(
     """
 <style>

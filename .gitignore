@@ -107,5 +107,6 @@ tags
 .history
 .ionide
 
+make_tree
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,visualstudiocode,sublimetext,vim

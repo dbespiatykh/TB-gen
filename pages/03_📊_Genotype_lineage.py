@@ -52,6 +52,8 @@ sidebar_background_image("logo.svg")
 
 st.title("Genotype MTBC lineages from VCF file")
 
+st.markdown("---")
+
 annotated_text(
     "Use your own ",
     annotation(".VCF", color="#525833", border="1px dashed"),
