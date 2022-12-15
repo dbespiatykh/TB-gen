@@ -15,16 +15,16 @@ st.set_page_config(
 )
 
 
-def sidebar_bg(side_bg):
+def sidebar_background_image(image):
 
-    side_bg_ext = "svg+xml"
+    image_extension = "svg+xml"
 
     st.markdown(
         f"""
       <style>
       [data-testid="stSidebar"] > div:first-child {{
-          background: url(data:image/{side_bg_ext};base64,{base64.b64encode(open(side_bg, "rb").read()).decode()});
-          padding-top: 100px;
+          background: url(data:image/{image_extension};base64,{base64.b64encode(open(image, "rb").read()).decode()});
+          padding-top: 120px;
           background-size: 300px;
           background-repeat: no-repeat;
           background-position: 4px 20px;
@@ -35,7 +35,7 @@ def sidebar_bg(side_bg):
     )
 
 
-sidebar_bg("logo.svg")
+sidebar_background_image("logo.svg")
 
 st.markdown("# Genotype MTBC lineages from VCF file")
 st.markdown(
@@ -52,9 +52,9 @@ levels_file = "levels.txt"
 
 
 @st.cache
-def get_levels_dictionary(input_df):
+def get_levels_dictionary(levels):
 
-    temp_df = pd.read_csv(input_df, sep="\t")
+    temp_df = pd.read_csv(levels, sep="\t")
     uniqueLevels = temp_df["level"].unique()
     levelsDict = {elem: pd.DataFrame() for elem in uniqueLevels}
 
@@ -96,9 +96,9 @@ def get_levels_dictionary(input_df):
 
 
 @st.cache
-def get_levels_pos(input_df):
+def get_levels_positions(levels):
 
-    temp_df = pd.read_csv(input_df, sep="\t")
+    temp_df = pd.read_csv(levels, sep="\t")
     pos = temp_df["POS"].values
     return pos
 
@@ -106,7 +106,7 @@ def get_levels_pos(input_df):
 @st.cache
 def vcf_to_dataframe(vcf_file):
 
-    pos_all = get_levels_pos(levels_file)
+    pos_all = get_levels_positions(levels_file)
     vcf_reader = Reader(vcf_file, "r")
     res = []
     cols = ["Sample", "REF", "ALT", "POS"]
@@ -141,12 +141,12 @@ def vcf_to_dataframe(vcf_file):
 
 
 @st.cache
-def l4_decision(myList):
+def lineage4_decision(call_list):
 
     lin4 = ["L4"]
     altList = []
 
-    for item in myList:
+    for item in call_list:
         if any(i in item for i in lin4):
             item = [x for x in item if x not in lin4]
 
@@ -159,12 +159,12 @@ def l4_decision(myList):
 
 
 @st.cache
-def l4_9_decision(myList):
+def lineage4_9_decision(call_list):
 
     lin4_9 = ["L4.9"]
     altList = []
 
-    for item in myList:
+    for item in call_list:
         if any(i in item for i in lin4_9):
             item = [x for x in item if x not in lin4_9]
 
@@ -177,11 +177,11 @@ def l4_9_decision(myList):
 
 
 @st.cache
-def cnt_lvl1(myList):
+def count_level1_variants(call_list):
 
     d = OrderedDict()
 
-    for item in myList:
+    for item in call_list:
         if not len(item) == 0:
             caseless = item.casefold()
             try:
@@ -189,7 +189,7 @@ def cnt_lvl1(myList):
             except KeyError:
                 d[caseless] = [item, 1]
 
-    myList = []
+    call_list = []
 
     for item, count in d.values():
         if not item.startswith("L8"):
@@ -197,17 +197,17 @@ def cnt_lvl1(myList):
                 item = "{}".format(item)
             elif count == 1:
                 item = "{} [{}]".format(item, "warning! only 1/2 snp is present")
-        myList.append(item)
+        call_list.append(item)
 
-    return myList
+    return call_list
 
 
 @st.cache
-def cnt_lvl2(myList):
+def count_level2_variants(call_list):
 
     d = OrderedDict()
 
-    for item in myList:
+    for item in call_list:
         if not len(item) == 0:
             caseless = item.casefold()
             try:
@@ -215,7 +215,7 @@ def cnt_lvl2(myList):
             except KeyError:
                 d[caseless] = [item, 1]
 
-    myList = []
+    call_list = []
 
     for item, count in d.values():
         if not item.startswith(("L2.2 (modern)", "L2.2 (ancient)")):
@@ -231,18 +231,18 @@ def cnt_lvl2(myList):
                     item = "{} [{}]".format(item, "warning! only 1/2 snp is present")
                 if item.startswith("L2.2 (modern)"):
                     item = "{}".format(item)
-        myList.append(item)
+        call_list.append(item)
 
-    return myList
+    return call_list
 
 
 @st.cache
-def l2_decision(myList):
+def lineage2_decision(call_list):
 
     lin2 = ["L2.2 (modern)", "L2.2 (ancient)"]
     altList = []
 
-    for item in myList:
+    for item in call_list:
         if all(i in item for i in lin2) == True:
             item = list(set(item) - set(lin2))
             item.append("L2.2 (modern)")
@@ -361,11 +361,15 @@ if st.sidebar.button("Genotype lineage"):
 
                 df2["level_1"] = df2["level_1"].str.split(",")
                 df2["level_2"] = df2["level_2"].str.split(",")
-                df2["level_1"] = l4_decision(df2["level_1"])
-                df2["level_2"] = l4_9_decision(df2["level_2"])
-                df2["level_1"] = [cnt_lvl1(item) for item in df2["level_1"]]
-                df2["level_2"] = [cnt_lvl2(item) for item in df2["level_2"]]
-                df2["level_2"] = l2_decision(df2["level_2"])
+                df2["level_1"] = lineage4_decision(df2["level_1"])
+                df2["level_2"] = lineage4_9_decision(df2["level_2"])
+                df2["level_1"] = [
+                    count_level1_variants(item) for item in df2["level_1"]
+                ]
+                df2["level_2"] = [
+                    count_level2_variants(item) for item in df2["level_2"]
+                ]
+                df2["level_2"] = lineage2_decision(df2["level_2"])
 
                 df2[["level_1", "level_2"]] = df2[["level_1", "level_2"]].applymap(
                     lambda x: ", ".join(map(str, x))

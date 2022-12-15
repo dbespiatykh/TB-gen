@@ -18,15 +18,15 @@ st.set_page_config(
 )
 
 
-def sidebar_bg(side_bg):
+def sidebar_background_image(image):
 
-    side_bg_ext = "svg+xml"
+    image_extension = "svg+xml"
 
     st.markdown(
         f"""
       <style>
       [data-testid="stSidebar"] > div:first-child {{
-          background: url(data:image/{side_bg_ext};base64,{base64.b64encode(open(side_bg, "rb").read()).decode()});
+          background: url(data:image/{image_extension};base64,{base64.b64encode(open(image, "rb").read()).decode()});
           padding-top: 120px;
           background-size: 300px;
           background-repeat: no-repeat;
@@ -38,9 +38,9 @@ def sidebar_bg(side_bg):
     )
 
 
-sidebar_bg("logo.svg")
+sidebar_background_image("logo.svg")
 
-st.sidebar.success("Select a page above.")
+st.sidebar.success("Select a page above")
 
 st.sidebar.header("Header `ver 1`")
 st.sidebar.subheader("Sunheader")
@@ -85,13 +85,12 @@ html, body, [class*="css"]  {
 )
 
 
-# Read .csv from a URL
-dataset_url = "tb_data.csv"
+main_dataset = "tb_data.csv"
 
 
 @st.experimental_memo
 def get_data() -> pd.DataFrame:
-    return pd.read_csv(dataset_url)
+    return pd.read_csv(main_dataset)
 
 
 df = get_data()

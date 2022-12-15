@@ -10,16 +10,16 @@ st.set_page_config(
 )
 
 
-def sidebar_bg(side_bg):
+def sidebar_background_image(image):
 
-    side_bg_ext = "svg+xml"
+    image_extension = "svg+xml"
 
     st.markdown(
         f"""
       <style>
       [data-testid="stSidebar"] > div:first-child {{
-          background: url(data:image/{side_bg_ext};base64,{base64.b64encode(open(side_bg, "rb").read()).decode()});
-          padding-top: 100px;
+          background: url(data:image/{image_extension};base64,{base64.b64encode(open(image, "rb").read()).decode()});
+          padding-top: 120px;
           background-size: 300px;
           background-repeat: no-repeat;
           background-position: 4px 20px;
@@ -30,7 +30,7 @@ def sidebar_bg(side_bg):
     )
 
 
-sidebar_bg("logo.svg")
+sidebar_background_image("logo.svg")
 
 # TREE TEST
 st.header("Lineage 2 Phylogeny")
