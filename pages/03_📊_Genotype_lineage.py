@@ -48,7 +48,7 @@ Use your own .`VCF` file as input to call lineage
 """
 )
 
-levels_file = "levels.txt"
+levels_file = "./data/levels.txt"
 
 
 @st.cache
