@@ -24,10 +24,10 @@ def sidebar_background_image(image):
       <style>
       [data-testid="stSidebar"] > div:first-child {{
           background: url(data:image/{image_extension};base64,{base64.b64encode(open(image, "rb").read()).decode()});
-          padding-top: 120px;
-          background-size: 300px;
+          padding-top: 80px;
+          background-size: 200px;
           background-repeat: no-repeat;
-          background-position: 4px 20px;
+          background-position: 20px 20px;
       }}
       </style>
       """,
