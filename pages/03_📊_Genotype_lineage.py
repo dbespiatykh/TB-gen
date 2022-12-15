@@ -6,6 +6,7 @@ import pandas as pd
 from vcf import Reader
 from collections import OrderedDict
 from tempfile import NamedTemporaryFile
+from annotated_text import annotated_text, annotation
 
 st.set_page_config(
     page_title="Genotype lineage from VCF",
@@ -50,15 +51,21 @@ def sidebar_background_image(image):
 sidebar_background_image("logo.svg")
 
 st.markdown("# Genotype MTBC lineages from VCF file")
+
+annotated_text(
+    "Use your own ",
+    annotation(".VCF", color="#525833", border="1px dashed"),
+    " file as input to call lineage",
+)
+
 st.markdown(
     """
-Use your own .`VCF` file as input to call lineage
-
-- Use can use both single- or multi-sample `.vcf` files
+- Use can use both single- or multi-sample .VCF files
 - Variants should be called by mapping to [NC_000962.3](https://www.ncbi.nlm.nih.gov/nuccore/NC_000962.3/) _M. tuberculosis_ H37Rv genome
 - Variants should be already filtered and contain only high quality calls
 """
 )
+
 
 levels_file = "./data/levels.txt"
 
