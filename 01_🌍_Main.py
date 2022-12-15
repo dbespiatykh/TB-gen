@@ -13,7 +13,7 @@ from streamlit_extras.add_vertical_space import add_vertical_space
 
 st.set_page_config(
     page_title="Global Mycobacterium tuberculosis data",
-    page_icon=":earth_africa:",
+    page_icon="favicon.ico",
     layout="wide",
     initial_sidebar_state="expanded",
 )

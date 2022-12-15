@@ -10,7 +10,7 @@ from annotated_text import annotated_text, annotation
 
 st.set_page_config(
     page_title="Genotype lineage from VCF",
-    page_icon="📊",
+    page_icon="favicon.ico",
     layout="wide",
     initial_sidebar_state="expanded",
 )

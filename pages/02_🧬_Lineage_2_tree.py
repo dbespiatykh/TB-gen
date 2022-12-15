@@ -4,7 +4,7 @@ import streamlit.components.v1 as components
 
 st.set_page_config(
     page_title="Phylogeny",
-    page_icon="🧬",
+    page_icon="favicon.ico",
     layout="wide",
     initial_sidebar_state="expanded",
 )
