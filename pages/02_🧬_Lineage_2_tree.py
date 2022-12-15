@@ -35,7 +35,7 @@ sidebar_background_image("logo.svg")
 # TREE TEST
 st.header("Lineage 2 Phylogeny")
 
-HtmlTree = open("tree-plot.html", "r", encoding="utf-8")
+HtmlTree = open("/data/tree-plot.html", "r", encoding="utf-8")
 source_code = HtmlTree.read()
 components.html(source_code, height=1500, scrolling=True)
 
