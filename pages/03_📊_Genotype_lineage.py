@@ -408,6 +408,7 @@ def temporary_vcf(uploaded_file):
     return temp_vcf.name
 
 
+@st.cache
 def genotype_lineages(uploaded_file):
     uploaded_extension = uploaded_file.name.split(".")[-1]
 
