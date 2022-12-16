@@ -1,3 +1,4 @@
+import os
 import base64
 import streamlit as st
 import numpy as np
@@ -58,12 +59,13 @@ st.markdown("---")
 annotated_text(
     "Use your own ",
     annotation(".VCF or .VCF.GZ", color="#525833", border="1px dashed"),
-    " file as input to call lineage",
+    " files as input to call lineage",
 )
 
 st.markdown(
     """
 - Use can use both single- or multi-sample .VCF files
+- Accepts multiple .VCF files at a time
 - Variants should be called by mapping to [NC_000962.3](https://www.ncbi.nlm.nih.gov/nuccore/NC_000962.3/) _M. tuberculosis_ H37Rv genome
 - Variants should be already filtered and contain only high quality calls
 """
@@ -287,7 +289,7 @@ def convert_df_to_csv(df):
 
 
 @st.cache
-def genotype_lineages(uploaded_vcf):
+def barcoding(uploaded_vcf):
     df = vcf_to_dataframe(uploaded_vcf)
 
     exp = (
@@ -382,82 +384,70 @@ def genotype_lineages(uploaded_vcf):
     return df2
 
 
-uploaded_file = st.sidebar.file_uploader("Upload VCF file", type=["vcf", "vcf.gz"])
+def temporary_vcf_gz(uploaded_file):
+    with NamedTemporaryFile(
+        dir=".",
+        suffix=".vcf.gz",
+        delete=False,
+    ) as temp_vcf:
+
+        temp_vcf.write(uploaded_file.getbuffer())
+
+    return temp_vcf.name
+
+
+def temporary_vcf(uploaded_file):
+    with NamedTemporaryFile(
+        dir=".",
+        suffix=".vcf",
+        delete=False,
+    ) as temp_vcf:
+
+        temp_vcf.write(uploaded_file.getbuffer())
+
+    return temp_vcf.name
+
+
+def genotype_lineages(uploaded_file):
+    uploaded_extension = uploaded_file.name.split(".")[-1]
+
+    if uploaded_extension == "gz":
+        try:
+            temp_vcf = temporary_vcf_gz(uploaded_file)
+            uploaded_vcf = gzopen(temp_vcf, "rt")
+            result = barcoding(uploaded_vcf)
+        finally:
+            os.remove(temp_vcf)
+    else:
+        try:
+            temp_vcf = temporary_vcf(uploaded_file)
+            uploaded_vcf = open(temp_vcf)
+            result = barcoding(uploaded_vcf)
+        finally:
+            os.remove(temp_vcf)
+    return result
+
+
+uploaded_files = st.sidebar.file_uploader(
+    "Upload VCF file", type=["vcf", "vcf.gz"], accept_multiple_files=True
+)
 
 
 if st.sidebar.button("Genotype lineage"):
-    if uploaded_file is not None:
+    if uploaded_files is not None:
         with st.spinner("Genotyping..."):
+
             try:
                 lvl1, lvl2, lvl3, lvl4, lvl5 = get_levels_dictionary(levels_file)
-                uploaded_extension = uploaded_file.name.split(".")[-1]
+                results_list = []
 
-                if uploaded_extension == "gz":
-                    with NamedTemporaryFile(
-                        dir=".",
-                        suffix=".vcf.gz",
-                        delete=True,
-                    ) as f:
+                for uploaded_file in uploaded_files:
 
-                        f.write(uploaded_file.getbuffer())
-                        f.flush()
-                        uploaded_vcf = gzopen(f.name, "rt")
-                        result = genotype_lineages(uploaded_vcf)
+                    out = genotype_lineages(uploaded_file)
+                    results_list.append(out)
+                results = pd.concat(results_list).reset_index(drop=True)
+                st.dataframe(results, width=900)
 
-                        st.dataframe(result, width=900)
-                        st.success("Done!", icon="✅")
-
-                        tsv = convert_df_to_tsv(result)
-                        csv = convert_df_to_csv(result)
-
-                        dwn1, dwn2, mock = st.columns([1, 1, 4])
-
-                        dwn1.download_button(
-                            label="💾 Download data as TSV",
-                            data=tsv,
-                            file_name="lineage.tsv",
-                            mime="text/csv",
-                        )
-
-                        dwn2.download_button(
-                            label="💾 Download data as CSV",
-                            data=csv,
-                            file_name="lineage.csv",
-                            mime="text/csv",
-                        )
-                else:
-                    with NamedTemporaryFile(
-                        dir=".",
-                        suffix=".vcf",
-                        delete=True,
-                    ) as f:
-
-                        f.write(uploaded_file.getbuffer())
-                        f.flush()
-                        uploaded_vcf = open(f.name)
-                        result = genotype_lineages(uploaded_vcf)
-
-                        st.dataframe(result, width=900)
-                        st.success("Done!", icon="✅")
-
-                        tsv = convert_df_to_tsv(result)
-                        csv = convert_df_to_csv(result)
-
-                        dwn1, dwn2, mock = st.columns([1, 1, 4])
-
-                        dwn1.download_button(
-                            label="💾 Download data as TSV",
-                            data=tsv,
-                            file_name="lineage.tsv",
-                            mime="text/csv",
-                        )
-
-                        dwn2.download_button(
-                            label="💾 Download data as CSV",
-                            data=csv,
-                            file_name="lineage.csv",
-                            mime="text/csv",
-                        )
             except:
                 st.error("VCF file is malformed!", icon="‼️")
 
