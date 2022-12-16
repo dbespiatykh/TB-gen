@@ -470,9 +470,10 @@ if st.sidebar.button("Genotype lineage"):
                     mime="text/csv",
                 )
 
-            except:
+            except ValueError:
+                st.warning("No data was uploaded!", icon="⚠️")
+            except StopIteration:
                 st.error("VCF file is malformed!", icon="‼️")
-
     else:
         st.warning("No data was uploaded!", icon="⚠️")
 else:
