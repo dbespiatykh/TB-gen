@@ -447,7 +447,28 @@ if st.sidebar.button("Genotype lineage"):
                     out = genotype_lineages(uploaded_file)
                     results_list.append(out)
                 results = pd.concat(results_list).reset_index(drop=True)
+
                 st.dataframe(results, width=900)
+                st.success("Done!", icon="✅")
+
+                tsv = convert_df_to_tsv(results)
+                csv = convert_df_to_csv(results)
+
+                dwn1, dwn2, mock = st.columns([1, 1, 4])
+
+                dwn1.download_button(
+                    label="💾 Download data as TSV",
+                    data=tsv,
+                    file_name="lineage.tsv",
+                    mime="text/csv",
+                )
+
+                dwn2.download_button(
+                    label="💾 Download data as CSV",
+                    data=csv,
+                    file_name="lineage.csv",
+                    mime="text/csv",
+                )
 
             except:
                 st.error("VCF file is malformed!", icon="‼️")
