@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 
 from vcf import Reader
+from gzip import open as gzopen
 from collections import OrderedDict
 from tempfile import NamedTemporaryFile
 from annotated_text import annotated_text, annotation
@@ -56,7 +57,7 @@ st.markdown("---")
 
 annotated_text(
     "Use your own ",
-    annotation(".VCF", color="#525833", border="1px dashed"),
+    annotation(".VCF or .VCF.GZ", color="#525833", border="1px dashed"),
     " file as input to call lineage",
 )
 
@@ -285,142 +286,181 @@ def convert_df_to_csv(df):
     return df.to_csv(index=False).encode("utf-8")
 
 
-uploaded_file = st.sidebar.file_uploader("Upload VCF file", type=["vcf"])
+@st.cache
+def genotype_lineages(uploaded_vcf):
+    df = vcf_to_dataframe(uploaded_vcf)
+
+    exp = (
+        df["POS"].values[:, None],
+        df["REF"].values[:, None],
+        df["ALT"].values[:, None],
+    )
+
+    df["level_1"] = np.dot(
+        np.logical_and.reduce(
+            [
+                np.equal(exp[0], lvl1[0]),
+                np.equal(exp[1], lvl1[1]),
+                np.equal(exp[2], lvl1[2]),
+            ]
+        ),
+        lvl1[3],
+    )
+
+    df["level_2"] = np.dot(
+        np.logical_and.reduce(
+            [
+                np.equal(exp[0], lvl2[0]),
+                np.equal(exp[1], lvl2[1]),
+                np.equal(exp[2], lvl2[2]),
+            ]
+        ),
+        lvl2[3],
+    )
+
+    df["level_3"] = np.dot(
+        np.logical_and.reduce(
+            [
+                np.equal(exp[0], lvl3[0]),
+                np.equal(exp[1], lvl3[1]),
+                np.equal(exp[2], lvl3[2]),
+            ]
+        ),
+        lvl3[3],
+    )
+
+    df["level_4"] = np.dot(
+        np.logical_and.reduce(
+            [
+                np.equal(exp[0], lvl4[0]),
+                np.equal(exp[1], lvl4[1]),
+                np.equal(exp[2], lvl4[2]),
+            ]
+        ),
+        lvl4[3],
+    )
+
+    df["level_5"] = np.dot(
+        np.logical_and.reduce(
+            [
+                np.equal(exp[0], lvl5[0]),
+                np.equal(exp[1], lvl5[1]),
+                np.equal(exp[2], lvl5[2]),
+            ]
+        ),
+        lvl5[3],
+    )
+
+    df = df.drop(["REF", "ALT", "POS"], axis=1)
+    df = df.replace("", np.nan)
+
+    df = (
+        df.groupby(["Sample"])
+        .agg(lambda x: ",".join(x.dropna()))
+        .reset_index()
+        .reindex(columns=df.columns)
+    )
+
+    df2 = df.copy()
+
+    df2["level_1"] = df2["level_1"].str.split(",")
+    df2["level_2"] = df2["level_2"].str.split(",")
+    df2["level_1"] = lineage4_decision(df2["level_1"])
+    df2["level_2"] = lineage4_9_decision(df2["level_2"])
+    df2["level_1"] = [count_level1_variants(item) for item in df2["level_1"]]
+    df2["level_2"] = [count_level2_variants(item) for item in df2["level_2"]]
+    df2["level_2"] = lineage2_decision(df2["level_2"])
+
+    df2[["level_1", "level_2"]] = df2[["level_1", "level_2"]].applymap(
+        lambda x: ", ".join(map(str, x))
+    )
+
+    df2 = df2.sort_values(
+        by=["level_1", "level_2", "level_3", "level_4", "level_5"]
+    ).reset_index(drop=True)
+
+    return df2
+
+
+uploaded_file = st.sidebar.file_uploader("Upload VCF file", type=["vcf", "vcf.gz"])
 
 
 if st.sidebar.button("Genotype lineage"):
     if uploaded_file is not None:
         with st.spinner("Genotyping..."):
+            try:
+                lvl1, lvl2, lvl3, lvl4, lvl5 = get_levels_dictionary(levels_file)
+                uploaded_extension = uploaded_file.name.split(".")[-1]
 
-            lvl1, lvl2, lvl3, lvl4, lvl5 = get_levels_dictionary(levels_file)
+                if uploaded_extension == "gz":
+                    with NamedTemporaryFile(
+                        dir=".",
+                        suffix=".vcf.gz",
+                        delete=True,
+                    ) as f:
 
-            with NamedTemporaryFile(
-                dir=".",
-                suffix=".vcf",
-                delete=True,
-            ) as f:
+                        f.write(uploaded_file.getbuffer())
+                        f.flush()
+                        uploaded_vcf = gzopen(f.name, "rt")
+                        result = genotype_lineages(uploaded_vcf)
 
-                f.write(uploaded_file.getbuffer())
-                f.flush()
+                        st.dataframe(result, width=900)
+                        st.success("Done!", icon="✅")
 
-                uploaded_vcf = open(f.name)
+                        tsv = convert_df_to_tsv(result)
+                        csv = convert_df_to_csv(result)
 
-                df = vcf_to_dataframe(uploaded_vcf)
+                        dwn1, dwn2, mock = st.columns([1, 1, 4])
 
-                exp = (
-                    df["POS"].values[:, None],
-                    df["REF"].values[:, None],
-                    df["ALT"].values[:, None],
-                )
+                        dwn1.download_button(
+                            label="💾 Download data as TSV",
+                            data=tsv,
+                            file_name="lineage.tsv",
+                            mime="text/csv",
+                        )
 
-                df["level_1"] = np.dot(
-                    np.logical_and.reduce(
-                        [
-                            np.equal(exp[0], lvl1[0]),
-                            np.equal(exp[1], lvl1[1]),
-                            np.equal(exp[2], lvl1[2]),
-                        ]
-                    ),
-                    lvl1[3],
-                )
+                        dwn2.download_button(
+                            label="💾 Download data as CSV",
+                            data=csv,
+                            file_name="lineage.csv",
+                            mime="text/csv",
+                        )
+                else:
+                    with NamedTemporaryFile(
+                        dir=".",
+                        suffix=".vcf",
+                        delete=True,
+                    ) as f:
 
-                df["level_2"] = np.dot(
-                    np.logical_and.reduce(
-                        [
-                            np.equal(exp[0], lvl2[0]),
-                            np.equal(exp[1], lvl2[1]),
-                            np.equal(exp[2], lvl2[2]),
-                        ]
-                    ),
-                    lvl2[3],
-                )
+                        f.write(uploaded_file.getbuffer())
+                        f.flush()
+                        uploaded_vcf = open(f.name)
+                        result = genotype_lineages(uploaded_vcf)
 
-                df["level_3"] = np.dot(
-                    np.logical_and.reduce(
-                        [
-                            np.equal(exp[0], lvl3[0]),
-                            np.equal(exp[1], lvl3[1]),
-                            np.equal(exp[2], lvl3[2]),
-                        ]
-                    ),
-                    lvl3[3],
-                )
+                        st.dataframe(result, width=900)
+                        st.success("Done!", icon="✅")
 
-                df["level_4"] = np.dot(
-                    np.logical_and.reduce(
-                        [
-                            np.equal(exp[0], lvl4[0]),
-                            np.equal(exp[1], lvl4[1]),
-                            np.equal(exp[2], lvl4[2]),
-                        ]
-                    ),
-                    lvl4[3],
-                )
+                        tsv = convert_df_to_tsv(result)
+                        csv = convert_df_to_csv(result)
 
-                df["level_5"] = np.dot(
-                    np.logical_and.reduce(
-                        [
-                            np.equal(exp[0], lvl5[0]),
-                            np.equal(exp[1], lvl5[1]),
-                            np.equal(exp[2], lvl5[2]),
-                        ]
-                    ),
-                    lvl5[3],
-                )
+                        dwn1, dwn2, mock = st.columns([1, 1, 4])
 
-                df = df.drop(["REF", "ALT", "POS"], axis=1)
-                df = df.replace("", np.nan)
+                        dwn1.download_button(
+                            label="💾 Download data as TSV",
+                            data=tsv,
+                            file_name="lineage.tsv",
+                            mime="text/csv",
+                        )
 
-                df = (
-                    df.groupby(["Sample"])
-                    .agg(lambda x: ",".join(x.dropna()))
-                    .reset_index()
-                    .reindex(columns=df.columns)
-                )
+                        dwn2.download_button(
+                            label="💾 Download data as CSV",
+                            data=csv,
+                            file_name="lineage.csv",
+                            mime="text/csv",
+                        )
+            except:
+                st.error("VCF file is malformed!", icon="‼️")
 
-                df2 = df.copy()
-
-                df2["level_1"] = df2["level_1"].str.split(",")
-                df2["level_2"] = df2["level_2"].str.split(",")
-                df2["level_1"] = lineage4_decision(df2["level_1"])
-                df2["level_2"] = lineage4_9_decision(df2["level_2"])
-                df2["level_1"] = [
-                    count_level1_variants(item) for item in df2["level_1"]
-                ]
-                df2["level_2"] = [
-                    count_level2_variants(item) for item in df2["level_2"]
-                ]
-                df2["level_2"] = lineage2_decision(df2["level_2"])
-
-                df2[["level_1", "level_2"]] = df2[["level_1", "level_2"]].applymap(
-                    lambda x: ", ".join(map(str, x))
-                )
-
-                df2 = df2.sort_values(
-                    by=["level_1", "level_2", "level_3", "level_4", "level_5"]
-                ).reset_index(drop=True)
-
-                st.dataframe(df2, width=900)
-                st.success("Done!", icon="✅")
-
-                tsv = convert_df_to_tsv(df2)
-                csv = convert_df_to_csv(df2)
-
-                dwn1, dwn2, mock = st.columns([1, 1, 4])
-
-                dwn1.download_button(
-                    label="💾 Download data as TSV",
-                    data=tsv,
-                    file_name="lineage.tsv",
-                    mime="text/csv",
-                )
-
-                dwn2.download_button(
-                    label="💾 Download data as CSV",
-                    data=csv,
-                    file_name="lineage.csv",
-                    mime="text/csv",
-                )
     else:
         st.warning("No data was uploaded!", icon="⚠️")
 else:
