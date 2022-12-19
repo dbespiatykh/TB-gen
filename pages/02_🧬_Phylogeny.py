@@ -24,7 +24,7 @@ def displayPDF(file):
         base64_pdf = base64.b64encode(f.read()).decode("utf-8")
 
     # Embedding PDF in HTML
-    pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf object-src style-src="self" frame-src="self" "></iframe>'
+    pdf_display = f'<embed src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf"></embed>'
 
     # Displaying File
     st.markdown(pdf_display, unsafe_allow_html=True)
