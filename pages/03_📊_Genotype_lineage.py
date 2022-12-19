@@ -9,48 +9,11 @@ from gzip import open as gzopen
 from collections import OrderedDict
 from tempfile import NamedTemporaryFile
 from annotated_text import annotated_text, annotation
+from utils import set_page_config, sidebar_image, set_css
 
-st.set_page_config(
-    page_title="Genotype lineage from VCF",
-    page_icon="favicon.ico",
-    layout="wide",
-    initial_sidebar_state="expanded",
-)
-
-st.write(
-    """
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
-html, body, [class*="css"]  {
-   font-family: 'Montserrat';
-}
-</style>
-""",
-    unsafe_allow_html=True,
-)
-
-
-def sidebar_background_image(image):
-
-    image_extension = "svg+xml"
-
-    st.markdown(
-        f"""
-      <style>
-      [data-testid="stSidebar"] > div:first-child {{
-          background: url(data:image/{image_extension};base64,{base64.b64encode(open(image, "rb").read()).decode()});
-          padding-top: 80px;
-          background-size: 200px;
-          background-repeat: no-repeat;
-          background-position: 20px 20px;
-      }}
-      </style>
-      """,
-        unsafe_allow_html=True,
-    )
-
-
-sidebar_background_image("logo.svg")
+set_page_config()
+sidebar_image()
+set_css()
 
 st.title("Genotype MTBC lineages from VCF file")
 

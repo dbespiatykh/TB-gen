@@ -9,37 +9,11 @@ from st_aggrid import AgGrid, GridUpdateMode
 from st_aggrid.grid_options_builder import GridOptionsBuilder
 from streamlit_extras.switch_page_button import switch_page
 from streamlit_extras.add_vertical_space import add_vertical_space
+from utils import set_page_config, sidebar_image, set_css
 
-
-st.set_page_config(
-    page_title="Global Mycobacterium tuberculosis data",
-    page_icon="favicon.ico",
-    layout="wide",
-    initial_sidebar_state="expanded",
-)
-
-
-def sidebar_background_image(image):
-
-    image_extension = "svg+xml"
-
-    st.markdown(
-        f"""
-      <style>
-      [data-testid="stSidebar"] > div:first-child {{
-          background: url(data:image/{image_extension};base64,{base64.b64encode(open(image, "rb").read()).decode()});
-          padding-top: 80px;
-          background-size: 200px;
-          background-repeat: no-repeat;
-          background-position: 20px 20px;
-      }}
-      </style>
-      """,
-        unsafe_allow_html=True,
-    )
-
-
-sidebar_background_image("logo.svg")
+set_page_config()
+sidebar_image()
+set_css()
 
 st.sidebar.success("Select a page above")
 
@@ -55,24 +29,9 @@ Add description
 
 
 genotype_user_data = st.button("Genotype VCF")
+
 if genotype_user_data:
     switch_page("genotype lineage")
-
-with open("style.css") as f:
-    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-
-st.write(
-    """
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap');
-html, body, [class*="css"]  {
-   font-family: 'Montserrat';
-}
-</style>
-""",
-    unsafe_allow_html=True,
-)
-
 
 main_dataset = "./data/tb_data.csv"
 
