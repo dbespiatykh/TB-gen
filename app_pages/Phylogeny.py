@@ -1,6 +1,9 @@
 import base64
 import streamlit as st
+
 from utils import set_page_config, sidebar_image, set_css
+import streamlit.components.v1 as components
+
 
 set_page_config()
 sidebar_image()
@@ -37,6 +40,17 @@ def show_pdf(file_path):
     st.markdown(pdf_display, unsafe_allow_html=True)
 
 
+def show_lineage3_tree():
+    HtmlTree = open("./data/trees/lineage.3.tree.html", "r", encoding="utf-8")
+    source_code = HtmlTree.read()
+    components.html(source_code, height=1000, width=1800, scrolling=True)
+
+
+# HtmlTree = open("./data/tree-plot.html", "r", encoding="utf-8")
+# source_code = HtmlTree.read()
+# components.html(source_code, height=1500, scrolling=True)
+
+
 tab1, tab2, tab3, tab4, tab5 = st.tabs(
     [
         "Lineage 1",
@@ -54,7 +68,7 @@ with tab2:
     show_svg("./data/trees/lineage2_tree.svg")
 
 with tab3:
-    show_svg("./data/trees/lineage3_tree.svg")
+    show_lineage3_tree()
 
 with tab4:
     show_svg("./data/trees/lineage4_tree.svg")
