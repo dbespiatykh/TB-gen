@@ -40,6 +40,18 @@ def show_pdf(file_path):
     st.markdown(pdf_display, unsafe_allow_html=True)
 
 
+def show_lineage1_tree():
+    HtmlTree = open("./data/trees/lineage.1.tree.html", "r", encoding="utf-8")
+    source_code = HtmlTree.read()
+    components.html(source_code, height=1000, width=1800, scrolling=True)
+
+
+def show_lineage2_tree():
+    HtmlTree = open("./data/trees/lineage.2.tree.html", "r", encoding="utf-8")
+    source_code = HtmlTree.read()
+    components.html(source_code, height=1000, width=1800, scrolling=True)
+
+
 def show_lineage3_tree():
     HtmlTree = open("./data/trees/lineage.3.tree.html", "r", encoding="utf-8")
     source_code = HtmlTree.read()
@@ -62,10 +74,10 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs(
 )
 
 with tab1:
-    show_pdf("./data/trees/l1_tree.pdf")
+    show_lineage1_tree()
 
 with tab2:
-    show_svg("./data/trees/lineage2_tree.svg")
+    show_lineage2_tree()
 
 with tab3:
     show_lineage3_tree()
