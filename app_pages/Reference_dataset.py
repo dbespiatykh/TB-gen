@@ -3,6 +3,7 @@ import geopandas
 import pickle
 import streamlit as st
 import leafmap.kepler as leafmap
+import altair as alt
 
 from st_aggrid import AgGrid, GridUpdateMode
 from st_aggrid.grid_options_builder import GridOptionsBuilder
@@ -39,15 +40,6 @@ def get_map_config(input):
 dataset = get_data("./data/samples_data.tsv")
 country_shapes = get_country_shapes("./data/world_countries.json")
 map_config = get_map_config("./data/config.pkl")
-
-# Calculate mean SNPs values
-no_vars = (
-    dataset[["level 1", "no. of SNPs"]]
-    .groupby(["level 1"])
-    .mean()
-    .reset_index()
-    .rename(columns={"level 1": "Main lineage", "no. of SNPs": "Number of SNPs"})
-)
 
 # Calculate number of samples per country
 cnt_samples = (
@@ -196,16 +188,58 @@ sample_stats(dataset)
 
 add_vertical_space(5)
 
-# Plot two barplots side by side
-fig_col1, fig_col2 = st.columns(2, gap="large")
 
-with fig_col1:
-    st.markdown("### Mean number of SNPs per lineage")
-    st.bar_chart(no_vars, x="Main lineage", y="Number of SNPs")
+@st.experimental_memo
+def get_chart():
+    # Calculate mean SNPs values
+    no_vars = (
+        get_data("./data/samples_data.tsv")[["level 1", "no. of SNPs"]]
+        .groupby(["level 1"])
+        .mean()
+        .reset_index()
+        .rename(columns={"level 1": "Main lineage", "no. of SNPs": "Number of SNPs"})
+    )
 
-# with fig_col2:
-#     st.markdown("### Total Number of SNPs per Drug Resistance Type")
-#     st.bar_chart(dr_snps, x="DR type", y="Total number of SNPs")
+    no_samples = (
+        get_data("./data/samples_data.tsv")[["level 1", "Sample"]]
+        .groupby(["level 1"])
+        .count()
+        .reset_index()
+        .rename(columns={"Sample": "Number of Samples", "level 1": "Main lineage"})
+    )
+
+    snp_chart = (
+        alt.Chart(no_vars)
+        .mark_bar(cornerRadiusTopLeft=3, cornerRadiusTopRight=3)
+        .encode(
+            x=alt.X("Main lineage", axis=alt.Axis(title="")),
+            y="Number of SNPs",
+            color=alt.value("#A65AA3"),
+        )
+    )
+
+    sample_chart = (
+        alt.Chart(no_samples)
+        .mark_bar(cornerRadiusTopLeft=3, cornerRadiusTopRight=3)
+        .encode(
+            x=alt.X("Main lineage", axis=alt.Axis(title="")),
+            y="Number of Samples",
+            color=alt.value("#88AAC7"),
+        )
+    )
+
+    fig_col1, fig_col2 = st.columns(2, gap="large")
+
+    with fig_col2:
+        st.markdown("### Average Number of SNPs per lineage")
+        st.altair_chart(snp_chart, theme="streamlit", use_container_width=True)
+
+    with fig_col1:
+        st.markdown("### Total number of samples per lineage")
+        st.altair_chart(sample_chart, theme="streamlit", use_container_width=True)
+
+
+get_chart()
 
 # Plot a map
 "### Maps Showing the Distributions of Samples "
