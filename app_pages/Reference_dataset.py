@@ -100,7 +100,13 @@ if st.checkbox("Show Dataset"):
     builder = GridOptionsBuilder.from_dataframe(dataset_sel)
     builder.configure_column("_selectedRowNodeInfo", hide=True)
     go = builder.build()
-    grid2 = AgGrid(dataset_sel, gridOptions=go, height=150, theme="streamlit")
+    grid2 = AgGrid(
+        dataset_sel,
+        gridOptions=go,
+        height=150,
+        theme="streamlit",
+        enable_enterprise_modules=False,
+    )
 
 sm1, mk = st.columns([2, 5])
 sm1.metric(
