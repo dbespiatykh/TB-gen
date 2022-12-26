@@ -88,7 +88,7 @@ if st.checkbox("Show Dataset"):
     grid1 = AgGrid(
         dataset,
         gridOptions=gd.build(),
-        enable_enterprise_modules=True,
+        enable_enterprise_modules=False,
         allowDragFromColumnsToolPanel=True,
         update_mode=GridUpdateMode.SELECTION_CHANGED,
         allow_unsafe_jscode=True,
