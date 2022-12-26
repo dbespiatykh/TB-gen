@@ -35,7 +35,7 @@ st.markdown(
 )
 
 
-levels_file = "./data/levels.txt"
+levels_file = "./data/levels.tsv"
 
 
 @st.cache
