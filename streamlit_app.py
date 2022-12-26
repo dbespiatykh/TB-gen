@@ -1,5 +1,4 @@
 import streamlit as st
-import leafmap.kepler as leafmap
 
 from streamlit_extras.switch_page_button import switch_page
 from utils import set_page_config, sidebar_image, set_css
