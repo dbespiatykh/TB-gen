@@ -6,18 +6,6 @@ body,
   font-family: "Montserrat";
 }
 
-/* Cards */
-div.css-ocqkz7.e1tzin5v4 {
-  background-color: #cad2dd;
-  border: 1px solid #1a5971;
-  padding: 1% 0% 1% 5%;
-  border-radius: 5px;
-  /* color: #c8d1d9; */
-
-  border-left: 0.3rem solid #1a5971 !important;
-  box-shadow: 0 0.1rem 0.3rem 0 #1a5971 !important;
-}
-
 /* Move block container higher */
 div.block-container.css-18e3th9.egzxvld2 {
   margin-top: -5em;
@@ -39,3 +27,15 @@ footer.css-12gp8ed.eknhn3m4 {
 div.vg-tooltip-element {
   display: none;
 } */
+
+/* Cards */
+/* div.css-ocqkz7.e1tzin5v4 {
+  background-color: #cad2dd;
+  border: 1px solid #1a5971;
+  padding: 1% 0% 1% 5%;
+  border-radius: 5px;
+  /* color: #c8d1d9; */
+
+/* border-left: 0.3rem solid #1a5971 !important;
+  box-shadow: 0 0.1rem 0.3rem 0 #1a5971 !important; */
+/* } */
