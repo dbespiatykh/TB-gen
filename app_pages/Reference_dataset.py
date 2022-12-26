@@ -14,6 +14,10 @@ set_page_config()
 sidebar_image()
 set_css()
 
+st.title("Reference dataset of _Mycobacterium tuberculosis_ complex isolates")
+
+st.markdown("---")
+
 
 @st.experimental_memo
 def get_data(input):
@@ -64,8 +68,16 @@ cnt_samples_poly = (
         right_on="Country of isolation",
         how="left",
     )
-    .drop(columns=["id"])
+    .drop(columns=["id", "Country of isolation"])
     .rename(columns={"name": "Country"})
+)
+
+sm1, mk = st.columns([2, 5])
+sm1.metric(
+    label="Total Samples",
+    value=int(dataset["Sample"].count()),
+    help="""Number of currently availible samples in the dataset
+        """,
 )
 
 ####################################################################################################################
@@ -108,13 +120,6 @@ if st.checkbox("Show Dataset"):
         enable_enterprise_modules=False,
     )
 
-sm1, mk = st.columns([2, 5])
-sm1.metric(
-    label="Total Samples",
-    value=int(dataset["Sample"].count()),
-    help="""Number of currently availible samples in the database
-        """,
-)
 
 add_vertical_space(3)
 
