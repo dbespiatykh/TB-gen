@@ -46,59 +46,101 @@ def get_countries(input):
 
 
 dataset = get_data("./data/samples_data.tsv")
-country_shapes = get_country_shapes("./data/world_countries.json")
-regions = get_regions("./data/regions.csv")
-countries = get_countries("./data/countries.csv")
 
-smp_data = pd.merge(
-    dataset[
-        [
+
+@st.experimental_memo
+def get_mapping_data():
+    dataset = get_data("./data/samples_data.tsv")
+    country_shapes = get_country_shapes("./data/world_countries.json")
+    regions = get_regions("./data/regions.csv")
+    countries = get_countries("./data/countries.csv")
+    smp_data = pd.merge(
+        dataset[
+            [
+                "Sample",
+                "Country of isolation",
+                "level 1",
+                "level 2",
+                "level 3",
+                "level 4",
+                "level 5",
+            ]
+        ],
+        countries,
+        how="left",
+        left_on="Country of isolation",
+        right_on="name",
+    ).drop(columns=["country"])
+    smp_data = smp_data[smp_data["name"].notna()]
+    smp_data = pd.merge(left=smp_data, right=regions, how="left", on="name").drop(
+        columns=["name"]
+    )
+    # Calculate number of samples per country
+    cnt_samples = (
+        dataset[["Sample", "Country of isolation"]]
+        .groupby(["Country of isolation"])
+        .count()
+        .reset_index()
+        .rename(columns={"Sample": "Number of Samples", "country of isolation": "name"})
+    )
+    # Merge country shapes and counts data
+    cnt_samples_poly = (
+        pd.merge(
+            country_shapes,
+            cnt_samples,
+            left_on="name",
+            right_on="Country of isolation",
+            how="left",
+        )
+        .dropna()
+        .drop(columns=["id", "Country of isolation"])
+        .rename(columns={"name": "Country"})
+    )
+    cnt_samples_poly["Number of Samples"] = cnt_samples_poly[
+        "Number of Samples"
+    ].astype(np.int64)
+    return smp_data, cnt_samples_poly
+
+
+def get_map():
+    smp_data, cnt_samples_poly = get_mapping_data()
+    m = leafmap.Map(
+        layers_control=False,
+        draw_control=False,
+        measure_control=False,
+        fullscreen_control=False,
+        attribution_control=True,
+    )
+    m.add_basemap("CartoDB.PositronNoLabels")
+    m.add_data(
+        data=cnt_samples_poly,
+        column="Number of Samples",
+        layer_name="Number of Samples",
+        k=9,
+        add_legend=False,
+    )
+    m.add_points_from_xy(
+        smp_data,
+        layer_name="Samples",
+        x="longitude",
+        y="latitude",
+        popup=[
             "Sample",
             "Country of isolation",
+            "Region",
             "level 1",
             "level 2",
             "level 3",
             "level 4",
             "level 5",
-        ]
-    ],
-    countries,
-    how="left",
-    left_on="Country of isolation",
-    right_on="name",
-).drop(columns=["country"])
-smp_data = smp_data[smp_data["name"].notna()]
-smp_data = pd.merge(left=smp_data, right=regions, how="left", on="name").drop(
-    columns=["name"]
-)
-
-
-# Calculate number of samples per country
-cnt_samples = (
-    dataset[["Sample", "Country of isolation"]]
-    .groupby(["Country of isolation"])
-    .count()
-    .reset_index()
-    .rename(columns={"Sample": "Number of Samples", "country of isolation": "name"})
-)
-
-# Merge country shapes and counts data
-cnt_samples_poly = (
-    pd.merge(
-        country_shapes,
-        cnt_samples,
-        left_on="name",
-        right_on="Country of isolation",
-        how="left",
+        ],
+        color_column="Region",
+        icon_names=["star"],
+        spin=True,
+        add_legend=False,
     )
-    .dropna()
-    .drop(columns=["id", "Country of isolation"])
-    .rename(columns={"name": "Country"})
-)
+    return m
 
-cnt_samples_poly["Number of Samples"] = cnt_samples_poly["Number of Samples"].astype(
-    np.int64
-)
 
 sm1, mk = st.columns([2, 5])
 sm1.metric(
@@ -282,40 +324,5 @@ add_vertical_space(5)
 
 # Plot a map
 "### Map Showing the Distribution of Samples"
-m = leafmap.Map(
-    draw_control=False,
-    measure_control=False,
-    fullscreen_control=False,
-    attribution_control=True,
-    layers_control=False,
-)
-m.add_basemap("CartoDB.PositronNoLabels")
-m.add_data(
-    data=cnt_samples_poly,
-    column="Number of Samples",
-    layer_name="Number of Samples",
-    k=9,
-    add_legend=False,
-)
-m.add_points_from_xy(
-    smp_data,
-    layer_name="Samples",
-    x="longitude",
-    y="latitude",
-    popup=[
-        "Sample",
-        "Country of isolation",
-        "Region",
-        "level 1",
-        "level 2",
-        "level 3",
-        "level 4",
-        "level 5",
-    ],
-    color_column="Region",
-    icon_names=["star"],
-    spin=True,
-    add_legend=False,
-)
 
-m.to_streamlit(height=700)
+get_map().to_streamlit(height=700)
