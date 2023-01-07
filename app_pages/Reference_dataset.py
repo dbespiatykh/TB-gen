@@ -287,6 +287,7 @@ m = leafmap.Map(
     measure_control=False,
     fullscreen_control=False,
     attribution_control=True,
+    layers_control=False,
 )
 m.add_basemap("CartoDB.PositronNoLabels")
 m.add_data(
