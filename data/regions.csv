@@ -50,10 +50,10 @@ Cocos (Keeling) Islands,CC,CCK,166,ISO 3166-2:CC,Oceania,Australia and New Zeala
 Colombia,CO,COL,170,ISO 3166-2:CO,Americas,Latin America and the Caribbean,South America,19,419,5
 Comoros,KM,COM,174,ISO 3166-2:KM,Africa,Sub-Saharan Africa,Eastern Africa,2,202,14
 Congo,CG,COG,178,ISO 3166-2:CG,Africa,Sub-Saharan Africa,Middle Africa,2,202,17
-"Congo, Democratic Republic of the",CD,COD,180,ISO 3166-2:CD,Africa,Sub-Saharan Africa,Middle Africa,2,202,17
+Democratic Republic of the Congo,CD,COD,180,ISO 3166-2:CD,Africa,Sub-Saharan Africa,Middle Africa,2,202,17
 Cook Islands,CK,COK,184,ISO 3166-2:CK,Oceania,Polynesia,,9,61,
 Costa Rica,CR,CRI,188,ISO 3166-2:CR,Americas,Latin America and the Caribbean,Central America,19,419,13
-Côte d'Ivoire,CI,CIV,384,ISO 3166-2:CI,Africa,Sub-Saharan Africa,Western Africa,2,202,11
+"Ivory Coast",CI,CIV,384,ISO 3166-2:CI,Africa,Sub-Saharan Africa,Western Africa,2,202,11
 Croatia,HR,HRV,191,ISO 3166-2:HR,Europe,Southern Europe,,150,39,
 Cuba,CU,CUB,192,ISO 3166-2:CU,Americas,Latin America and the Caribbean,Caribbean,19,419,29
 Curaçao,CW,CUW,531,ISO 3166-2:CW,Americas,Latin America and the Caribbean,Caribbean,19,419,29
@@ -163,7 +163,7 @@ Niger,NE,NER,562,ISO 3166-2:NE,Africa,Sub-Saharan Africa,Western Africa,2,202,11
 Nigeria,NG,NGA,566,ISO 3166-2:NG,Africa,Sub-Saharan Africa,Western Africa,2,202,11
 Niue,NU,NIU,570,ISO 3166-2:NU,Oceania,Polynesia,,9,61,
 Norfolk Island,NF,NFK,574,ISO 3166-2:NF,Oceania,Australia and New Zealand,,9,53,
-North Macedonia,MK,MKD,807,ISO 3166-2:MK,Europe,Southern Europe,,150,39,
+Macedonia,MK,MKD,807,ISO 3166-2:MK,Europe,Southern Europe,,150,39,
 Northern Mariana Islands,MP,MNP,580,ISO 3166-2:MP,Oceania,Micronesia,,9,57,
 Norway,NO,NOR,578,ISO 3166-2:NO,Europe,Northern Europe,,150,154,
 Oman,OM,OMN,512,ISO 3166-2:OM,Asia,Western Asia,,142,145,
@@ -218,9 +218,9 @@ Switzerland,CH,CHE,756,ISO 3166-2:CH,Europe,Western Europe,,150,155,
 Syrian Arab Republic,SY,SYR,760,ISO 3166-2:SY,Asia,Western Asia,,142,145,
 Taiwan,TW,TWN,158,ISO 3166-2:TW,Asia,Eastern Asia,,142,30,
 Tajikistan,TJ,TJK,762,ISO 3166-2:TJ,Asia,Central Asia,,142,143,
-"Tanzania, United Republic of",TZ,TZA,834,ISO 3166-2:TZ,Africa,Sub-Saharan Africa,Eastern Africa,2,202,14
+"United Republic of Tanzania",TZ,TZA,834,ISO 3166-2:TZ,Africa,Sub-Saharan Africa,Eastern Africa,2,202,14
 Thailand,TH,THA,764,ISO 3166-2:TH,Asia,South-eastern Asia,,142,35,
-Timor-Leste,TL,TLS,626,ISO 3166-2:TL,Asia,South-eastern Asia,,142,35,
+East Timor,TL,TLS,626,ISO 3166-2:TL,Asia,South-eastern Asia,,142,35,
 Togo,TG,TGO,768,ISO 3166-2:TG,Africa,Sub-Saharan Africa,Western Africa,2,202,11
 Tokelau,TK,TKL,772,ISO 3166-2:TK,Oceania,Polynesia,,9,61,
 Tonga,TO,TON,776,ISO 3166-2:TO,Oceania,Polynesia,,9,61,
@@ -234,7 +234,7 @@ Uganda,UG,UGA,800,ISO 3166-2:UG,Africa,Sub-Saharan Africa,Eastern Africa,2,202,1
 Ukraine,UA,UKR,804,ISO 3166-2:UA,Europe,Eastern Europe,,150,151,
 United Arab Emirates,AE,ARE,784,ISO 3166-2:AE,Asia,Western Asia,,142,145,
 United Kingdom,GB,GBR,826,ISO 3166-2:GB,Europe,Northern Europe,,150,154,
-United States,US,USA,840,ISO 3166-2:US,Americas,Northern America,,19,21,
+"United States of America",US,USA,840,ISO 3166-2:US,Americas,Northern America,,19,21,
 United States Minor Outlying Islands,UM,UMI,581,ISO 3166-2:UM,Oceania,Micronesia,,9,57,
 Uruguay,UY,URY,858,ISO 3166-2:UY,Americas,Latin America and the Caribbean,South America,19,419,5
 Uzbekistan,UZ,UZB,860,ISO 3166-2:UZ,Asia,Central Asia,,142,143,
