@@ -1,8 +1,8 @@
 import pandas as pd
+import numpy as np
 import geopandas
-import pickle
 import streamlit as st
-import leafmap.kepler as leafmap
+import leafmap.foliumap as leafmap
 import altair as alt
 
 from st_aggrid import AgGrid, GridUpdateMode
@@ -31,15 +31,47 @@ def get_country_shapes(input):
     return df
 
 
-def get_map_config(input):
-    with open(input, "rb") as f:
-        config = pickle.load(f)
-    return config
+@st.experimental_memo
+def get_regions(input):
+    df = pd.read_csv(input, usecols=["name", "region"]).rename(
+        columns={"region": "Region"}
+    )
+    return df
+
+
+@st.experimental_memo
+def get_countries(input):
+    df = pd.read_csv(input)
+    return df
 
 
 dataset = get_data("./data/samples_data.tsv")
 country_shapes = get_country_shapes("./data/world_countries.json")
-map_config = get_map_config("./data/config.pkl")
+regions = get_regions("./data/regions.csv")
+countries = get_countries("./data/countries.csv")
+
+smp_data = pd.merge(
+    dataset[
+        [
+            "Sample",
+            "Country of isolation",
+            "level 1",
+            "level 2",
+            "level 3",
+            "level 4",
+            "level 5",
+        ]
+    ],
+    countries,
+    how="left",
+    left_on="Country of isolation",
+    right_on="name",
+).drop(columns=["country"])
+smp_data = smp_data[smp_data["name"].notna()]
+smp_data = pd.merge(left=smp_data, right=regions, how="left", on="name").drop(
+    columns=["name"]
+)
+
 
 # Calculate number of samples per country
 cnt_samples = (
@@ -59,8 +91,13 @@ cnt_samples_poly = (
         right_on="Country of isolation",
         how="left",
     )
+    .dropna()
     .drop(columns=["id", "Country of isolation"])
     .rename(columns={"name": "Country"})
+)
+
+cnt_samples_poly["Number of Samples"] = cnt_samples_poly["Number of Samples"].astype(
+    np.int64
 )
 
 sm1, mk = st.columns([2, 5])
@@ -231,69 +268,53 @@ def get_chart():
     fig_col1, fig_col2 = st.columns(2, gap="large")
 
     with fig_col2:
-        st.markdown("### Average Number of SNPs per lineage")
+        st.markdown("### Average Number of SNPs per Lineage")
         st.altair_chart(snp_chart, theme="streamlit", use_container_width=True)
 
     with fig_col1:
-        st.markdown("### Total number of samples per lineage")
+        st.markdown("### Total Number of Samples per Lineage")
         st.altair_chart(sample_chart, theme="streamlit", use_container_width=True)
 
 
 get_chart()
 
-# Plot a map
-"### Maps Showing the Distributions of Samples "
-m = leafmap.Map()
-m.add_data(data=cnt_samples_poly, name="Number of Samples")
-m.config = map_config
+add_vertical_space(5)
 
-tab1, tab2, tab3 = st.tabs(
-    [
-        "Distribution of the Analyzed Samples per Country of Isolation",
-        "test #1",
-        "test #2",
-    ]
+# Plot a map
+"### Map Showing the Distribution of Samples"
+m = leafmap.Map(
+    draw_control=False,
+    measure_control=False,
+    fullscreen_control=False,
+    attribution_control=True,
+)
+m.add_basemap("CartoDB.PositronNoLabels")
+m.add_data(
+    data=cnt_samples_poly,
+    column="Number of Samples",
+    layer_name="Number of Samples",
+    k=9,
+    add_legend=False,
+)
+m.add_points_from_xy(
+    smp_data,
+    layer_name="Samples",
+    x="longitude",
+    y="latitude",
+    popup=[
+        "Sample",
+        "Country of isolation",
+        "Region",
+        "level 1",
+        "level 2",
+        "level 3",
+        "level 4",
+        "level 5",
+    ],
+    color_column="Region",
+    icon_names=["star"],
+    spin=True,
+    add_legend=False,
 )
 
-with tab1:
-    m.to_streamlit()
-
-
-# import folium
-# from streamlit_folium import st_folium
-
-# url = 'https://raw.githubusercontent.com/python-visualization/folium/master/examples/data'
-# country_shapes = f'{url}/world-countries.json'
-
-# country = pd.read_csv('/Volumes/Extreme_SSD/Work/RNF/TB_app/data/countries.csv').dropna()
-
-# cn_samples = dataset[['Sample', 'country of isolation']] \
-#     .groupby(['country of isolation']) \
-#         .count() \
-#             .reset_index() \
-#                 .rename(columns={'Sample': 'Number of Samples', 'country of isolation': 'Country of Isolation'})
-
-# m = folium.Map()
-
-# folium.Choropleth(
-#     #The GeoJSON data to represent the world country
-#     geo_data=country_shapes,
-#     name='choropleth TB samples',
-#     data=cn_samples,
-#     #The column aceppting list with 2 value; The country name and  the numerical value
-#     columns=['Country of Isolation', 'Number of Samples'],
-#     key_on='feature.properties.name',
-#     fill_color='PuRd',
-#     nan_fill_color='white'
-# ).add_to(m)
-
-# for lat, lon, name in   zip(country['latitude'],country['longitude'],country['name']):
-#     #Creating the marker
-#     folium.Marker(
-#     #Coordinate of the country
-#     location=[lat, lon],
-#     #The popup that show up if click the marker
-#     popup=name
-#     ).add_to(m)
-
-# st_data = st_folium(m, width=1000)
+m.to_streamlit(height=700)
