@@ -19,7 +19,7 @@ show_pages(
 
 st.sidebar.success("Select a page above")
 
-st.title("TB app: Explore _Mycobacterium tuberculosis_ complex")
+st.title("TB gen: Explore _Mycobacterium tuberculosis_ complex")
 st.markdown("---")
 
 
