@@ -5,7 +5,7 @@ import base64
 def set_page_config():
     try:
         st.set_page_config(
-            page_title="TB app",
+            page_title="TB gen",
             page_icon="./assets/favicon.ico",
             layout="wide",
             initial_sidebar_state="expanded",
