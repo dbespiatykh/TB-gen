@@ -1,12 +1,13 @@
 import streamlit as st
 
 from streamlit_extras.switch_page_button import switch_page
-from utils import set_page_config, sidebar_image, set_css
+from utils import set_page_config, sidebar_image, set_css, github_link
 from st_pages import Page, show_pages
 
 set_page_config()
 sidebar_image()
 set_css()
+github_link()
 
 show_pages(
     [
@@ -16,8 +17,6 @@ show_pages(
         Page("app_pages/Genotype_lineage.py", "Genotype lineage", "📊"),
     ]
 )
-
-st.sidebar.success("Select a page above")
 
 st.title("TB gen: Explore _Mycobacterium tuberculosis_ complex")
 st.markdown("---")
