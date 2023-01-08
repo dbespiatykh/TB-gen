@@ -324,5 +324,10 @@ add_vertical_space(5)
 
 # Plot a map
 "### Map Showing the Distribution of Samples"
-
 get_map().to_streamlit(height=700)
+
+with st.expander("**_NB_**"):
+    st.info(
+        "Samples without information about the country of isolation are not shown",
+        icon="ℹ️",
+    )
