@@ -19,18 +19,26 @@ show_pages(
 
 st.sidebar.success("Select a page above")
 
-st.sidebar.header("Header `ver 1`")
-st.sidebar.subheader("Subheader")
-
-st.title("Global _Mycobacterium tuberculosis_ data")
-st.markdown(
-    """
-Add description
-"""
-)
+st.title("TB app: Explore _Mycobacterium tuberculosis_ complex")
+st.markdown("---")
 
 
-genotype_user_data = st.button("Genotype VCF")
+def buttons():
+    bt1, bt2, bt3, mk = st.columns([2, 2, 2, 8])
 
-if genotype_user_data:
-    switch_page("genotype lineage")
+    with bt1:
+        genotype_user_data = st.button("Genotype VCF")
+    with bt2:
+        phylogeny = st.button("Phylogeny")
+    with bt3:
+        dataset = st.button("Reference dataset")
+
+    if genotype_user_data:
+        switch_page("genotype lineage")
+    if phylogeny:
+        switch_page("phylogeny")
+    if dataset:
+        switch_page("reference dataset")
+
+
+buttons()
