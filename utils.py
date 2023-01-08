@@ -5,7 +5,7 @@ import base64
 def set_page_config():
     try:
         st.set_page_config(
-            page_title="Global Mycobacterium tuberculosis data",
+            page_title="TB app",
             page_icon="./assets/favicon.ico",
             layout="wide",
             initial_sidebar_state="expanded",
