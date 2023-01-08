@@ -8,6 +8,7 @@ import altair as alt
 from st_aggrid import AgGrid, GridUpdateMode
 from st_aggrid.grid_options_builder import GridOptionsBuilder
 from streamlit_extras.add_vertical_space import add_vertical_space
+from streamlit_extras.stoggle import stoggle
 from utils import set_page_config, sidebar_image, set_css
 
 set_page_config()
@@ -326,8 +327,7 @@ add_vertical_space(5)
 "### Map Showing the Distribution of Samples"
 get_map().to_streamlit(height=700)
 
-with st.expander("**_NB_**"):
-    st.info(
-        "Samples without information about the country of isolation are not shown",
-        icon="ℹ️",
-    )
+stoggle(
+    "Note",
+    """ℹ️ Samples without information about the country of isolation are not shown""",
+)
