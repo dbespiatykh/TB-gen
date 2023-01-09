@@ -1,13 +1,13 @@
 import streamlit as st
 
 from streamlit_extras.switch_page_button import switch_page
-from utils import set_page_config, sidebar_image, set_css, github_link
+from utils import set_page_config, sidebar_image, set_css, author_link
 from st_pages import Page, show_pages
 
 set_page_config()
 sidebar_image()
 set_css()
-github_link()
+author_link()
 
 show_pages(
     [
@@ -23,14 +23,14 @@ st.markdown("---")
 
 
 def buttons():
-    bt1, bt2, bt3, mk = st.columns([2, 2, 2, 8])
+    bt1, bt2, bt3, mk = st.columns([1, 1, 1, 8])
 
     with bt1:
         genotype_user_data = st.button("Genotype VCF")
     with bt2:
-        phylogeny = st.button("Phylogeny")
+        phylogeny = st.button("Explore Phylogeny")
     with bt3:
-        dataset = st.button("Reference dataset")
+        dataset = st.button("Reference Dataset")
 
     if genotype_user_data:
         switch_page("genotype lineage")
