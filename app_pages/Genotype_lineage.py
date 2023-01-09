@@ -8,11 +8,12 @@ from gzip import open as gzopen
 from collections import OrderedDict
 from tempfile import NamedTemporaryFile
 from annotated_text import annotated_text, annotation
-from utils import set_page_config, sidebar_image, set_css
+from utils import set_page_config, sidebar_image, set_css, home_page
 
 set_page_config()
 sidebar_image()
 set_css()
+home_page()
 
 st.title("Genotype MTBC lineages from VCF file")
 

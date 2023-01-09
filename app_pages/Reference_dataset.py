@@ -9,11 +9,12 @@ from st_aggrid import AgGrid, GridUpdateMode
 from st_aggrid.grid_options_builder import GridOptionsBuilder
 from streamlit_extras.add_vertical_space import add_vertical_space
 from streamlit_extras.stoggle import stoggle
-from utils import set_page_config, sidebar_image, set_css
+from utils import set_page_config, sidebar_image, set_css, home_page
 
 set_page_config()
 sidebar_image()
 set_css()
+home_page()
 
 st.title("Reference dataset of _Mycobacterium tuberculosis_ complex isolates")
 

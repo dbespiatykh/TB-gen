@@ -1,13 +1,14 @@
 import base64
 import streamlit as st
 
-from utils import set_page_config, sidebar_image, set_css
+from utils import set_page_config, sidebar_image, set_css, home_page
 import streamlit.components.v1 as components
 
 
 set_page_config()
 sidebar_image()
 set_css()
+home_page()
 
 st.title("_Mycobacterium tuberculosis_ phylogeny")
 
