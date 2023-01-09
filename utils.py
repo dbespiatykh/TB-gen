@@ -2,6 +2,7 @@ import streamlit as st
 import base64
 
 from streamlit_extras.mention import mention
+from streamlit_extras.switch_page_button import switch_page
 
 
 def set_page_config():
@@ -39,7 +40,7 @@ def sidebar_image():
     )
 
 
-def github_link():
+def author_link():
     with st.sidebar.container():
         st.markdown(
             "This app is maintained by [Dmitry Bespiatykh](https://orcid.org/0000-0003-0867-5988)"
@@ -55,3 +56,9 @@ def github_link():
 def set_css():
     with open("style.css") as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+
+def home_page():
+    home = st.button("Home")
+    if home:
+        switch_page("home")
