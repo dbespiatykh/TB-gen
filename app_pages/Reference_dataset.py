@@ -11,7 +11,6 @@ from st_aggrid import AgGrid, GridUpdateMode
 from st_aggrid.grid_options_builder import GridOptionsBuilder
 from streamlit_extras.colored_header import colored_header
 from streamlit_extras.add_vertical_space import add_vertical_space
-from streamlit_extras.stoggle import stoggle
 from utils import set_page_config, sidebar_image, set_css, home_page
 
 set_page_config()
@@ -171,7 +170,7 @@ def show_dataset():
     gd = GridOptionsBuilder.from_dataframe(
         dataset, enableRowGroup=True, enableValue=True, enablePivot=True
     )
-    gd.configure_grid_options(domLayout="normal")
+    gd.configure_grid_options(domLayout="normal", autoHeight=True)
     gd.configure_selection(selection_mode="multiple", use_checkbox=True)
     gd.configure_default_column(editable=True, groupable=True)
     gd.configure_side_bar()
@@ -184,7 +183,7 @@ def show_dataset():
             allowDragFromColumnsToolPanel=True,
             update_mode=GridUpdateMode.SELECTION_CHANGED,
             allow_unsafe_jscode=True,
-            height=400,
+            height=600,
             width="100%",
             theme="alpine",
         )
@@ -217,7 +216,7 @@ def show_dataset():
         AgGrid(
             dataset_sel,
             gridOptions=go,
-            height=150,
+            domLayout="autoHeight",
             theme="alpine",
             enable_enterprise_modules=False,
         )
