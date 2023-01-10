@@ -24,6 +24,16 @@ st.title("Reference dataset of _Mycobacterium tuberculosis_ complex isolates")
 st.markdown("---")
 
 
+@st.cache
+def convert_df_to_tsv(df):
+    return df.to_csv(sep="\t", index=False).encode("utf-8")
+
+
+@st.cache
+def convert_df_to_csv(df):
+    return df.to_csv(index=False).encode("utf-8")
+
+
 @st.experimental_memo
 def get_data(input):
     df = pd.read_csv(input, sep="\t")
@@ -164,12 +174,9 @@ def show_dataset():
     gd.configure_grid_options(domLayout="normal")
     gd.configure_selection(selection_mode="multiple", use_checkbox=True)
     gd.configure_default_column(editable=True, groupable=True)
-    # gd.configure_pagination(enabled=True, paginationPageSize=100)
     gd.configure_side_bar()
 
     if st.checkbox("Show Dataset"):
-        # st.subheader('Dataset')
-        # st.dataframe(dataset)
         grid1 = AgGrid(
             dataset,
             gridOptions=gd.build(),
@@ -181,6 +188,25 @@ def show_dataset():
             width="100%",
             theme="alpine",
         )
+        tsv = convert_df_to_tsv(dataset)
+        csv = convert_df_to_csv(dataset)
+
+        dwn1, dwn2, mock = st.columns([1, 1, 4])
+
+        dwn1.download_button(
+            label="💾 Download dataset as TSV",
+            data=tsv,
+            file_name="dataset.tsv",
+            mime="text/csv",
+        )
+
+        dwn2.download_button(
+            label="💾 Download dataset as CSV",
+            data=csv,
+            file_name="dataset.csv",
+            mime="text/csv",
+        )
+
         sel_row = grid1["selected_rows"]
         dataset_sel = pd.DataFrame(sel_row)
         st.subheader("Selected Samples")
@@ -195,6 +221,31 @@ def show_dataset():
             theme="alpine",
             enable_enterprise_modules=False,
         )
+        try:
+            dataset_sel = dataset_sel.drop(columns=["_selectedRowNodeInfo"])
+        except KeyError:
+            st.info("Select samples from the main dataframe", icon="ℹ️")
+        tsv_sel = convert_df_to_tsv(dataset_sel)
+        csv_sel = convert_df_to_csv(dataset_sel)
+
+        dwn_sel1, dwn_sel2, mock_sel = st.columns([1, 1, 4])
+
+        if dataset_sel.empty:
+            st.warning("Subset dataframe is empty", icon="⚠️")
+        else:
+            dwn_sel1.download_button(
+                label="💾 Download subset as TSV",
+                data=tsv_sel,
+                file_name="subsetted_dataset.tsv",
+                mime="text/csv",
+            )
+
+            dwn_sel2.download_button(
+                label="💾 Download subset as CSV",
+                data=csv_sel,
+                file_name="subsetted_dataset.csv",
+                mime="text/csv",
+            )
 
         return grid1
 
