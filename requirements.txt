@@ -8,3 +8,4 @@ streamlit_extras==0.2.4
 streamlit-aggrid==0.3.3
 st-pages==0.3.0
 mapclassify==2.4.3
+pdbio==0.4.2
