@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import geopandas
+import logging
 import streamlit as st
 import altair as alt
 import leafmap.foliumap as leafmap
@@ -206,6 +207,7 @@ def sample_stats():
 
     if st.checkbox("Show Variants"):
         try:
+            logging.getLogger("pdbio").setLevel(logging.WARNING)
             vcf_path = "./data/VCF/" + sample_filter + ".vcf.gz"
             vcfdf = VcfDataFrame(path=vcf_path)
             vcfdf.df.index = vcfdf.df.index + 1
