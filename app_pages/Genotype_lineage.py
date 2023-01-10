@@ -230,7 +230,7 @@ def lineage2_decision(call_list):
     altList = []
 
     for item in call_list:
-        if all(i in item for i in lin2) == True:
+        if all(i in item for i in lin2) is True:
             item = list(set(item) - set(lin2))
             item.append("L2.2 (modern)")
         else:
