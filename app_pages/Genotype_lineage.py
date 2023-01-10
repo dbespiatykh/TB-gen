@@ -101,7 +101,7 @@ def vcf_to_dataframe(vcf_file):
     for rec in vcf_reader:
         x = [rec.end]
         for sample in rec.samples:
-            if sample.gt_bases == None:
+            if sample.gt_bases is None:
                 # no call
                 row = [sample.sample, rec.REF, sample.gt_bases]
             elif rec.REF != sample.gt_bases:
