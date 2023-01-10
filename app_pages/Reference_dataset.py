@@ -9,6 +9,7 @@ import leafmap.foliumap as leafmap
 from pdbio.vcfdataframe import VcfDataFrame
 from st_aggrid import AgGrid, GridUpdateMode
 from st_aggrid.grid_options_builder import GridOptionsBuilder
+from streamlit_extras.colored_header import colored_header
 from streamlit_extras.add_vertical_space import add_vertical_space
 from streamlit_extras.stoggle import stoggle
 from utils import set_page_config, sidebar_image, set_css, home_page
@@ -330,18 +331,29 @@ def get_chart():
         st.altair_chart(sample_chart, theme="streamlit", use_container_width=True)
 
 
+colored_header(
+    label="Dataset",
+    description="Reference Dataset",
+    color_name="light-blue-70",
+)
 sample_count()
 show_dataset()
 add_vertical_space(2)
 
+colored_header(
+    label="Statistics",
+    description="Various Sample Statistics",
+    color_name="blue-70",
+)
 sample_stats()
 add_vertical_space(5)
 
 get_chart()
 add_vertical_space(5)
 
-get_map().to_streamlit(height=700)
-stoggle(
-    "Note",
-    """ℹ️ Samples without information about the country of isolation are not shown""",
+colored_header(
+    label="Map Showing the Distribution of Samples",
+    description="Samples without information about the country of isolation are not shown",
+    color_name="violet-70",
 )
+get_map().to_streamlit(height=700)
