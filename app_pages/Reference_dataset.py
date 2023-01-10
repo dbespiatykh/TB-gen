@@ -48,7 +48,16 @@ def get_countries(input):
     return df
 
 
-dataset = get_data("./data/samples_data.tsv")
+@st.experimental_memo
+def sample_count():
+    dataset = get_data("./data/samples_data.tsv")
+    sm1, mk = st.columns([2, 5])
+    sm1.metric(
+        label="Total Samples",
+        value=int(dataset["Sample"].count()),
+        help="""Number of currently availible samples in the dataset
+            """,
+    )
 
 
 @st.experimental_memo
@@ -145,16 +154,8 @@ def get_map():
     return m
 
 
-sm1, mk = st.columns([2, 5])
-sm1.metric(
-    label="Total Samples",
-    value=int(dataset["Sample"].count()),
-    help="""Number of currently availible samples in the dataset
-        """,
-)
-
-
 def show_dataset():
+    dataset = get_data("./data/samples_data.tsv")
     gd = GridOptionsBuilder.from_dataframe(
         dataset, enableRowGroup=True, enableValue=True, enablePivot=True
     )
@@ -196,11 +197,8 @@ def show_dataset():
         return grid1
 
 
-show_dataset()
-add_vertical_space(2)
-
-
-def sample_stats(dataset):
+def sample_stats():
+    dataset = get_data("./data/samples_data.tsv")
     # Dataframe filter
     sample_filter = st.selectbox("Select Sample", pd.unique(dataset["Sample"]))
     dataset = dataset[dataset["Sample"] == sample_filter]
@@ -280,18 +278,6 @@ def sample_stats(dataset):
     sd12.metric(label="Level 5", value=str(dataset["level 5"].item()))
 
 
-sample_stats(dataset)
-
-# expander = st.expander("†")
-# expander.write("""
-#     All metrics relative to reference
-#     _M. tuberculosis_ H37Rv genome
-#     (GenBank accession no. [NC_000962.3](https://www.ncbi.nlm.nih.gov/nuccore/NC_000962.3/))
-# """)
-
-add_vertical_space(5)
-
-
 @st.experimental_memo
 def get_chart():
     # Calculate mean SNPs values
@@ -342,14 +328,17 @@ def get_chart():
         st.altair_chart(sample_chart, theme="streamlit", use_container_width=True)
 
 
-get_chart()
+sample_count()
+show_dataset()
+add_vertical_space(2)
 
+sample_stats()
 add_vertical_space(5)
 
-# Plot a map
-"### Map Showing the Distribution of Samples"
-get_map().to_streamlit(height=700)
+get_chart()
+add_vertical_space(5)
 
+get_map().to_streamlit(height=700)
 stoggle(
     "Note",
     """ℹ️ Samples without information about the country of isolation are not shown""",
