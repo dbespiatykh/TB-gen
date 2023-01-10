@@ -1,10 +1,11 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 import geopandas
 import streamlit as st
-import leafmap.foliumap as leafmap
 import altair as alt
+import leafmap.foliumap as leafmap
 
+from pdbio.vcfdataframe import VcfDataFrame
 from st_aggrid import AgGrid, GridUpdateMode
 from st_aggrid.grid_options_builder import GridOptionsBuilder
 from streamlit_extras.add_vertical_space import add_vertical_space
@@ -152,54 +153,75 @@ sm1.metric(
         """,
 )
 
-####################################################################################################################
-# st.markdown("## Dataset")
-gd = GridOptionsBuilder.from_dataframe(
-    dataset, enableRowGroup=True, enableValue=True, enablePivot=True
-)
-gd.configure_grid_options(domLayout="normal")
-gd.configure_selection(selection_mode="multiple", use_checkbox=True)
-gd.configure_default_column(editable=True, groupable=True)
-# gd.configure_pagination(enabled=True, paginationPageSize=100)
-gd.configure_side_bar()
 
-if st.checkbox("Show Dataset"):
-    # st.subheader('Dataset')
-    # st.dataframe(dataset)
-    grid1 = AgGrid(
-        dataset,
-        gridOptions=gd.build(),
-        enable_enterprise_modules=False,
-        allowDragFromColumnsToolPanel=True,
-        update_mode=GridUpdateMode.SELECTION_CHANGED,
-        allow_unsafe_jscode=True,
-        height=400,
-        width="100%",
-        theme="streamlit",
+def show_dataset():
+    gd = GridOptionsBuilder.from_dataframe(
+        dataset, enableRowGroup=True, enableValue=True, enablePivot=True
     )
-    sel_row = grid1["selected_rows"]
-    dataset_sel = pd.DataFrame(sel_row)
-    st.subheader("Selected Samples")
-    # Grid 2
-    builder = GridOptionsBuilder.from_dataframe(dataset_sel)
-    builder.configure_column("_selectedRowNodeInfo", hide=True)
-    go = builder.build()
-    grid2 = AgGrid(
-        dataset_sel,
-        gridOptions=go,
-        height=150,
-        theme="streamlit",
-        enable_enterprise_modules=False,
-    )
+    gd.configure_grid_options(domLayout="normal")
+    gd.configure_selection(selection_mode="multiple", use_checkbox=True)
+    gd.configure_default_column(editable=True, groupable=True)
+    # gd.configure_pagination(enabled=True, paginationPageSize=100)
+    gd.configure_side_bar()
+
+    if st.checkbox("Show Dataset"):
+        # st.subheader('Dataset')
+        # st.dataframe(dataset)
+        grid1 = AgGrid(
+            dataset,
+            gridOptions=gd.build(),
+            enable_enterprise_modules=False,
+            allowDragFromColumnsToolPanel=True,
+            update_mode=GridUpdateMode.SELECTION_CHANGED,
+            allow_unsafe_jscode=True,
+            height=400,
+            width="100%",
+            theme="alpine",
+        )
+        sel_row = grid1["selected_rows"]
+        dataset_sel = pd.DataFrame(sel_row)
+        st.subheader("Selected Samples")
+        # Grid 2
+        builder = GridOptionsBuilder.from_dataframe(dataset_sel)
+        builder.configure_column("_selectedRowNodeInfo", hide=True)
+        go = builder.build()
+        AgGrid(
+            dataset_sel,
+            gridOptions=go,
+            height=150,
+            theme="alpine",
+            enable_enterprise_modules=False,
+        )
+
+        return grid1
 
 
-add_vertical_space(3)
+show_dataset()
+add_vertical_space(2)
 
 
 def sample_stats(dataset):
     # Dataframe filter
     sample_filter = st.selectbox("Select Sample", pd.unique(dataset["Sample"]))
     dataset = dataset[dataset["Sample"] == sample_filter]
+    add_vertical_space(2)
+
+    if st.checkbox("Show Variants"):
+        try:
+            vcf_path = "./data/VCF/" + sample_filter + ".vcf.gz"
+            vcfdf = VcfDataFrame(path=vcf_path)
+            vcfdf.df.index = vcfdf.df.index + 1
+            st.dataframe(vcfdf.df)
+            with open(vcf_path, "rb") as vcf:
+                st.download_button(
+                    label="Download calls in VCF format",
+                    data=vcf,
+                    file_name=sample_filter + ".vcf.gz",
+                )
+        except FileNotFoundError:
+            st.warning("VCF file in not available", icon="⚠️")
+
+    add_vertical_space(3)
 
     # Create six columns
     sd1, sd2, sd3, sd4, sd5, sd6 = st.columns(6, gap="small")
