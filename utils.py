@@ -3,6 +3,18 @@ import base64
 
 from streamlit_extras.mention import mention
 from streamlit_extras.switch_page_button import switch_page
+from st_pages import Page, show_pages
+
+
+def set_pages():
+    show_pages(
+        [
+            Page("streamlit_app.py", "Home", "🏠"),
+            Page("app_pages/Reference_dataset.py", "Reference dataset", "📈"),
+            Page("app_pages/Phylogeny.py", "Phylogeny", "🧬"),
+            Page("app_pages/Genotype_lineage.py", "Genotype lineage", "📊"),
+        ]
+    )
 
 
 def set_page_config():
