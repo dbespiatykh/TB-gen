@@ -10,38 +10,32 @@ from tempfile import NamedTemporaryFile
 from annotated_text import annotated_text, annotation
 from utils import set_page_config, sidebar_image, set_css, home_page
 
-set_page_config()
-sidebar_image()
-set_css()
-home_page()
 
-st.title("Genotype MTBC lineages from VCF file")
+def page_info():
+    st.title("Genotype MTBC lineages from VCF file")
 
-st.markdown("---")
+    st.markdown("---")
 
-annotated_text(
-    "Use your own ",
-    annotation(".VCF or .VCF.GZ", color="#525833", border="1px dashed"),
-    " files as input to call lineage",
-)
+    annotated_text(
+        "Use your own ",
+        annotation(".VCF or .VCF.GZ", color="#525833", border="1px dashed"),
+        " files as input to call lineage",
+    )
 
-st.markdown(
+    st.markdown(
+        """
+    - Use can use both single- or multi-sample .VCF files
+    - Accepts multiple .VCF files at a time
+    - Variants should be called by mapping to [NC_000962.3](https://www.ncbi.nlm.nih.gov/nuccore/NC_000962.3/) _M. tuberculosis_ H37Rv genome
+    - Variants should be already filtered and contain only high quality calls
     """
-- Use can use both single- or multi-sample .VCF files
-- Accepts multiple .VCF files at a time
-- Variants should be called by mapping to [NC_000962.3](https://www.ncbi.nlm.nih.gov/nuccore/NC_000962.3/) _M. tuberculosis_ H37Rv genome
-- Variants should be already filtered and contain only high quality calls
-"""
-)
-
-
-levels_file = "./data/levels.tsv"
+    )
 
 
 @st.cache
-def get_levels_dictionary(levels):
+def get_levels_dictionary():
 
-    temp_df = pd.read_csv(levels, sep="\t")
+    temp_df = pd.read_csv("./data/levels.tsv", sep="\t")
     uniqueLevels = temp_df["level"].unique()
     levelsDict = {elem: pd.DataFrame() for elem in uniqueLevels}
 
@@ -83,9 +77,9 @@ def get_levels_dictionary(levels):
 
 
 @st.cache
-def get_levels_positions(levels):
+def get_levels_positions():
 
-    temp_df = pd.read_csv(levels, sep="\t")
+    temp_df = pd.read_csv("./data/levels.tsv", sep="\t")
     pos = temp_df["POS"].values
     return pos
 
@@ -93,7 +87,7 @@ def get_levels_positions(levels):
 @st.cache
 def vcf_to_dataframe(vcf_file):
 
-    pos_all = get_levels_positions(levels_file)
+    pos_all = get_levels_positions()
     vcf_reader = Reader(vcf_file, "r")
     res = []
     cols = ["Sample", "REF", "ALT", "POS"]
@@ -396,48 +390,54 @@ uploaded_files = st.sidebar.file_uploader(
     "Upload VCF file", type=["vcf", "vcf.gz"], accept_multiple_files=True
 )
 
+if __name__ == "__main__":
+    set_page_config()
+    sidebar_image()
+    set_css()
+    home_page()
+    page_info()
 
-if st.sidebar.button("Genotype lineage"):
-    if uploaded_files is not None:
-        with st.spinner("Genotyping..."):
+    if st.sidebar.button("Genotype lineage"):
+        if uploaded_files is not None:
+            with st.spinner("Genotyping..."):
 
-            try:
-                lvl1, lvl2, lvl3, lvl4, lvl5 = get_levels_dictionary(levels_file)
-                results_list = []
+                try:
+                    lvl1, lvl2, lvl3, lvl4, lvl5 = get_levels_dictionary()
+                    results_list = []
 
-                for uploaded_file in uploaded_files:
+                    for uploaded_file in uploaded_files:
 
-                    out = genotype_lineages(uploaded_file)
-                    results_list.append(out)
-                results = pd.concat(results_list).reset_index(drop=True)
+                        out = genotype_lineages(uploaded_file)
+                        results_list.append(out)
+                    results = pd.concat(results_list).reset_index(drop=True)
 
-                st.dataframe(results, width=900)
-                st.success("Done!", icon="✅")
+                    st.dataframe(results, width=900)
+                    st.success("Done!", icon="✅")
 
-                tsv = convert_df_to_tsv(results)
-                csv = convert_df_to_csv(results)
+                    tsv = convert_df_to_tsv(results)
+                    csv = convert_df_to_csv(results)
 
-                dwn1, dwn2, mock = st.columns([1, 1, 4])
+                    dwn1, dwn2, mock = st.columns([1, 1, 4])
 
-                dwn1.download_button(
-                    label="💾 Download data as TSV",
-                    data=tsv,
-                    file_name="lineage.tsv",
-                    mime="text/csv",
-                )
+                    dwn1.download_button(
+                        label="💾 Download data as TSV",
+                        data=tsv,
+                        file_name="lineage.tsv",
+                        mime="text/csv",
+                    )
 
-                dwn2.download_button(
-                    label="💾 Download data as CSV",
-                    data=csv,
-                    file_name="lineage.csv",
-                    mime="text/csv",
-                )
+                    dwn2.download_button(
+                        label="💾 Download data as CSV",
+                        data=csv,
+                        file_name="lineage.csv",
+                        mime="text/csv",
+                    )
 
-            except ValueError:
-                st.warning("No data was uploaded!", icon="⚠️")
-            except StopIteration:
-                st.error("VCF file is malformed!", icon="‼️")
+                except ValueError:
+                    st.warning("No data was uploaded!", icon="⚠️")
+                except StopIteration:
+                    st.error("VCF file is malformed!", icon="‼️")
+        else:
+            st.warning("No data was uploaded!", icon="⚠️")
     else:
-        st.warning("No data was uploaded!", icon="⚠️")
-else:
-    st.info("Upload input data in the sidebar to start!", icon="👈")
+        st.info("Upload input data in the sidebar to start!", icon="👈")

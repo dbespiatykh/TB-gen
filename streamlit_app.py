@@ -1,25 +1,12 @@
 import streamlit as st
 
 from streamlit_extras.switch_page_button import switch_page
-from utils import set_page_config, sidebar_image, set_css, author_link
-from st_pages import Page, show_pages
+from utils import set_page_config, sidebar_image, set_css, author_link, set_pages
 
-set_page_config()
-sidebar_image()
-set_css()
-author_link()
 
-show_pages(
-    [
-        Page("streamlit_app.py", "Home", "🏠"),
-        Page("app_pages/Reference_dataset.py", "Reference dataset", "📈"),
-        Page("app_pages/Phylogeny.py", "Phylogeny", "🧬"),
-        Page("app_pages/Genotype_lineage.py", "Genotype lineage", "📊"),
-    ]
-)
-
-st.title("TB gen: Explore _Mycobacterium tuberculosis_ complex")
-st.markdown("---")
+def page_info():
+    st.title("TB gen: Explore _Mycobacterium tuberculosis_ complex")
+    st.markdown("---")
 
 
 def buttons():
@@ -40,4 +27,11 @@ def buttons():
         switch_page("reference dataset")
 
 
-buttons()
+if __name__ == "__main__":
+    set_page_config()
+    sidebar_image()
+    set_css()
+    author_link()
+    set_pages()
+    page_info()
+    buttons()

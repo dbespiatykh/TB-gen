@@ -13,14 +13,10 @@ from streamlit_extras.colored_header import colored_header
 from streamlit_extras.add_vertical_space import add_vertical_space
 from utils import set_page_config, sidebar_image, set_css, home_page
 
-set_page_config()
-sidebar_image()
-set_css()
-home_page()
 
-st.title("Reference dataset of _Mycobacterium tuberculosis_ complex isolates")
-
-st.markdown("---")
+def page_info():
+    st.title("Reference dataset of _Mycobacterium tuberculosis_ complex isolates")
+    st.markdown("---")
 
 
 @st.cache
@@ -34,34 +30,34 @@ def convert_df_to_csv(df):
 
 
 @st.experimental_memo
-def get_data(input):
-    df = pd.read_csv(input, sep="\t")
+def load_dataset():
+    df = pd.read_csv("./data/samples_data.tsv", sep="\t")
     return df
 
 
 @st.experimental_memo
-def get_country_shapes(input):
-    df = geopandas.read_file(input)
+def load_country_shapes():
+    df = geopandas.read_file("./data/world_countries.json")
     return df
 
 
 @st.experimental_memo
-def get_regions(input):
-    df = pd.read_csv(input, usecols=["name", "region"]).rename(
+def load_regions():
+    df = pd.read_csv("./data/regions.csv", usecols=["name", "region"]).rename(
         columns={"region": "Region"}
     )
     return df
 
 
 @st.experimental_memo
-def get_countries(input):
-    df = pd.read_csv(input)
+def load_country_coords():
+    df = pd.read_csv("./data/countries.csv")
     return df
 
 
 @st.experimental_memo
 def sample_count():
-    dataset = get_data("./data/samples_data.tsv")
+    dataset = load_dataset()
     sm1, mk = st.columns([2, 5])
     sm1.metric(
         label="Total Samples",
@@ -73,10 +69,10 @@ def sample_count():
 
 @st.experimental_memo
 def get_mapping_data():
-    dataset = get_data("./data/samples_data.tsv")
-    country_shapes = get_country_shapes("./data/world_countries.json")
-    regions = get_regions("./data/regions.csv")
-    countries = get_countries("./data/countries.csv")
+    dataset = load_dataset()
+    country_shapes = load_country_shapes()
+    regions = load_regions()
+    countries = load_country_coords()
     smp_data = pd.merge(
         dataset[
             [
@@ -166,7 +162,7 @@ def get_map():
 
 
 def show_dataset():
-    dataset = get_data("./data/samples_data.tsv")
+    dataset = load_dataset()
     gd = GridOptionsBuilder.from_dataframe(
         dataset, enableRowGroup=True, enableValue=True, enablePivot=True
     )
@@ -250,7 +246,7 @@ def show_dataset():
 
 
 def sample_stats():
-    dataset = get_data("./data/samples_data.tsv")
+    dataset = load_dataset()
     # Dataframe filter
     sample_filter = st.selectbox("Select Sample", pd.unique(dataset["Sample"]))
     dataset = dataset[dataset["Sample"] == sample_filter]
@@ -333,9 +329,8 @@ def sample_stats():
 
 @st.experimental_memo
 def get_chart():
-    # Calculate mean SNPs values
     no_vars = (
-        get_data("./data/samples_data.tsv")[["level 1", "no. of SNPs"]]
+        load_dataset()[["level 1", "no. of SNPs"]]
         .groupby(["level 1"])
         .mean()
         .reset_index()
@@ -343,7 +338,7 @@ def get_chart():
     )
 
     no_samples = (
-        get_data("./data/samples_data.tsv")[["level 1", "Sample"]]
+        load_dataset()[["level 1", "Sample"]]
         .groupby(["level 1"])
         .count()
         .reset_index()
@@ -381,29 +376,36 @@ def get_chart():
         st.altair_chart(sample_chart, theme="streamlit", use_container_width=True)
 
 
-colored_header(
-    label="Dataset",
-    description="Reference Dataset",
-    color_name="light-blue-70",
-)
-sample_count()
-show_dataset()
-add_vertical_space(2)
+if __name__ == "__main__":
+    set_page_config()
+    sidebar_image()
+    set_css()
+    home_page()
+    page_info()
 
-colored_header(
-    label="Statistics",
-    description="Various Sample Statistics",
-    color_name="blue-70",
-)
-sample_stats()
-add_vertical_space(5)
+    colored_header(
+        label="Dataset",
+        description="Reference Dataset",
+        color_name="light-blue-70",
+    )
+    sample_count()
+    show_dataset()
+    add_vertical_space(2)
 
-get_chart()
-add_vertical_space(5)
+    colored_header(
+        label="Statistics",
+        description="Various Sample Statistics",
+        color_name="blue-70",
+    )
+    sample_stats()
+    add_vertical_space(5)
 
-colored_header(
-    label="Map Showing the Distribution of Samples",
-    description="Samples without information about the country of isolation are not shown",
-    color_name="violet-70",
-)
-get_map().to_streamlit(height=700)
+    get_chart()
+    add_vertical_space(5)
+
+    colored_header(
+        label="Map Showing the Distribution of Samples",
+        description="Samples without information about the country of isolation are not shown",
+        color_name="violet-70",
+    )
+    get_map().to_streamlit(height=700)
