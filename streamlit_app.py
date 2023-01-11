@@ -1,6 +1,8 @@
 import streamlit as st
+import base64
 
 from streamlit_extras.switch_page_button import switch_page
+from streamlit_extras.add_vertical_space import add_vertical_space
 from utils import set_page_config, sidebar_image, set_css, author_link, set_pages
 
 
@@ -9,7 +11,6 @@ def page_info():
         "<h1 style='text-align: center; color: #7A3777;'><strong>Explore <em>Mycobacterium tuberculosis</em> complex</strong></h1>",
         unsafe_allow_html=True,
     )
-    st.markdown("---")
 
 
 def buttons():
@@ -34,6 +35,13 @@ def buttons():
         switch_page("reference dataset")
 
 
+def show_svg_tree():
+    with open("./assets/mtbc_tree.svg", "rb") as f:
+        base64_svg = base64.b64encode(f.read()).decode("utf-8")
+    svg_display = f'<center><iframe src="data:image/svg+xml;base64,{base64_svg}" width="750" height="750"></iframe></center>'
+    st.markdown(svg_display, unsafe_allow_html=True)
+
+
 if __name__ == "__main__":
     set_page_config()
     sidebar_image()
@@ -41,4 +49,7 @@ if __name__ == "__main__":
     author_link()
     set_pages()
     page_info()
+    add_vertical_space(1)
     buttons()
+    add_vertical_space(2)
+    show_svg_tree()
