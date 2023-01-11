@@ -13,14 +13,18 @@ def page_info():
 
 
 def buttons():
-    bt1, bt2, bt3, mk = st.columns([1, 1, 1, 7])
+    bt1, bt2, bt3, bt4, bt5 = st.columns([4, 1, 1, 1, 4])
 
     with bt1:
-        genotype_user_data = st.button("Genotype VCF")
+        pass
     with bt2:
-        phylogeny = st.button("Explore Phylogeny")
+        genotype_user_data = st.button("Genotype VCF")
     with bt3:
+        phylogeny = st.button("Explore Phylogeny")
+    with bt4:
         dataset = st.button("Reference Dataset")
+    with bt5:
+        pass
 
     if genotype_user_data:
         switch_page("genotype lineage")
