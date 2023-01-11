@@ -61,13 +61,16 @@ def load_country_coords():
 @st.experimental_memo
 def sample_count():
     dataset = load_dataset()
-    sm1, mk = st.columns([2, 5])
-    sm1.metric(
-        label="Total Samples",
-        value=int(dataset["Sample"].count()),
-        help="""Number of currently availible samples in the dataset
-            """,
-    )
+    sm1, mock = st.columns([2, 5])
+    with sm1:
+        st.metric(
+            label="Total Samples",
+            value=int(dataset["Sample"].count()),
+            help="""Number of currently availible samples in the dataset
+                """,
+        )
+    with mock:
+        pass
 
 
 @st.experimental_memo
@@ -191,19 +194,22 @@ def show_dataset():
 
         dwn1, dwn2, mock = st.columns([1, 1, 4])
 
-        dwn1.download_button(
-            label="💾 Download dataset as TSV",
-            data=tsv,
-            file_name="dataset.tsv",
-            mime="text/csv",
-        )
-
-        dwn2.download_button(
-            label="💾 Download dataset as CSV",
-            data=csv,
-            file_name="dataset.csv",
-            mime="text/csv",
-        )
+        with dwn1:
+            st.download_button(
+                label="💾 Download dataset as TSV",
+                data=tsv,
+                file_name="dataset.tsv",
+                mime="text/csv",
+            )
+        with dwn2:
+            st.download_button(
+                label="💾 Download dataset as CSV",
+                data=csv,
+                file_name="dataset.csv",
+                mime="text/csv",
+            )
+        with mock:
+            pass
 
         sel_row = grid1["selected_rows"]
         dataset_sel = pd.DataFrame(sel_row)
@@ -231,19 +237,22 @@ def show_dataset():
         if dataset_sel.empty:
             st.warning("Subset dataframe is empty", icon="⚠️")
         else:
-            dwn_sel1.download_button(
-                label="💾 Download subset as TSV",
-                data=tsv_sel,
-                file_name="subsetted_dataset.tsv",
-                mime="text/csv",
-            )
-
-            dwn_sel2.download_button(
-                label="💾 Download subset as CSV",
-                data=csv_sel,
-                file_name="subsetted_dataset.csv",
-                mime="text/csv",
-            )
+            with dwn_sel1:
+                st.download_button(
+                    label="💾 Download subset as TSV",
+                    data=tsv_sel,
+                    file_name="subsetted_dataset.tsv",
+                    mime="text/csv",
+                )
+            with dwn_sel2:
+                st.download_button(
+                    label="💾 Download subset as CSV",
+                    data=csv_sel,
+                    file_name="subsetted_dataset.csv",
+                    mime="text/csv",
+                )
+            with mock:
+                pass
 
         return grid1
 

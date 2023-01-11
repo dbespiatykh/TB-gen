@@ -421,19 +421,22 @@ if __name__ == "__main__":
 
                     dwn1, dwn2, mock = st.columns([1, 1, 4])
 
-                    dwn1.download_button(
-                        label="💾 Download data as TSV",
-                        data=tsv,
-                        file_name="lineage.tsv",
-                        mime="text/csv",
-                    )
-
-                    dwn2.download_button(
-                        label="💾 Download data as CSV",
-                        data=csv,
-                        file_name="lineage.csv",
-                        mime="text/csv",
-                    )
+                    with dwn1:
+                        st.download_button(
+                            label="💾 Download data as TSV",
+                            data=tsv,
+                            file_name="lineage.tsv",
+                            mime="text/csv",
+                        )
+                    with dwn2:
+                        st.download_button(
+                            label="💾 Download data as CSV",
+                            data=csv,
+                            file_name="lineage.csv",
+                            mime="text/csv",
+                        )
+                    with mock:
+                        pass
 
                 except ValueError:
                     st.warning("No data was uploaded!", icon="⚠️")
