@@ -5,7 +5,10 @@ from utils import set_page_config, sidebar_image, set_css, author_link, set_page
 
 
 def page_info():
-    st.title("TB gen: Explore _Mycobacterium tuberculosis_ complex")
+    st.markdown(
+        "<h1 style='text-align: center; color: #7A3777;'><strong>Explore <em>Mycobacterium tuberculosis</em> complex</strong></h1>",
+        unsafe_allow_html=True,
+    )
     st.markdown("---")
 
 

@@ -12,8 +12,10 @@ from utils import set_page_config, sidebar_image, set_css, home_page
 
 
 def page_info():
-    st.title("Genotype MTBC lineages from VCF file")
-
+    st.markdown(
+        "<h2 style='text-left: center; color: #7A3777;'><strong>Genotype lineage from VCF file</strong></h2>",
+        unsafe_allow_html=True,
+    )
     st.markdown("---")
 
     annotated_text(

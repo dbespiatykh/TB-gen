@@ -15,7 +15,10 @@ from utils import set_page_config, sidebar_image, set_css, home_page
 
 
 def page_info():
-    st.title("Reference dataset of _Mycobacterium tuberculosis_ complex isolates")
+    st.markdown(
+        "<h2 style='text-align: left; color: #7A3777;'><strong>Reference dataset of <em>Mycobacterium tuberculosis</em> complex isolates</strong></h2>",
+        unsafe_allow_html=True,
+    )
     st.markdown("---")
 
 

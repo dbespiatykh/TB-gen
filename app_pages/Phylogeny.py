@@ -5,7 +5,10 @@ import streamlit.components.v1 as components
 
 
 def page_info():
-    st.title("_Mycobacterium tuberculosis_ phylogeny")
+    st.markdown(
+        "<h2 style='text-align: left; color: #7A3777;'><strong><em>Mycobacterium tuberculosis</em> complex phylogeny</strong></h2>",
+        unsafe_allow_html=True,
+    )
     st.markdown("---")
 
 
