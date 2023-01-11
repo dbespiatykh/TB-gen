@@ -10,7 +10,7 @@ def page_info():
 
 
 def buttons():
-    bt1, bt2, bt3, mk = st.columns([1, 1, 1, 8])
+    bt1, bt2, bt3, mk = st.columns([1, 1, 1, 7])
 
     with bt1:
         genotype_user_data = st.button("Genotype VCF")
