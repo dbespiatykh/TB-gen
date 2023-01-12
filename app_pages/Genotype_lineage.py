@@ -400,9 +400,10 @@ if __name__ == "__main__":
     page_info()
 
     if st.sidebar.button("Genotype lineage"):
-        if uploaded_files is not None:
+        if uploaded_files is None:
+            st.warning("No data was uploaded!", icon="⚠️")
+        else:
             with st.spinner("Genotyping..."):
-
                 try:
                     lvl1, lvl2, lvl3, lvl4, lvl5 = get_levels_dictionary()
                     results_list = []
@@ -442,7 +443,5 @@ if __name__ == "__main__":
                     st.warning("No data was uploaded!", icon="⚠️")
                 except StopIteration:
                     st.error("VCF file is malformed!", icon="‼️")
-        else:
-            st.warning("No data was uploaded!", icon="⚠️")
     else:
         st.info("Upload input data in the sidebar to start!", icon="👈")
