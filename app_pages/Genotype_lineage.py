@@ -388,10 +388,6 @@ def genotype_lineages(uploaded_file):
     return result
 
 
-uploaded_files = st.sidebar.file_uploader(
-    "Upload VCF file", type=["vcf", "vcf.gz"], accept_multiple_files=True
-)
-
 if __name__ == "__main__":
     set_page_config()
     sidebar_image()
@@ -399,8 +395,13 @@ if __name__ == "__main__":
     home_page()
     page_info()
 
+    with st.sidebar.container():
+        uploaded_files = st.file_uploader(
+            "Upload VCF file", type=["vcf", "vcf.gz"], accept_multiple_files=True
+        )
+
     if st.sidebar.button("Genotype lineage"):
-        if uploaded_files is None:
+        if len(uploaded_files) == 0:
             st.warning("No data was uploaded!", icon="⚠️")
         else:
             with st.spinner("Genotyping..."):
@@ -440,7 +441,7 @@ if __name__ == "__main__":
                         pass
 
                 except ValueError:
-                    st.warning("No data was uploaded!", icon="⚠️")
+                    st.warning("Wrong file type!", icon="⚠️")
                 except StopIteration:
                     st.error("VCF file is malformed!", icon="‼️")
     else:
