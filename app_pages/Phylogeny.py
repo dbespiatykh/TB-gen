@@ -47,7 +47,7 @@ def show_lineage5_tree():
     components.html(source_code, height=1000, width=1600, scrolling=True)
 
 
-def arragenge_tabs():
+def arrange_tabs():
     tab1, tab2, tab3, tab4, tab5 = st.tabs(
         [
             "Lineage 1",
@@ -80,4 +80,4 @@ if __name__ == "__main__":
     set_css()
     home_page()
     page_info()
-    arragenge_tabs()
+    arrange_tabs()
