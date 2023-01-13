@@ -250,6 +250,7 @@ def convert_df_to_csv(df):
 @st.cache
 def barcoding(uploaded_vcf):
     df = vcf_to_dataframe(uploaded_vcf)
+    lvl1, lvl2, lvl3, lvl4, lvl5 = get_levels_dictionary()
 
     exp = (
         df["POS"].values[:, None],
@@ -406,7 +407,6 @@ if __name__ == "__main__":
         else:
             with st.spinner("Genotyping..."):
                 try:
-                    lvl1, lvl2, lvl3, lvl4, lvl5 = get_levels_dictionary()
                     results_list = []
 
                     for uploaded_file in uploaded_files:
