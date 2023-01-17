@@ -3,9 +3,9 @@ leafmap==0.10.5
 numpy==1.23.5
 pandas==1.5.0
 PyVCF3==1.0.3
-streamlit==1.16.0
-streamlit_extras==0.2.4
+streamlit==1.17.0
+streamlit_extras==0.2.5
 streamlit-aggrid==0.3.3
-st-pages==0.3.0
+st-pages==0.3.1
 mapclassify==2.4.3
 pdbio==0.4.2
