@@ -34,7 +34,7 @@ def page_info():
     )
 
 
-@st.cache
+@st.experimental_memo()
 def get_levels_dictionary():
 
     temp_df = pd.read_csv("./data/levels.tsv", sep="\t")
@@ -78,7 +78,7 @@ def get_levels_dictionary():
     return lvl1, lvl2, lvl3, lvl4, lvl5
 
 
-@st.cache
+@st.experimental_memo()
 def get_levels_positions():
 
     temp_df = pd.read_csv("./data/levels.tsv", sep="\t")
@@ -86,7 +86,7 @@ def get_levels_positions():
     return pos
 
 
-@st.cache
+@st.experimental_memo(show_spinner=False)
 def vcf_to_dataframe(vcf_file):
 
     pos_all = get_levels_positions()
@@ -123,7 +123,7 @@ def vcf_to_dataframe(vcf_file):
     return res
 
 
-@st.cache
+@st.experimental_memo()
 def lineage4_decision(call_list):
 
     lin4 = ["L4"]
@@ -141,7 +141,7 @@ def lineage4_decision(call_list):
     return altList
 
 
-@st.cache
+@st.experimental_memo()
 def lineage4_9_decision(call_list):
 
     lin4_9 = ["L4.9"]
@@ -159,7 +159,7 @@ def lineage4_9_decision(call_list):
     return altList
 
 
-@st.cache
+@st.experimental_memo()
 def count_level1_variants(call_list):
 
     d = OrderedDict()
@@ -185,7 +185,7 @@ def count_level1_variants(call_list):
     return call_list
 
 
-@st.cache
+@st.experimental_memo()
 def count_level2_variants(call_list):
 
     d = OrderedDict()
@@ -219,7 +219,7 @@ def count_level2_variants(call_list):
     return call_list
 
 
-@st.cache
+@st.experimental_memo()
 def lineage2_decision(call_list):
 
     lin2 = ["L2.2 (modern)", "L2.2 (ancient)"]
@@ -237,17 +237,17 @@ def lineage2_decision(call_list):
     return altList
 
 
-@st.cache
+@st.experimental_memo()
 def convert_df_to_tsv(df):
     return df.to_csv(sep="\t", index=False).encode("utf-8")
 
 
-@st.cache
+@st.experimental_memo()
 def convert_df_to_csv(df):
     return df.to_csv(index=False).encode("utf-8")
 
 
-@st.cache
+@st.experimental_memo(show_spinner=False)
 def barcoding(uploaded_vcf):
     df = vcf_to_dataframe(uploaded_vcf)
     lvl1, lvl2, lvl3, lvl4, lvl5 = get_levels_dictionary()
@@ -368,7 +368,7 @@ def temporary_vcf(uploaded_file):
     return temp_vcf.name
 
 
-@st.cache
+@st.experimental_memo(show_spinner=False)
 def genotype_lineages(uploaded_file):
     uploaded_extension = uploaded_file.name.split(".")[-1]
 
