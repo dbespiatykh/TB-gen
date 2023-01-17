@@ -55,7 +55,7 @@ def sidebar_image():
 def author_link():
     with st.sidebar.container():
         st.markdown(
-            "This app is maintained by [Dmitry Bespiatykh](https://orcid.org/0000-0003-0867-5988)"
+            "This app is maintained by  \n[Dmitry Bespiatykh](https://orcid.org/0000-0003-0867-5988)"
         )
         mention(
             label="dbespiatykh",
