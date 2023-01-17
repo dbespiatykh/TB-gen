@@ -22,12 +22,12 @@ def page_info():
     st.markdown("---")
 
 
-@st.cache
+@st.experimental_memo()
 def convert_df_to_tsv(df):
     return df.to_csv(sep="\t", index=False).encode("utf-8")
 
 
-@st.cache
+@st.experimental_memo(show_spinner=False)
 def convert_df_to_csv(df):
     return df.to_csv(index=False).encode("utf-8")
 
@@ -56,6 +56,14 @@ def load_regions():
 def load_country_coords():
     df = pd.read_csv("./data/countries.csv")
     return df
+
+
+@st.experimental_memo(show_spinner=False)
+def vcf_to_df(vcf_path):
+    logging.getLogger("pdbio").setLevel(logging.WARNING)
+    vcfdf = VcfDataFrame(path=vcf_path)
+    vcfdf.df.index = vcfdf.df.index + 1
+    return vcfdf.df
 
 
 @st.experimental_memo
@@ -127,6 +135,7 @@ def get_mapping_data():
     return smp_data, cnt_samples_poly
 
 
+@st.experimental_singleton
 def get_map():
     smp_data, cnt_samples_poly = get_mapping_data()
     m = leafmap.Map(
@@ -265,20 +274,19 @@ def sample_stats():
     add_vertical_space(2)
 
     if st.checkbox("Show Variants"):
-        try:
-            logging.getLogger("pdbio").setLevel(logging.WARNING)
-            vcf_path = "./data/VCF/" + sample_filter + ".vcf.gz"
-            vcfdf = VcfDataFrame(path=vcf_path)
-            vcfdf.df.index = vcfdf.df.index + 1
-            st.dataframe(vcfdf.df)
-            with open(vcf_path, "rb") as vcf:
-                st.download_button(
-                    label="Download calls in VCF format",
-                    data=vcf,
-                    file_name=sample_filter + ".vcf.gz",
-                )
-        except FileNotFoundError:
-            st.warning("VCF file in not available", icon="⚠️")
+        with st.spinner("Loading VCF..."):
+            try:
+                vcf_path = "./data/VCF/" + sample_filter + ".vcf.gz"
+                vcf_df = vcf_to_df(vcf_path)
+                st.dataframe(vcf_df)
+                with open(vcf_path, "rb") as vcf:
+                    st.download_button(
+                        label="Download calls in VCF format",
+                        data=vcf,
+                        file_name=sample_filter + ".vcf.gz",
+                    )
+            except FileNotFoundError:
+                st.warning("VCF file in not available", icon="⚠️")
 
     add_vertical_space(3)
 
