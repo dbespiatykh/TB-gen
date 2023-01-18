@@ -9,7 +9,9 @@ def page_info():
         "<h2 style='text-align: left; color: #7A3777;'><strong><em>Mycobacterium tuberculosis</em> complex phylogeny</strong></h2>",
         unsafe_allow_html=True,
     )
-    st.markdown("---")
+    st.caption(
+        "The exterior vertical bars and names indicate lineage: black – this study, golden – [Napier _et al._](https://doi.org/10.1186/S13073-020-00817-3)"
+    )
 
 
 @st.experimental_memo
