@@ -1,7 +1,8 @@
 import os
-import streamlit as st
+import time
 import numpy as np
 import pandas as pd
+import streamlit as st
 
 from vcf import Reader
 from gzip import open as gzopen
@@ -407,6 +408,7 @@ if __name__ == "__main__":
         else:
             with st.spinner("Genotyping..."):
                 try:
+                    t_start = time.time()
                     results_list = []
 
                     for uploaded_file in uploaded_files:
@@ -416,7 +418,19 @@ if __name__ == "__main__":
                     results = pd.concat(results_list).reset_index(drop=True)
 
                     st.dataframe(results, width=900)
-                    st.success("Done!", icon="✅")
+
+                    t_end = time.time()
+                    hours, rem = divmod(t_end - t_start, 3600)
+                    minutes, seconds = divmod(rem, 60)
+
+                    st.success(
+                        "Done! "
+                        + "Elapsed time: "
+                        + "{:0>2}:{:0>2}:{:05.2f}".format(
+                            int(hours), int(minutes), seconds
+                        ),
+                        icon="✅",
+                    )
 
                     tsv = convert_df_to_tsv(results)
                     csv = convert_df_to_csv(results)
