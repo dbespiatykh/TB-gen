@@ -394,7 +394,9 @@ if __name__ == "__main__":
 
     with st.sidebar.container():
         uploaded_files = st.file_uploader(
-            "Upload VCF file", type=["vcf", "vcf.gz"], accept_multiple_files=True
+            "**Upload** **:blue[.VCF]** **file**",
+            type=["vcf", "vcf.gz"],
+            accept_multiple_files=True,
         )
 
     if st.sidebar.button("Genotype lineage", type="primary"):
