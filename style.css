@@ -7,8 +7,13 @@ body,
 }
 
 /* Move block container higher */
-div.block-container.css-18e3th9.egzxvld2 {
+/* div.block-container.css-18e3th9.egzxvld2 {
   margin-top: -5em;
+} */
+
+/* Reduce top padding */
+div.block-container.css-k1ih3n.egzxvld4 {
+  padding: 1rem 5rem 10rem;
 }
 
 /* Sidebar width */
