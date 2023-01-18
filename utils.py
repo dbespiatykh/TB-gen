@@ -67,6 +67,7 @@ def set_css():
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 
+@st.experimental_memo(experimental_allow_widgets=True, show_spinner=False)
 def home_page():
     home = st.button("Home")
     if home:

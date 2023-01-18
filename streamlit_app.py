@@ -13,6 +13,7 @@ def page_info():
     )
 
 
+@st.experimental_memo(experimental_allow_widgets=True, show_spinner=False)
 def buttons():
     bt1, bt2, bt3, bt4, bt5 = st.columns([4, 1, 1, 1, 4])
 
@@ -35,6 +36,7 @@ def buttons():
         switch_page("reference dataset")
 
 
+@st.experimental_memo(show_spinner=False)
 def show_svg_tree():
     with open("./assets/mtbc_tree.svg", "rb") as f:
         base64_svg = base64.b64encode(f.read()).decode("utf-8")

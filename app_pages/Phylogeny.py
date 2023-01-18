@@ -47,6 +47,7 @@ def show_lineage5_tree():
     components.html(source_code, height=1000, width=1600, scrolling=True)
 
 
+@st.experimental_memo(show_spinner=False)
 def arrange_tabs():
     tab1, tab2, tab3, tab4, tab5 = st.tabs(
         [
