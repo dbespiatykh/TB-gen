@@ -8,7 +8,6 @@ from vcf import Reader
 from gzip import open as gzopen
 from collections import OrderedDict
 from tempfile import NamedTemporaryFile
-from annotated_text import annotated_text, annotation
 from utils import set_page_config, sidebar_image, set_css, home_page
 
 
@@ -18,21 +17,6 @@ def page_info():
         unsafe_allow_html=True,
     )
     st.markdown("---")
-
-    annotated_text(
-        "Use your own ",
-        annotation(".VCF or .VCF.GZ", color="#525833", border="1px dashed"),
-        " files as input to call lineage",
-    )
-
-    st.markdown(
-        """
-    - Use can use both single- or multi-sample .VCF files
-    - Accepts multiple .VCF files at a time
-    - Variants should be called by mapping to [NC_000962.3](https://www.ncbi.nlm.nih.gov/nuccore/NC_000962.3/) _M. tuberculosis_ H37Rv genome
-    - Variants should be already filtered and contain only high quality calls
-    """
-    )
 
 
 @st.experimental_memo()
@@ -397,6 +381,17 @@ if __name__ == "__main__":
     home_page()
     page_info()
 
+    info_box = st.empty()
+    info_box.markdown(
+        """
+    Use your own `.VCF or .VCF.GZ` files as input to call lineage  \n
+    - Use can use both single- or multi-sample .VCF files
+    - Accepts multiple .VCF files at a time
+    - Variants should be called by mapping to [NC_000962.3](https://www.ncbi.nlm.nih.gov/nuccore/NC_000962.3/) _M. tuberculosis_ H37Rv genome
+    - Variants should be already filtered and contain only high quality calls
+    """
+    )
+
     with st.sidebar.container():
         uploaded_files = st.file_uploader(
             "Upload VCF file", type=["vcf", "vcf.gz"], accept_multiple_files=True
@@ -407,6 +402,7 @@ if __name__ == "__main__":
             st.warning("No data was uploaded!", icon="⚠️")
         else:
             with st.spinner("Genotyping..."):
+                info_box.empty()
                 try:
                     t_start = time.time()
                     results_list = []
