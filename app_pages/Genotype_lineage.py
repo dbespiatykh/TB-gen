@@ -384,11 +384,11 @@ if __name__ == "__main__":
     info_box = st.empty()
     info_box.markdown(
         """
-    Use your own `.VCF or .VCF.GZ` files as input to call lineage  \n
-    - Use can use both single- or multi-sample .VCF files
-    - Accepts multiple .VCF files at a time
-    - Variants should be called by mapping to [NC_000962.3](https://www.ncbi.nlm.nih.gov/nuccore/NC_000962.3/) _M. tuberculosis_ H37Rv genome
-    - Variants should be already filtered and contain only high quality calls
+    Use your own **:blue[.VCF]** or **:blue[.VCF.GZ]** files as input to call lineage  \n
+    - You can use both **:green[single-]** or **:green[multi-sample]** **:blue[.VCF]** files
+    - Accepts **:green[multiple]** **:blue[.VCF]** files at a time
+    - Variants should be called by mapping to the [NC_000962.3](https://www.ncbi.nlm.nih.gov/nuccore/NC_000962.3/) _M. tuberculosis_ H37Rv genome
+    - It is preferable for variants to be filtered and contain only high quality calls
     """
     )
 
