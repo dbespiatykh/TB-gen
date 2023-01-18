@@ -6,7 +6,7 @@ from streamlit_extras.switch_page_button import switch_page
 from st_pages import show_pages_from_config
 
 
-@st.experimental_memo()
+@st.experimental_memo(show_spinner=False)
 def set_pages():
     show_pages_from_config()
 
@@ -26,7 +26,7 @@ def set_page_config():
         raise e
 
 
-@st.experimental_memo()
+@st.experimental_memo(show_spinner=False)
 def sidebar_image():
 
     image_extension = "svg+xml"
@@ -47,7 +47,7 @@ def sidebar_image():
     )
 
 
-@st.experimental_memo()
+@st.experimental_memo(show_spinner=False)
 def author_link():
     with st.sidebar.container():
         st.markdown(
@@ -61,7 +61,7 @@ def author_link():
         st.markdown("---")
 
 
-@st.experimental_memo()
+@st.experimental_memo(show_spinner=False)
 def set_css():
     with open("style.css") as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
