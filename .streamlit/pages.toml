@@ -1,0 +1,20 @@
+[[pages]]
+path = "streamlit_app.py"
+name = "Home"
+icon = "🏠"
+
+[[pages]]
+path = "app_pages/Reference_dataset.py"
+name = "Reference dataset"
+icon = "📈"
+
+[[pages]]
+path = "app_pages/Phylogeny.py"
+name = "Phylogeny"
+icon = "🧬"
+
+[[pages]]
+path = "app_pages/Genotype_lineage.py"
+name = "Genotype lineage"
+icon = "📊"
+
