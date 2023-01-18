@@ -397,7 +397,7 @@ if __name__ == "__main__":
             "Upload VCF file", type=["vcf", "vcf.gz"], accept_multiple_files=True
         )
 
-    if st.sidebar.button("Genotype lineage"):
+    if st.sidebar.button("Genotype lineage", type="primary"):
         if len(uploaded_files) == 0:
             st.warning("No data was uploaded!", icon="⚠️")
         else:
