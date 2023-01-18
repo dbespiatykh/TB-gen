@@ -3,18 +3,12 @@ import base64
 
 from streamlit_extras.mention import mention
 from streamlit_extras.switch_page_button import switch_page
-from st_pages import Page, show_pages
+from st_pages import show_pages_from_config
 
 
+@st.experimental_memo()
 def set_pages():
-    show_pages(
-        [
-            Page("streamlit_app.py", "Home", "🏠"),
-            Page("app_pages/Reference_dataset.py", "Reference dataset", "📈"),
-            Page("app_pages/Phylogeny.py", "Phylogeny", "🧬"),
-            Page("app_pages/Genotype_lineage.py", "Genotype lineage", "📊"),
-        ]
-    )
+    show_pages_from_config()
 
 
 def set_page_config():
@@ -32,6 +26,7 @@ def set_page_config():
         raise e
 
 
+@st.experimental_memo()
 def sidebar_image():
 
     image_extension = "svg+xml"
@@ -52,6 +47,7 @@ def sidebar_image():
     )
 
 
+@st.experimental_memo()
 def author_link():
     with st.sidebar.container():
         st.markdown(
@@ -65,6 +61,7 @@ def author_link():
         st.markdown("---")
 
 
+@st.experimental_memo()
 def set_css():
     with open("style.css") as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
