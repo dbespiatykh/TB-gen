@@ -15,7 +15,7 @@ def page_info():
 
 @st.experimental_memo(experimental_allow_widgets=True, show_spinner=False)
 def buttons():
-    bt1, bt2, bt3, bt4, bt5 = st.columns([4, 1, 1, 1, 4])
+    bt1, bt2, bt3, bt4, bt5, bt6 = st.columns([3, 1, 1, 1, 1, 3])
 
     with bt1:
         pass
@@ -26,6 +26,8 @@ def buttons():
     with bt4:
         dataset = st.button("Reference Dataset")
     with bt5:
+        barcodes = st.button("Barcoding SNPs")
+    with bt6:
         pass
 
     if genotype_user_data:
@@ -34,6 +36,8 @@ def buttons():
         switch_page("phylogeny")
     if dataset:
         switch_page("reference dataset")
+    if barcodes:
+        switch_page("barcoding snps")
 
 
 @st.experimental_memo(show_spinner=False)
