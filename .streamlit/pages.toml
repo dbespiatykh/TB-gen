@@ -14,7 +14,11 @@ name = "Phylogeny"
 icon = "🧬"
 
 [[pages]]
+path = "app_pages/Barcoding_SNPs.py"
+name = "Barcoding SNPs"
+icon = "🗄️"
+
+[[pages]]
 path = "app_pages/Genotype_lineage.py"
 name = "Genotype lineage"
 icon = "📊"
-
