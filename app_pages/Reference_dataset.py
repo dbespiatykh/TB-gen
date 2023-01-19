@@ -1,15 +1,14 @@
+import logging
+import geopandas
 import numpy as np
 import pandas as pd
-import geopandas
-import logging
-import streamlit as st
 import altair as alt
+import streamlit as st
 import leafmap.foliumap as leafmap
 
 from pdbio.vcfdataframe import VcfDataFrame
-from st_aggrid import AgGrid, GridUpdateMode
-from st_aggrid.grid_options_builder import GridOptionsBuilder
 from streamlit_extras.colored_header import colored_header
+from st_aggrid import AgGrid, GridUpdateMode, GridOptionsBuilder
 from streamlit_extras.add_vertical_space import add_vertical_space
 from utils import set_page_config, sidebar_image, set_css, home_page
 
@@ -183,7 +182,7 @@ def show_dataset():
     )
     gd.configure_grid_options(domLayout="normal", autoHeight=True)
     gd.configure_selection(selection_mode="multiple", use_checkbox=True)
-    gd.configure_default_column(editable=True, groupable=True)
+    gd.configure_default_column(editable=False, groupable=True)
     gd.configure_side_bar()
 
     if st.checkbox("Show Dataset"):
