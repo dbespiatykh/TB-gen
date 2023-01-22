@@ -10,7 +10,11 @@ def page_info():
         unsafe_allow_html=True,
     )
     st.caption(
-        "The exterior vertical bars and names indicate lineage: black – this study, golden – [Napier _et al._ (2020)](https://doi.org/10.1186/S13073-020-00817-3)"
+        "<p>The exterior vertical bars and names indicate lineage: \
+            <span style='color: #333333; font-weight:bold'>black</span> – this study, \
+            <span style='color: #BE9A5A; font-weight:bold'>golden</span> – \
+            <a href='https://doi.org/10.1186/S13073-020-00817-3' style='color: #BE9A5A'>Napier <em>et al.</em> (2020)</a></p>",
+        unsafe_allow_html=True,
     )
 
 
