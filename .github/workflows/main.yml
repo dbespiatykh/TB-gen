@@ -22,7 +22,7 @@ jobs:
 
       - name: Run App
         run: |
-          streamlit run streamlit_app.py --server.headless True &
+          nohup streamlit run streamlit_app.py --server.headless True > /dev/null 2>&1 &
 
       - name: Cypress
         uses: cypress-io/github-action@v5
@@ -30,6 +30,7 @@ jobs:
           start: npm start
           record: true
           wait-on: "http://localhost:8501"
+          wait-on-timeout: 120
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
