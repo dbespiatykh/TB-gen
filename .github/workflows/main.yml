@@ -30,7 +30,6 @@ jobs:
           install: false
           start: yarn start:ci
           record: true
-          start: yarn start
           wait-on: "http://localhost:8501"
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
