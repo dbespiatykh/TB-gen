@@ -27,6 +27,8 @@ jobs:
       - name: Cypress
         uses: cypress-io/github-action@v5
         with:
+          install: false
+          start: yarn start:ci
           record: true
           start: yarn start
           wait-on: "http://localhost:8501"
