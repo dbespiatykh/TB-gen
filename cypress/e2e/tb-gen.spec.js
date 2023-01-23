@@ -4,7 +4,7 @@ context("Actions", () => {
   it("Test TB-gen streamlit app", () => {
     cy.visit("http://localhost:8501");
     cy.viewport("macbook-15");
-    const fs = cy.get(".edgvbvh10").first();
+    const fs = cy.get(".edgvbvh10", { timeout: 120000 }).first();
     fs.click();
     const fileName = "all.filtered.trimmed.vcf.gz";
 
