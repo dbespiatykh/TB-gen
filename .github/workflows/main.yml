@@ -1,4 +1,4 @@
-name: Test the app
+name: Cypress Tests
 
 on: [push]
 
