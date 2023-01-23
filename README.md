@@ -3,6 +3,7 @@
 # Web-app to explore _Mycobacterium tuberculosis_ complex
 
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://tb-gen.streamlit.app)
+[![Tests](https://github.com/dbespiatykh/TB-gen/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/dbespiatykh/TB-gen/actions/workflows/main.yml)
 
 ## Description
 
