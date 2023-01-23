@@ -111,4 +111,5 @@ make_tree
 __pycache__
 
 dev
+node_modules/
 # End of https://www.toptal.com/developers/gitignore/api/macos,visualstudiocode,sublimetext,vim
