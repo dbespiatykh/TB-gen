@@ -2,7 +2,7 @@ import "cypress-file-upload";
 
 context("Actions", () => {
   it("Test TB-gen streamlit app", () => {
-    cy.visit("http://localhost:8502");
+    cy.visit("http://localhost:8501");
     cy.viewport("macbook-15");
     const fs = cy.get(".edgvbvh10").first();
     fs.click();
