@@ -27,8 +27,7 @@ jobs:
       - name: Cypress
         uses: cypress-io/github-action@v5
         with:
-          # start: npm start
-          browser: chrome
+          start: npm start
           record: true
           wait-on: "http://localhost:8501"
         env:
