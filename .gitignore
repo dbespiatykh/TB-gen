@@ -112,4 +112,5 @@ __pycache__
 
 dev
 node_modules/
+cypress/videos/
 # End of https://www.toptal.com/developers/gitignore/api/macos,visualstudiocode,sublimetext,vim
