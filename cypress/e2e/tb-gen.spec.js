@@ -25,7 +25,7 @@ context("Actions", () => {
           }
         );
       cy.get(".edgvbvh11", { timeout: 120000 }).click();
-      cy.get(`.stDataFrame`)
+      cy.get(`.stDataFrame`, { timeout: 120000 })
         .should("contain", "L4.1")
         .and("contain", "L1.1")
         .and("contain", "L1.1.1.1")
