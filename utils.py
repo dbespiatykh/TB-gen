@@ -1,7 +1,8 @@
 import streamlit as st
 import base64
+import streamlit.components.v1 as components
 
-from streamlit_extras.mention import mention
+from markdownlit import mdlit
 from streamlit_extras.switch_page_button import switch_page
 from st_pages import show_pages_from_config
 from st_aggrid import JsCode
@@ -51,13 +52,11 @@ def sidebar_image():
 @st.experimental_memo(show_spinner=False)
 def author_link():
     with st.sidebar.container():
-        st.markdown(
-            "This app is maintained by  \n[Dmitry Bespiatykh](https://orcid.org/0000-0003-0867-5988)"
-        )
-        mention(
-            label="dbespiatykh",
-            icon="github",
-            url="https://github.com/dbespiatykh",
+        mdlit(
+            "This app is  maintained by\
+                  \n[Dmitry Bespiatykh](https://orcid.org/0000-0003-0867-5988)\
+                    \n\
+                      \n@(https://github.com/dbespiatykh)"
         )
         st.markdown("---")
 
@@ -73,6 +72,17 @@ def home_page():
     home = st.button("Home")
     if home:
         switch_page("home")
+
+
+@st.experimental_memo(experimental_allow_widgets=True, show_spinner=False)
+def read_index_html():
+    with open("index.html") as f:
+
+        components.html(
+            f.read(),
+            height=0,
+            width=0,
+        )
 
 
 @st.experimental_memo(show_spinner=False)
