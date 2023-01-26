@@ -18,7 +18,21 @@ def page_info():
         "<h2 style='text-align: left; color: #7A3777;'><strong>Reference dataset of <em>Mycobacterium tuberculosis</em> complex isolates</strong></h2>",
         unsafe_allow_html=True,
     )
-    st.markdown("---")
+    st.markdown(
+        "\
+           <a style='text-decoration: none' \
+            href='#dataset'>\
+            <span style='color: #7A3777; font-size: 20px; font-weight:bold'>&#x278A; </span><span style='color: #A65AA3; font-size: 20px; font-weight:bold'>Dataset</span></a>\
+           \n<a style='text-decoration: none' \
+            href='#statistics'>\
+            <span style='color: #7A3777; font-size: 20px; font-weight:bold'>&#x278B; </span><span style='color: #A65AA3; font-size: 20px; font-weight:bold'>Statistics</span></a>\
+           \n<a style='text-decoration: none' \
+            href='#map-showing-the-distribution-of-samples'>\
+            <span style='color: #7A3777; font-size: 20px; font-weight:bold'>&#x278C; </span><span style='color: #A65AA3; font-size: 20px; font-weight:bold'>Map</span></a>\
+            \n___\
+            ",
+        unsafe_allow_html=True,
+    )
 
 
 @st.experimental_memo()
@@ -430,3 +444,13 @@ if __name__ == "__main__":
         color_name="violet-70",
     )
     get_map().to_streamlit(height=700)
+
+    st.markdown(
+        "\
+        <a style='text-decoration: none' \
+            href='#reference-dataset-of-mycobacterium-tuberculosis-complex-isolates'>\
+            <span style='color: #7A3777; font-weight:bold'>&#x21E7; </span>\
+            <span style='color: #A65AA3; font-weight:bold'>Back to top</span></a>\
+            ",
+        unsafe_allow_html=True,
+    )
