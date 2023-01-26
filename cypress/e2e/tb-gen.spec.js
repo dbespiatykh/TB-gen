@@ -4,8 +4,13 @@ context("Actions", () => {
   it("Test TB-gen streamlit app", () => {
     cy.visit("http://localhost:8501");
     cy.viewport("macbook-15");
-    const fs = cy.get(".edgvbvh10", { timeout: 120000 }).first();
-    fs.click();
+
+    const genotype_button = cy
+      .get("button")
+      .contains("genotype vcf", { matchCase: false, timeout: 120000 });
+
+    genotype_button.click();
+
     const fileName = "all.filtered.trimmed.vcf.gz";
 
     cy.fixture(fileName, "base64").then((fileContent) => {
@@ -24,7 +29,10 @@ context("Actions", () => {
             events: ["dragenter", "drop"],
           }
         );
-      cy.get(".edgvbvh11", { timeout: 120000 }).click();
+
+      cy.get("button")
+        .contains("genotype lineage", { matchCase: false, timeout: 120000 })
+        .click();
       cy.get(`.stDataFrame`)
         .should("contain", "L4.1")
         .and("contain", "L1.1")
