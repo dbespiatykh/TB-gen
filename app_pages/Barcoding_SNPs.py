@@ -3,7 +3,14 @@ import pandas as pd
 import streamlit as st
 
 from st_aggrid import AgGrid, GridUpdateMode, ColumnsAutoSizeMode, GridOptionsBuilder
-from utils import set_page_config, sidebar_image, set_css, home_page, get_cell_style
+from utils import (
+    set_page_config,
+    sidebar_image,
+    set_css,
+    home_page,
+    get_cell_style,
+    author_link,
+)
 
 
 def page_info():
@@ -117,5 +124,6 @@ if __name__ == "__main__":
     sidebar_image()
     set_css()
     home_page()
+    author_link()
     page_info()
     show_dataset()
