@@ -1,7 +1,7 @@
 import streamlit as st
-
-from utils import set_page_config, sidebar_image, set_css, home_page
 import streamlit.components.v1 as components
+
+from utils import set_page_config, sidebar_image, set_css, home_page, author_link
 
 
 def page_info():
@@ -84,6 +84,7 @@ if __name__ == "__main__":
     set_page_config()
     sidebar_image()
     set_css()
+    author_link()
     home_page()
     page_info()
     arrange_tabs()
