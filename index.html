@@ -1,0 +1,36 @@
+<script>
+  const streamlitDoc = window.parent.document;
+
+  const buttons = Array.from(
+    streamlitDoc.querySelectorAll(".stButton > button")
+  );
+
+  const genotype_vcf_button = buttons.find(
+    (el) => el.innerText === "Genotype VCF"
+  );
+  const phylogeny_button = buttons.find(
+    (el) => el.innerText === "Explore Phylogeny"
+  );
+  const reference_button = buttons.find(
+    (el) => el.innerText === "Reference Dataset"
+  );
+  const snps_button = buttons.find((el) => el.innerText === "Barcoding SNPs");
+  const genotype_button = buttons.find(
+    (el) => el.innerText === "Genotype lineage"
+  );
+
+  genotype_vcf_button.style.color = "#7A3777";
+  genotype_vcf_button.style.backgroundColor = "#D5D3E7";
+
+  phylogeny_button.style.color = "#7A3777";
+  phylogeny_button.style.backgroundColor = "#D5D3E7";
+
+  reference_button.style.color = "#7A3777";
+  reference_button.style.backgroundColor = "#D5D3E7";
+
+  snps_button.style.color = "#7A3777";
+  snps_button.style.backgroundColor = "#D5D3E7";
+
+  genotype_button.style.color = "#7A3777";
+  genotype_button.style.backgroundColor = "#D5D3E7";
+</script>
