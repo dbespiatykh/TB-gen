@@ -56,9 +56,9 @@ def author_link():
         # <a href='https://github.com/dbespiatykh'><img src='https://img.shields.io/badge/dbespiatykh-181717?logo=github&amp;style=flat_square&amp;labelColor=white&amp;logoWidth=20&amp;logoColor=181717' alt='GitHub'></a>\
         st.markdown(
             "\
-        \n[![RG](https://img.shields.io/badge/Dmitry_Bespiatykh-00CCBB?logo=researchgate&style=flat_square&labelColor=white&logoWidth=20&logoColor=00CCBB)](https://www.researchgate.net/profile/Dmitry-Bespiatykh)\
-        \n[![ORCiD](https://img.shields.io/badge/0000_0003_0867_5988-A6CE39?logo=orcid&style=flat_square&labelColor=white&logoWidth=20)](https://orcid.org/0000-0003-0867-5988)\
-        \n[![GitHub](https://img.shields.io/badge/dbespiatykh-181717?logo=github&style=flat_square&labelColor=white&logoWidth=20&logoColor=181717)](https://github.com/dbespiatykh)\
+        \n[![RG](https://img.shields.io/badge/Dmitry_Bespiatykh-00CCBB?logo=researchgate&style=flat-square&labelColor=white&logoWidth=20&logoColor=00CCBB)](https://www.researchgate.net/profile/Dmitry-Bespiatykh)\
+        \n[![ORCiD](https://img.shields.io/badge/0000_0003_0867_5988-A6CE39?logo=orcid&style=flat-square&labelColor=white&logoWidth=20)](https://orcid.org/0000-0003-0867-5988)\
+        \n[![GitHub](https://img.shields.io/badge/dbespiatykh-181717?logo=github&style=flat-square&labelColor=white&logoWidth=20&logoColor=181717)](https://github.com/dbespiatykh)\
                 ",
             unsafe_allow_html=True,
         )
