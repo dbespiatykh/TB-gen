@@ -10,7 +10,7 @@ from pdbio.vcfdataframe import VcfDataFrame
 from streamlit_extras.colored_header import colored_header
 from st_aggrid import AgGrid, GridUpdateMode, GridOptionsBuilder
 from streamlit_extras.add_vertical_space import add_vertical_space
-from utils import set_page_config, sidebar_image, set_css, home_page
+from utils import set_page_config, sidebar_image, set_css, home_page, author_link
 
 
 def page_info():
@@ -400,6 +400,7 @@ if __name__ == "__main__":
     set_page_config()
     sidebar_image()
     set_css()
+    author_link()
     home_page()
     page_info()
 
