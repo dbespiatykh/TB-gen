@@ -2,7 +2,6 @@ import streamlit as st
 import base64
 import streamlit.components.v1 as components
 
-from markdownlit import mdlit
 from streamlit_extras.switch_page_button import switch_page
 from st_pages import show_pages_from_config
 from st_aggrid import JsCode
@@ -52,13 +51,17 @@ def sidebar_image():
 @st.experimental_memo(show_spinner=False)
 def author_link():
     with st.sidebar.container():
-        mdlit(
-            "This app is  maintained by\
-                  \n[Dmitry Bespiatykh](https://orcid.org/0000-0003-0867-5988)\
-                    \n\
-                      \n@(https://github.com/dbespiatykh)"
+        # <a href='https://www.researchgate.net/profile/Dmitry-Bespiatykh'><img src='https://img.shields.io/badge/Dmitry_Bespiatykh-00CCBB?logo=researchgate&amp;style=flat_square&amp;labelColor=white&amp;logoWidth=20&amp;logoColor=00CCBB' alt='RG'></a>\
+        # <a href='https://orcid.org/0000-0003-0867-5988'><img src='https://img.shields.io/badge/0000_0003_0867_5988-A6CE39?logo=orcid&amp;style=flat_square&amp;labelColor=white&amp;logoWidth=20' alt='ORCiD'></a>\
+        # <a href='https://github.com/dbespiatykh'><img src='https://img.shields.io/badge/dbespiatykh-181717?logo=github&amp;style=flat_square&amp;labelColor=white&amp;logoWidth=20&amp;logoColor=181717' alt='GitHub'></a>\
+        st.markdown(
+            "\
+        \n[![RG](https://img.shields.io/badge/Dmitry_Bespiatykh-00CCBB?logo=researchgate&style=flat_square&labelColor=white&logoWidth=20&logoColor=00CCBB)](https://www.researchgate.net/profile/Dmitry-Bespiatykh)\
+        \n[![ORCiD](https://img.shields.io/badge/0000_0003_0867_5988-A6CE39?logo=orcid&style=flat_square&labelColor=white&logoWidth=20)](https://orcid.org/0000-0003-0867-5988)\
+        \n[![GitHub](https://img.shields.io/badge/dbespiatykh-181717?logo=github&style=flat_square&labelColor=white&logoWidth=20&logoColor=181717)](https://github.com/dbespiatykh)\
+                ",
+            unsafe_allow_html=True,
         )
-        st.markdown("---")
 
 
 @st.experimental_memo(show_spinner=False)
