@@ -3,7 +3,14 @@ import base64
 
 from streamlit_extras.switch_page_button import switch_page
 from streamlit_extras.add_vertical_space import add_vertical_space
-from utils import set_page_config, sidebar_image, set_css, author_link, set_pages
+from utils import (
+    set_page_config,
+    sidebar_image,
+    set_css,
+    author_link,
+    set_pages,
+    read_index_html,
+)
 
 
 def page_info():
@@ -39,6 +46,8 @@ def buttons():
     if barcodes:
         switch_page("barcoding snps")
 
+    read_index_html()
+
 
 @st.experimental_memo(show_spinner=False)
 def show_svg_tree():
@@ -57,5 +66,4 @@ if __name__ == "__main__":
     page_info()
     add_vertical_space(1)
     buttons()
-    add_vertical_space(2)
     show_svg_tree()
