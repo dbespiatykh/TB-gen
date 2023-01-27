@@ -28,7 +28,7 @@ jobs:
         uses: cypress-io/github-action@v5
         with:
           start: npm start
-          record: true
+          record: false
           browser: chrome
           wait-on: "http://localhost:8501"
           wait-on-timeout: 120
