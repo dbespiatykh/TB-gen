@@ -1,10 +1,12 @@
-import streamlit as st
+import json
 import base64
+import streamlit as st
 import streamlit.components.v1 as components
 
-from streamlit_extras.switch_page_button import switch_page
-from st_pages import show_pages_from_config
 from st_aggrid import JsCode
+from st_pages import show_pages_from_config
+from streamlit_extras.switch_page_button import switch_page
+from streamlit_lottie import st_lottie
 
 
 @st.experimental_memo(show_spinner=False)
@@ -86,6 +88,31 @@ def read_index_html():
             height=0,
             width=0,
         )
+
+
+@st.experimental_memo(experimental_allow_widgets=True, show_spinner=False)
+class LottieAnimations:
+    def success():
+        with open("./assets/lottiefiles/success.json", "r") as f:
+            animation = json.load(f)
+            return st_lottie(animation, loop=False, key="success", height=150)
+
+    def error():
+        with open("./assets/lottiefiles/error.json", "r") as f:
+            animation = json.load(f)
+            return st_lottie(animation, loop=True, key="error", height=100)
+
+    def warning():
+        with open("./assets/lottiefiles/warning.json", "r") as f:
+            animation = json.load(f)
+            return st_lottie(animation, loop=True, key="warning", height=100)
+
+    def arrow():
+        with open("./assets/lottiefiles/arrow.json", "r") as f:
+            animation = json.load(f)
+            return st_lottie(
+                animation, loop=False, key="initial", height=100, speed=1.5
+            )
 
 
 @st.experimental_memo(show_spinner=False)
