@@ -5,10 +5,12 @@ import pandas as pd
 import streamlit as st
 
 from vcf import Reader
+from gzip import BadGzipFile
 from gzip import open as gzopen
 from collections import OrderedDict
 from tempfile import NamedTemporaryFile
-from utils import set_page_config, sidebar_image, set_css, home_page
+from streamlit_extras.add_vertical_space import add_vertical_space
+from utils import set_page_config, sidebar_image, set_css, home_page, LottieAnimations
 
 
 def page_info():
@@ -401,10 +403,17 @@ if __name__ == "__main__":
 
     if st.sidebar.button("Genotype lineage", type="primary"):
         if len(uploaded_files) == 0:
-            st.warning("No data was uploaded!", icon="⚠️")
+            with st.container():
+                st.warning("No data was uploaded!", icon="⚠️")
+
+                col1, col2 = st.columns([1, 10])
+                with col1:
+                    LottieAnimations.warning()
+                with col2:
+                    pass
+
         else:
             with st.spinner("Genotyping..."):
-                info_box.empty()
                 try:
                     t_start = time.time()
                     results_list = []
@@ -413,48 +422,117 @@ if __name__ == "__main__":
 
                         out = genotype_lineages(uploaded_file)
                         results_list.append(out)
+
                     results = pd.concat(results_list).reset_index(drop=True)
 
-                    st.dataframe(results, width=900)
-
-                    t_end = time.time()
-                    hours, rem = divmod(t_end - t_start, 3600)
-                    minutes, seconds = divmod(rem, 60)
-
-                    st.success(
-                        "Done! "
-                        + "Elapsed time: "
-                        + "{:0>2}:{:0>2}:{:05.2f}".format(
-                            int(hours), int(minutes), seconds
-                        ),
-                        icon="✅",
-                    )
-
-                    tsv = convert_df_to_tsv(results)
-                    csv = convert_df_to_csv(results)
-
-                    dwn1, dwn2, mock = st.columns([1, 1, 4])
-
-                    with dwn1:
-                        st.download_button(
-                            label="💾 Download data as TSV",
-                            data=tsv,
-                            file_name="lineage.tsv",
-                            mime="text/csv",
-                        )
-                    with dwn2:
-                        st.download_button(
-                            label="💾 Download data as CSV",
-                            data=csv,
-                            file_name="lineage.csv",
-                            mime="text/csv",
-                        )
-                    with mock:
-                        pass
-
                 except ValueError:
-                    st.warning("Wrong file type!", icon="⚠️")
+                    with st.container():
+                        st.warning("Wrong file type!", icon="⚠️")
+
+                        col1, col2 = st.columns([1, 10])
+                        with col1:
+                            LottieAnimations.warning()
+                        with col2:
+                            pass
+
+                except BadGzipFile:
+                    with st.container():
+                        st.error("File is not gzipped!", icon="❗")
+
+                        col1, col2 = st.columns([1, 10])
+                        with col1:
+                            LottieAnimations.error()
+                        with col2:
+                            pass
+
                 except StopIteration:
-                    st.error("VCF file is malformed!", icon="‼️")
-    else:
-        st.info("Upload input data in the sidebar to start!", icon="👈")
+                    with st.container():
+                        st.error("VCF file is malformed!", icon="❗")
+
+                        col1, col2 = st.columns([1, 10])
+                        with col1:
+                            LottieAnimations.error()
+                        with col2:
+                            pass
+
+                else:
+                    if results.empty:
+                        with st.container():
+
+                            st.warning("No genotypes were called", icon="⚠️")
+
+                            col1, col2 = st.columns([1, 10])
+                            with col1:
+                                LottieAnimations.warning()
+                            with col2:
+                                pass
+
+                    else:
+                        info_box.empty()
+
+                        t_end = time.time()
+                        hours, rem = divmod(t_end - t_start, 3600)
+                        minutes, seconds = divmod(rem, 60)
+
+                        placeholder = st.empty()
+                        with placeholder.container():
+                            LottieAnimations.success()
+                            time.sleep(2)
+                        placeholder.empty()
+
+                        st.dataframe(results, width=900)
+
+                        st.success(
+                            "Done! "
+                            + "Elapsed time: "
+                            + "{:0>2}:{:0>2}:{:05.2f}".format(
+                                int(hours), int(minutes), seconds
+                            ),
+                            icon="✅",
+                        )
+
+                        tsv = convert_df_to_tsv(results)
+                        csv = convert_df_to_csv(results)
+
+                        dwn1, dwn2, mock = st.columns([1, 1, 4])
+
+                        with dwn1:
+                            st.download_button(
+                                label="💾 Download data as TSV",
+                                data=tsv,
+                                file_name="lineage.tsv",
+                                mime="text/csv",
+                            )
+
+                        with dwn2:
+                            st.download_button(
+                                label="💾 Download data as CSV",
+                                data=csv,
+                                file_name="lineage.csv",
+                                mime="text/csv",
+                            )
+
+                        with mock:
+                            pass
+
+    elif len(uploaded_files) != 0:
+        with st.container():
+            st.info("Press the <Genotype lineage> button!")
+            add_vertical_space(1)
+
+            col1, col2 = st.columns([1, 10])
+            with col1:
+                LottieAnimations.arrow()
+            with col2:
+                pass
+
+    elif len(uploaded_files) == 0:
+        with st.container():
+            st.info("Upload input data in the sidebar to start!")
+            add_vertical_space(1)
+
+            col1, col2 = st.columns([1, 10])
+            with col1:
+                LottieAnimations.arrow()
+            with col2:
+                pass
