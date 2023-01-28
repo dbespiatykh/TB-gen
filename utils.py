@@ -1,12 +1,18 @@
 import json
 import base64
+import string
+import random
 import streamlit as st
 import streamlit.components.v1 as components
 
 from st_aggrid import JsCode
 from st_pages import show_pages_from_config
 from streamlit_extras.switch_page_button import switch_page
-from streamlit_lottie import st_lottie
+from streamlit_lottie import st_lottie, st_lottie_spinner
+
+
+def get_random_key(size=6, chars=string.ascii_lowercase + string.digits):
+    return "".join(random.choice(chars) for _ in range(size))
 
 
 @st.experimental_memo(show_spinner=False)
@@ -90,29 +96,34 @@ def read_index_html():
         )
 
 
-@st.experimental_memo(experimental_allow_widgets=True, show_spinner=False)
-class LottieAnimations:
-    def success():
-        with open("./assets/lottiefiles/success.json", "r") as f:
-            animation = json.load(f)
-            return st_lottie(animation, loop=False, key="success", height=150)
+def lottie_success():
+    with open("./assets/lottiefiles/success.json", "r") as f:
+        animation = json.load(f)
+        return st_lottie(animation, loop=False, key="success", height=150)
 
-    def error():
-        with open("./assets/lottiefiles/error.json", "r") as f:
-            animation = json.load(f)
-            return st_lottie(animation, loop=True, key="error", height=100)
 
-    def warning():
-        with open("./assets/lottiefiles/warning.json", "r") as f:
-            animation = json.load(f)
-            return st_lottie(animation, loop=True, key="warning", height=100)
+def lottie_error():
+    with open("./assets/lottiefiles/error.json", "r") as f:
+        animation = json.load(f)
+        return st_lottie(animation, loop=True, key="error", height=100)
 
-    def arrow():
-        with open("./assets/lottiefiles/arrow.json", "r") as f:
-            animation = json.load(f)
-            return st_lottie(
-                animation, loop=False, key="initial", height=100, speed=1.5
-            )
+
+def lottie_warning():
+    with open("./assets/lottiefiles/warning.json", "r") as f:
+        animation = json.load(f)
+        return st_lottie(animation, loop=True, key="warning", height=100)
+
+
+def lottie_arrow():
+    with open("./assets/lottiefiles/arrow.json", "r") as f:
+        animation = json.load(f)
+        return st_lottie(animation, loop=False, key="initial", height=100, speed=1.5)
+
+
+def lottie_spinner():
+    with open("./assets/lottiefiles/spinner.json", "r") as f:
+        animation = json.load(f)
+        return st_lottie_spinner(animation, loop=True, height=100, key=get_random_key())
 
 
 @st.experimental_memo(show_spinner=False)
