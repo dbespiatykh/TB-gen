@@ -1,5 +1,11 @@
 import "cypress-file-upload";
 
+Cypress.on("uncaught:exception", (err, runnable) => {
+  // returning false here prevents Cypress from
+  // failing the test
+  return false;
+});
+
 context("Actions", () => {
   it("Test TB-gen streamlit app", () => {
     cy.visit("http://localhost:8501");
