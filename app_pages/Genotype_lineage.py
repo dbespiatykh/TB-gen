@@ -9,8 +9,17 @@ from gzip import BadGzipFile
 from gzip import open as gzopen
 from collections import OrderedDict
 from tempfile import NamedTemporaryFile
-from streamlit_extras.add_vertical_space import add_vertical_space
-from utils import set_page_config, sidebar_image, set_css, home_page, LottieAnimations
+from utils import (
+    set_page_config,
+    sidebar_image,
+    set_css,
+    home_page,
+    lottie_success,
+    lottie_error,
+    lottie_warning,
+    lottie_arrow,
+    lottie_spinner,
+)
 
 
 def page_info():
@@ -19,6 +28,47 @@ def page_info():
         unsafe_allow_html=True,
     )
     st.markdown("---")
+
+
+def info_box():
+    box = st.empty()
+    with box.container():
+        st.markdown(
+            """
+            Use your own **:blue[.VCF]** or **:blue[.VCF.GZ]** files as input to call lineage  \n
+            - You can use both **:green[single-]** or **:green[multi-sample]** **:blue[.VCF]** files
+            - Accepts **:green[multiple]** **:blue[.VCF]** files at a time
+            - Variants should be called by mapping to the [NC_000962.3](https://www.ncbi.nlm.nih.gov/nuccore/NC_000962.3/) _M. tuberculosis_ H37Rv genome
+            - It is preferable for variants to be filtered and contain only high quality calls
+            """
+        )
+    return box
+
+
+def lottie_container(message_string, message_type, icon, lottie_function):
+    with st.container():
+
+        if icon is None:
+            if message_type == "info":
+                st.info(message_string)
+            elif message_type == "warning":
+                st.warning(message_string)
+            elif message_type == "error":
+                st.error(message_string)
+        else:
+            if message_type == "info":
+                st.info(message_string, icon=icon)
+            elif message_type == "warning":
+                st.warning(message_string, icon=icon)
+            elif message_type == "error":
+                st.error(message_string, icon=icon)
+
+        col1, col2 = st.columns([1, 10])
+
+        with col1:
+            lottie_function()
+        with col2:
+            pass
 
 
 @st.experimental_memo()
@@ -382,17 +432,7 @@ if __name__ == "__main__":
     set_css()
     home_page()
     page_info()
-
-    info_box = st.empty()
-    info_box.markdown(
-        """
-    Use your own **:blue[.VCF]** or **:blue[.VCF.GZ]** files as input to call lineage  \n
-    - You can use both **:green[single-]** or **:green[multi-sample]** **:blue[.VCF]** files
-    - Accepts **:green[multiple]** **:blue[.VCF]** files at a time
-    - Variants should be called by mapping to the [NC_000962.3](https://www.ncbi.nlm.nih.gov/nuccore/NC_000962.3/) _M. tuberculosis_ H37Rv genome
-    - It is preferable for variants to be filtered and contain only high quality calls
-    """
-    )
+    info_ct = info_box()
 
     with st.sidebar.container():
         uploaded_files = st.file_uploader(
@@ -403,136 +443,92 @@ if __name__ == "__main__":
 
     if st.sidebar.button("Genotype lineage", type="primary"):
         if len(uploaded_files) == 0:
-            with st.container():
-                st.warning("No data was uploaded!", icon="⚠️")
-
-                col1, col2 = st.columns([1, 10])
-                with col1:
-                    LottieAnimations.warning()
-                with col2:
-                    pass
+            lottie_container("No data was uploaded!", "warning", "⚠️", lottie_warning)
 
         else:
-            with st.spinner("Genotyping..."):
-                try:
-                    t_start = time.time()
-                    results_list = []
+            try:
+                t_start = time.time()
+                results_list = []
 
-                    for uploaded_file in uploaded_files:
-
+                for uploaded_file in uploaded_files:
+                    with lottie_spinner():
+                        info_ct.empty()
                         out = genotype_lineages(uploaded_file)
                         results_list.append(out)
 
-                    results = pd.concat(results_list).reset_index(drop=True)
+                results = pd.concat(results_list).reset_index(drop=True)
 
-                except ValueError:
-                    with st.container():
-                        st.warning("Wrong file type!", icon="⚠️")
+            except ValueError:
+                info_box()
+                lottie_container("Wrong file type!", "warning", "⚠️", lottie_warning)
 
-                        col1, col2 = st.columns([1, 10])
-                        with col1:
-                            LottieAnimations.warning()
-                        with col2:
-                            pass
+            except BadGzipFile:
+                info_box()
+                lottie_container("File is not gzipped!", "error", "❗", lottie_error)
 
-                except BadGzipFile:
-                    with st.container():
-                        st.error("File is not gzipped!", icon="❗")
+            except StopIteration:
+                info_box()
+                lottie_container("VCF file is malformed!", "error", "❗", lottie_error)
 
-                        col1, col2 = st.columns([1, 10])
-                        with col1:
-                            LottieAnimations.error()
-                        with col2:
-                            pass
-
-                except StopIteration:
-                    with st.container():
-                        st.error("VCF file is malformed!", icon="❗")
-
-                        col1, col2 = st.columns([1, 10])
-                        with col1:
-                            LottieAnimations.error()
-                        with col2:
-                            pass
+            else:
+                if results.empty:
+                    info_box()
+                    lottie_container(
+                        "No genotypes were called", "warning", "⚠️", lottie_warning
+                    )
 
                 else:
-                    if results.empty:
-                        with st.container():
+                    t_end = time.time()
+                    hours, rem = divmod(t_end - t_start, 3600)
+                    minutes, seconds = divmod(rem, 60)
 
-                            st.warning("No genotypes were called", icon="⚠️")
+                    placeholder = st.empty()
+                    with placeholder.container():
+                        lottie_success()
+                        time.sleep(1.6)
+                    placeholder.empty()
 
-                            col1, col2 = st.columns([1, 10])
-                            with col1:
-                                LottieAnimations.warning()
-                            with col2:
-                                pass
+                    st.dataframe(results, width=900)
 
-                    else:
-                        info_box.empty()
+                    st.success(
+                        "Done! "
+                        + "Elapsed time: "
+                        + "{:0>2}:{:0>2}:{:05.2f}".format(
+                            int(hours), int(minutes), seconds
+                        ),
+                        icon="✅",
+                    )
 
-                        t_end = time.time()
-                        hours, rem = divmod(t_end - t_start, 3600)
-                        minutes, seconds = divmod(rem, 60)
+                    tsv = convert_df_to_tsv(results)
+                    csv = convert_df_to_csv(results)
 
-                        placeholder = st.empty()
-                        with placeholder.container():
-                            LottieAnimations.success()
-                            time.sleep(2)
-                        placeholder.empty()
+                    dwn1, dwn2, mock = st.columns([1, 1, 4])
 
-                        st.dataframe(results, width=900)
-
-                        st.success(
-                            "Done! "
-                            + "Elapsed time: "
-                            + "{:0>2}:{:0>2}:{:05.2f}".format(
-                                int(hours), int(minutes), seconds
-                            ),
-                            icon="✅",
+                    with dwn1:
+                        st.download_button(
+                            label="💾 Download data as TSV",
+                            data=tsv,
+                            file_name="lineage.tsv",
+                            mime="text/csv",
                         )
 
-                        tsv = convert_df_to_tsv(results)
-                        csv = convert_df_to_csv(results)
+                    with dwn2:
+                        st.download_button(
+                            label="💾 Download data as CSV",
+                            data=csv,
+                            file_name="lineage.csv",
+                            mime="text/csv",
+                        )
 
-                        dwn1, dwn2, mock = st.columns([1, 1, 4])
-
-                        with dwn1:
-                            st.download_button(
-                                label="💾 Download data as TSV",
-                                data=tsv,
-                                file_name="lineage.tsv",
-                                mime="text/csv",
-                            )
-
-                        with dwn2:
-                            st.download_button(
-                                label="💾 Download data as CSV",
-                                data=csv,
-                                file_name="lineage.csv",
-                                mime="text/csv",
-                            )
-
-                        with mock:
-                            pass
+                    with mock:
+                        pass
 
     elif len(uploaded_files) != 0:
-        with st.container():
-            st.info("Press the <Genotype lineage> button!")
-            add_vertical_space(1)
-
-            col1, col2 = st.columns([1, 10])
-            with col1:
-                LottieAnimations.arrow()
-            with col2:
-                pass
+        lottie_container(
+            "Press the <Genotype lineage> button!", "info", None, lottie_arrow
+        )
 
     elif len(uploaded_files) == 0:
-        with st.container():
-            st.info("Upload input data in the sidebar to start!")
-            add_vertical_space(1)
-
-            col1, col2 = st.columns([1, 10])
-            with col1:
-                LottieAnimations.arrow()
-            with col2:
-                pass
+        lottie_container(
+            "Upload input data in the sidebar to start!", "info", None, lottie_arrow
+        )
