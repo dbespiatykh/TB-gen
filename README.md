@@ -5,6 +5,7 @@
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://tb-gen.streamlit.app)
 [![Tests](https://github.com/dbespiatykh/TB-gen/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/dbespiatykh/TB-gen/actions/workflows/main.yml)
 [![TB-gen](https://img.shields.io/endpoint?url=https://cloud.cypress.io/badge/simple/tsa7nt/main&style=flat&logo=cypress)](https://cloud.cypress.io/projects/tsa7nt/runs)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdbespiatykh%2FTB-gen.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdbespiatykh%2FTB-gen?ref=badge_shield)
 
 ## Description
 
@@ -33,3 +34,7 @@ pip install -r requirements.txt
 ```bash
 streamlit run streamlit_app.py
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdbespiatykh%2FTB-gen.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdbespiatykh%2FTB-gen?ref=badge_large)
