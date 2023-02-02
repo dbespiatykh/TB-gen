@@ -471,7 +471,16 @@ if __name__ == "__main__":
                 lottie_container("VCF file is malformed!", "error", "❗", lottie_error)
 
             else:
-                if results.empty:
+                if (
+                    results.empty
+                    or all(
+                        results.loc[:, results.columns != "Sample"]
+                        .replace("", np.nan)
+                        .isna()
+                        .all()
+                    )
+                    is True
+                ):
                     info_box()
                     lottie_container(
                         "No genotypes were called", "warning", "⚠️", lottie_warning
