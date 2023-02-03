@@ -7,30 +7,69 @@ import streamlit as st
 import leafmap.foliumap as leafmap
 
 from pdbio.vcfdataframe import VcfDataFrame
+from streamlit_toggle import st_toggle_switch
 from streamlit_extras.colored_header import colored_header
 from st_aggrid import AgGrid, GridUpdateMode, GridOptionsBuilder
 from streamlit_extras.add_vertical_space import add_vertical_space
-from utils import set_page_config, sidebar_image, set_css, home_page, author_link
+from utils import (
+    set_page_config,
+    sidebar_image,
+    set_css,
+    home_page,
+    author_link,
+    back_button,
+)
 
 
 def page_info():
     st.markdown(
-        "<h2 style='text-align: left; color: #7A3777;'><strong>Reference dataset of <em>Mycobacterium tuberculosis</em> complex isolates</strong></h2>",
+        """
+        <h2 style="text-align: left; color: #7a3777">
+        <strong
+            >Reference dataset of <em>Mycobacterium tuberculosis</em> complex
+            isolates</strong
+        >
+        </h2>
+        """,
         unsafe_allow_html=True,
     )
     st.markdown(
-        "\
-           <a style='text-decoration: none' \
-            href='#dataset'>\
-            <span style='color: #7A3777; font-size: 20px; font-weight:bold'>&#x278A; </span><span style='color: #A65AA3; font-size: 20px; font-weight:bold'>Dataset</span></a>\
-           \n<a style='text-decoration: none' \
-            href='#statistics'>\
-            <span style='color: #7A3777; font-size: 20px; font-weight:bold'>&#x278B; </span><span style='color: #A65AA3; font-size: 20px; font-weight:bold'>Statistics</span></a>\
-           \n<a style='text-decoration: none' \
-            href='#map-showing-the-distribution-of-samples'>\
-            <span style='color: #7A3777; font-size: 20px; font-weight:bold'>&#x278C; </span><span style='color: #A65AA3; font-size: 20px; font-weight:bold'>Map</span></a>\
-            \n___\
-            ",
+        """
+        <a style="text-decoration: none" href="#dataset">
+        <span style="color: #7a3777; font-size: 20px; font-weight: bold"
+            >&#x278A; </span
+        ><span style="color: #a65aa3; font-size: 20px; font-weight: bold"
+            >Dataset</span
+        ></a
+        >
+        </br>
+        <a style="text-decoration: none" href="#statistics">
+        <span style="color: #7a3777; font-size: 20px; font-weight: bold"
+            >&#x278B; </span
+        ><span style="color: #a65aa3; font-size: 20px; font-weight: bold"
+            >Statistics</span
+        ></a
+        >
+        </br>
+        <a
+        style="text-decoration: none"
+        href="#map-showing-the-distribution-of-samples"
+        >
+        <span style="color: #7a3777; font-size: 20px; font-weight: bold"
+            >&#x278C; </span
+        ><span style="color: #a65aa3; font-size: 20px; font-weight: bold"
+            >Map</span
+        ></a
+        >
+        <hr
+        style="
+            height: 2px;
+            border-width: 0;
+            color: #A9A5D1;
+            background-color: #A9A5D1;
+        "
+        />
+        """,
         unsafe_allow_html=True,
     )
 
@@ -189,7 +228,24 @@ def get_map():
     return m
 
 
+def get_toggle_switch():
+    switch, mock = st.columns([1, 5])
+    with switch:
+        st_toggle_switch(
+            label="Show full dataset",
+            key="toggle",
+            default_value=False,
+            label_after=True,
+            inactive_color="#CFDED8",
+            active_color="#A65AA3",
+            track_color="#BCC3DB",
+        )
+    with mock:
+        pass
+
+
 def show_dataset():
+    get_toggle_switch()
     dataset = load_dataset()
     gd = GridOptionsBuilder.from_dataframe(
         dataset, enableRowGroup=True, enableValue=True, enablePivot=True
@@ -199,7 +255,7 @@ def show_dataset():
     gd.configure_default_column(editable=False, groupable=True)
     gd.configure_side_bar()
 
-    if st.checkbox("Show Dataset"):
+    if st.session_state["toggle"] is True:
         grid1 = AgGrid(
             dataset,
             gridOptions=gd.build(),
@@ -445,12 +501,4 @@ if __name__ == "__main__":
     )
     get_map().to_streamlit(height=700)
 
-    st.markdown(
-        "\
-        <a style='text-decoration: none' \
-            href='#reference-dataset-of-mycobacterium-tuberculosis-complex-isolates'>\
-            <span style='color: #7A3777; font-weight:bold'>&#x21E7; </span>\
-            <span style='color: #A65AA3; font-weight:bold'>Back to top</span></a>\
-            ",
-        unsafe_allow_html=True,
-    )
+    back_button("reference-dataset-of-mycobacterium-tuberculosis-complex-isolates")
