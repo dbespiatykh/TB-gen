@@ -10,6 +10,7 @@ from utils import (
     home_page,
     get_cell_style,
     author_link,
+    back_button,
 )
 
 
@@ -127,13 +128,4 @@ if __name__ == "__main__":
     author_link()
     page_info()
     show_dataset()
-
-    st.markdown(
-        "\
-        <a style='text-decoration: none' \
-            href='#mtbc-barcoding-snps'>\
-            <span style='color: #7A3777; font-weight:bold'>&#x21E7; </span>\
-            <span style='color: #A65AA3; font-weight:bold'>Back to top</span></a>\
-            ",
-        unsafe_allow_html=True,
-    )
+    back_button("mtbc-barcoding-snps")
