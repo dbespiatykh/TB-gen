@@ -126,6 +126,30 @@ def lottie_spinner():
         return st_lottie_spinner(animation, loop=True, height=100, key=get_random_key())
 
 
+def back_button(anchor: str):
+    link = "#" + anchor
+    st.markdown(
+        f"""
+        <a
+        style="text-decoration: none"
+        href="{link}">
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            fill="#7A3777"
+            class="bi bi-arrow-up-square-fill"
+            viewBox="0 0 16 16">
+            <path
+            d="M2 16a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2zm6.5-4.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 1 0z"/>
+        </svg>
+        <span style="color: #a65aa3; font-weight: bold">Back to top</span>
+        </a>
+            """,
+        unsafe_allow_html=True,
+    )
+
+
 @st.experimental_memo(show_spinner=False)
 def get_cell_style():
     cellstyle_jscode = JsCode(
