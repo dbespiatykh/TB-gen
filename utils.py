@@ -59,15 +59,21 @@ def sidebar_image():
 @st.experimental_memo(show_spinner=False)
 def author_link():
     with st.sidebar.container():
-        # <a href='https://www.researchgate.net/profile/Dmitry-Bespiatykh'><img src='https://img.shields.io/badge/Dmitry_Bespiatykh-00CCBB?logo=researchgate&amp;style=flat_square&amp;labelColor=white&amp;logoWidth=20&amp;logoColor=00CCBB' alt='RG'></a>\
-        # <a href='https://orcid.org/0000-0003-0867-5988'><img src='https://img.shields.io/badge/0000_0003_0867_5988-A6CE39?logo=orcid&amp;style=flat_square&amp;labelColor=white&amp;logoWidth=20' alt='ORCiD'></a>\
-        # <a href='https://github.com/dbespiatykh'><img src='https://img.shields.io/badge/dbespiatykh-181717?logo=github&amp;style=flat_square&amp;labelColor=white&amp;logoWidth=20&amp;logoColor=181717' alt='GitHub'></a>\
         st.markdown(
-            "\
-        \n[![RG](https://img.shields.io/badge/Dmitry_Bespiatykh-00CCBB?logo=researchgate&style=flat-square&labelColor=white&logoWidth=20&logoColor=00CCBB)](https://www.researchgate.net/profile/Dmitry-Bespiatykh)\
-        \n[![ORCiD](https://img.shields.io/badge/0000_0003_0867_5988-A6CE39?logo=orcid&style=flat-square&labelColor=white&logoWidth=20)](https://orcid.org/0000-0003-0867-5988)\
-        \n[![GitHub](https://img.shields.io/badge/dbespiatykh-181717?logo=github&style=flat-square&labelColor=white&logoWidth=20&logoColor=181717)](https://github.com/dbespiatykh)\
-                ",
+            """
+            <a href="https://www.researchgate.net/profile/Dmitry-Bespiatykh"><img
+                src="https://img.shields.io/badge/Dmitry_Bespiatykh-00CCBB?logo=researchgate&amp;style=flat-square&amp;labelColor=white&amp;logoWidth=20&amp;logoColor=00CCBB"
+                alt="RG"
+            /></a>
+            <a href="https://orcid.org/0000-0003-0867-5988"><img
+                src="https://img.shields.io/badge/0000_0003_0867_5988-A6CE39?logo=orcid&amp;style=flat-square&amp;labelColor=white&amp;logoWidth=20"
+                alt="ORCiD"
+            /></a>
+            <a href="https://github.com/dbespiatykh"><img
+                src="https://img.shields.io/badge/dbespiatykh-181717?logo=github&amp;style=flat-square&amp;labelColor=white&amp;logoWidth=20&amp;logoColor=181717"
+                alt="GitHub"
+            /></a>
+            """,
             unsafe_allow_html=True,
         )
 
@@ -183,41 +189,8 @@ def get_cell_style():
                             'font-family': 'sans-serif',
                         }
                     }
-                    if (params.value == 'L1'
-                    | params.value == 'L1.1'
-                    | params.value == 'L1.1.1'
-                    | params.value == 'L1.1.1.1'
-                    | params.value == 'L1.1.1.10'
-                    | params.value == 'L1.1.1.11'
-                    | params.value == 'L1.1.1.2'
-                    | params.value == 'L1.1.1.3'
-                    | params.value == 'L1.1.1.4'
-                    | params.value == 'L1.1.1.5'
-                    | params.value == 'L1.1.1.6'
-                    | params.value == 'L1.1.1.7'
-                    | params.value == 'L1.1.1.8'
-                    | params.value == 'L1.1.1.9'
-                    | params.value == 'L1.1.2'
-                    | params.value == 'L1.1.2.1'
-                    | params.value == 'L1.1.2.2'
-                    | params.value == 'L1.1.3'
-                    | params.value == 'L1.1.3.1'
-                    | params.value == 'L1.1.3.2'
-                    | params.value == 'L1.1.3.3'
-                    | params.value == 'L1.1.3.4'
-                    | params.value == 'L1.2'
-                    | params.value == 'L1.2'
-                    | params.value == 'L1.2.1'
-                    | params.value == 'L1.2.2'
-                    | params.value == 'L1.2.2.1'
-                    | params.value == 'L1.2.2.2'
-                    | params.value == 'L1.2.2.3'
-                    | params.value == 'L1.2.2.4'
-                    | params.value == 'L1.2.2.5'
-                    | params.value == 'L1.3'
-                    | params.value == 'L1.3'
-                    | params.value == 'L1.3.1'
-                    | params.value == 'L1.3.2') {
+                    var re = new RegExp("^L1");
+                    if (re.test(params.value)){
                         return {
                             'color': '#006796',
                             'font-weight': 'bold',
@@ -225,53 +198,8 @@ def get_cell_style():
                             'backgroundColor': '#00679633',
                         }
                     }
-                    if (params.value == 'L2'
-                    | params.value == 'L2.1'
-                    | params.value == 'L2.2 (ancient)'
-                    | params.value == 'L2.2 (modern)'
-                    | params.value == 'L2.2.A'
-                    | params.value == 'L2.2.AA1'
-                    | params.value == 'L2.2.AA2'
-                    | params.value == 'L2.2.AA3'
-                    | params.value == 'L2.2.AA3.1'
-                    | params.value == 'L2.2.AA3.2'
-                    | params.value == 'L2.2.AA4'
-                    | params.value == 'L2.2.B'
-                    | params.value == 'L2.2.C'
-                    | params.value == 'L2.2.D'
-                    | params.value == 'L2.2.E'
-                    | params.value == 'L2.2.M1'
-                    | params.value == 'L2.2.M1.1'
-                    | params.value == 'L2.2.M1.2'
-                    | params.value == 'L2.2.M1.3'
-                    | params.value == 'L2.2.M1.4'
-                    | params.value == 'L2.2.M2'
-                    | params.value == 'L2.2.M2.1'
-                    | params.value == 'L2.2.M2.2'
-                    | params.value == 'L2.2.M2.3'
-                    | params.value == 'L2.2.M2.4'
-                    | params.value == 'L2.2.M2.5'
-                    | params.value == 'L2.2.M3'
-                    | params.value == 'L2.2.M4'
-                    | params.value == 'L2.2.M4.1'
-                    | params.value == 'L2.2.M4.2'
-                    | params.value == 'L2.2.M4.3'
-                    | params.value == 'L2.2.M4.4'
-                    | params.value == 'L2.2.M4.5'
-                    | params.value == 'L2.2.M4.6'
-                    | params.value == 'L2.2.M4.7'
-                    | params.value == 'L2.2.M4.8'
-                    | params.value == 'L2.2.M4.9'
-                    | params.value == 'L2.2.M4.9.1'
-                    | params.value == 'L2.2.M4.9.2'
-                    | params.value == 'L2.2.M5'
-                    | params.value == 'L2.2.M6'
-                    | params.value == 'L2.2.M6.1'
-                    | params.value == 'L2.2.M6.2'
-                    | params.value == '2.2.1.2'
-                    | params.value == 'AA1SA'
-                    | params.value == 'Bmyc3'
-                    | params.value == 'lin2.2.1.2') {
+                    var re = new RegExp("^L2|^Bmyc|^AA1|^lin2");
+                    if (re.test(params.value)){
                         return {
                             'color': '#8A517E',
                             'font-weight': 'bold',
@@ -279,25 +207,8 @@ def get_cell_style():
                             'backgroundColor': '#8A517E33',
                         }
                     }
-                    if (params.value == 'L3'
-                    | params.value == 'L3.1'
-                    | params.value == 'L3.1.1'
-                    | params.value == 'L3.1.1.1'
-                    | params.value == 'L3.1.1.2'
-                    | params.value == 'L3.1.2'
-                    | params.value == 'L3.1.3'
-                    | params.value == 'L3.1.3.1'
-                    | params.value == 'L3.2'
-                    | params.value == 'L3.2'
-                    | params.value == 'L3.3'
-                    | params.value == 'L3.3'
-                    | params.value == 'L3.4'
-                    | params.value == 'L3.4'
-                    | params.value == 'L3.5'
-                    | params.value == 'L3.5'
-                    | params.value == 'L3.5.1'
-                    | params.value == 'L3.6'
-                    | params.value == 'L3.6') {
+                    var re = new RegExp("^L3");
+                    if (re.test(params.value)){
                         return {
                             'color': '#B56748',
                             'font-weight': 'bold',
@@ -305,65 +216,8 @@ def get_cell_style():
                             'backgroundColor': '#B5674833',
                         }
                     }
-                    if (params.value == 'L4'
-                    | params.value == 'L4.1'
-                    | params.value == 'L4.1.1'
-                    | params.value == 'L4.1.1.1'
-                    | params.value == 'L4.1.1.2'
-                    | params.value == 'L4.1.1.3'
-                    | params.value == 'L4.1.1.3.1'
-                    | params.value == 'L4.1.2'
-                    | params.value == 'L4.1.2.1'
-                    | params.value == 'L4.1.2.1.1'
-                    | params.value == 'L4.1.3'
-                    | params.value == 'L4.1.4'
-                    | params.value == 'L4.2'
-                    | params.value == 'L4.2'
-                    | params.value == 'L4.2.1'
-                    | params.value == 'L4.2.1.1'
-                    | params.value == 'L4.2.2'
-                    | params.value == 'L4.2.2.1'
-                    | params.value == 'L4.2.2.2'
-                    | params.value == 'L4.3'
-                    | params.value == 'L4.3'
-                    | params.value == 'L4.3.1'
-                    | params.value == 'L4.3.1.1'
-                    | params.value == 'L4.3.2'
-                    | params.value == 'L4.3.2.1'
-                    | params.value == 'L4.3.3'
-                    | params.value == 'L4.3.4'
-                    | params.value == 'L4.3.4.1'
-                    | params.value == 'L4.3.4.2'
-                    | params.value == 'L4.3.4.2.1'
-                    | params.value == 'L4.4'
-                    | params.value == 'L4.4'
-                    | params.value == 'L4.4.1'
-                    | params.value == 'L4.4.1.1'
-                    | params.value == 'L4.4.1.1.1'
-                    | params.value == 'L4.4.1.2'
-                    | params.value == 'L4.4.2'
-                    | params.value == 'L4.5'
-                    | params.value == 'L4.5'
-                    | params.value == 'L4.6'
-                    | params.value == 'L4.6'
-                    | params.value == 'L4.6.1'
-                    | params.value == 'L4.6.1.1'
-                    | params.value == 'L4.6.1.2'
-                    | params.value == 'L4.6.2'
-                    | params.value == 'L4.6.2.2'
-                    | params.value == 'L4.6.3'
-                    | params.value == 'L4.6.4'
-                    | params.value == 'L4.6.5'
-                    | params.value == 'L4.7'
-                    | params.value == 'L4.7'
-                    | params.value == 'L4.8'
-                    | params.value == 'L4.8'
-                    | params.value == 'L4.8.1'
-                    | params.value == 'L4.8.2'
-                    | params.value == 'L4.8.3'
-                    | params.value == 'L4.9'
-                    | params.value == 'L4.9'
-                    | params.value == 'L4.9.1') {
+                    var re = new RegExp("^L4");
+                    if (re.test(params.value)){
                         return {
                             'color': '#16592C',
                             'font-weight': 'bold',
@@ -371,17 +225,8 @@ def get_cell_style():
                             'backgroundColor': '#16592C33',
                         }
                     }
-                    if (params.value == 'L5'
-                    | params.value == 'L5.1'
-                    | params.value == 'L5.1.1'
-                    | params.value == 'L5.1.2'
-                    | params.value == 'L5.1.3'
-                    | params.value == 'L5.1.4'
-                    | params.value == 'L5.1.5'
-                    | params.value == 'L5.2'
-                    | params.value == 'L5.2'
-                    | params.value == 'L5.3'
-                    | params.value == 'L5.3') {
+                    var re = new RegExp("^L5");
+                    if (re.test(params.value)){
                         return {
                             'color': '#595480',
                             'font-weight': 'bold',
@@ -389,21 +234,8 @@ def get_cell_style():
                             'backgroundColor': '#59548033',
                         }
                     }
-                    if (params.value == 'L6'
-                    | params.value == 'L6.1'
-                    | params.value == 'L6.1.1'
-                    | params.value == 'L6.1.2'
-                    | params.value == 'L6.1.3'
-                    | params.value == 'L6.2'
-                    | params.value == 'L6.2'
-                    | params.value == 'L6.2.1'
-                    | params.value == 'L6.2.2'
-                    | params.value == 'L6.2.3'
-                    | params.value == 'L6.3'
-                    | params.value == 'L6.3'
-                    | params.value == 'L6.3.1'
-                    | params.value == 'L6.3.2'
-                    | params.value == 'L6.3.3') {
+                    var re = new RegExp("^L6");
+                    if (re.test(params.value)){
                         return {
                             'color': '#696969',
                             'font-weight': 'bold',
@@ -435,11 +267,8 @@ def get_cell_style():
                             'backgroundColor': '#3B808733',
                         }
                     }
-                    if (params.value == 'M.bovis'
-                    | params.value == 'M.caprae'
-                    | params.value == 'M.microti'
-                    | params.value == 'M.orygis'
-                    | params.value == 'M.pinipedii') {
+                    var re = new RegExp("^M.");
+                    if (re.test(params.value)){
                         return {
                             'color': '#82181A',
                             'font-weight': 'bold',
