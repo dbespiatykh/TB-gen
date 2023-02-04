@@ -4,6 +4,6 @@
     "cypress-file-upload": "^5.0.8"
   },
   "scripts": {
-    "start": "cypress run --headed --record"
+    "start": "cypress run --browser chrome --headed --record"
   }
 }
