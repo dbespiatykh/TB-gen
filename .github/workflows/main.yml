@@ -30,6 +30,8 @@ jobs:
           start: npm start
           record: true
           browser: chrome
+          headed: true
+          timeout-minutes: 15
           wait-on: "http://localhost:8501"
           wait-on-timeout: 120
         env:
