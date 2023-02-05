@@ -53,6 +53,17 @@ def info_box():
             - It is preferable for variants to be filtered and contain only high quality calls
             """
         )
+        st.markdown(
+            """
+            <p style="color: #737A7C">
+            <sub
+                >Example .VCF file can be downloaded from the
+                <span style="color: #a65aa3">Reference dataset </span>page</sub
+            >
+            </p>
+            """,
+            unsafe_allow_html=True,
+        )
     return box
 
 
@@ -512,11 +523,10 @@ if __name__ == "__main__":
 
                     st.success(
                         "Done! "
-                        + "Elapsed time: "
+                        + "⏱️ "
                         + "{:0>2}:{:0>2}:{:05.2f}".format(
                             int(hours), int(minutes), seconds
-                        ),
-                        icon="✅",
+                        )
                     )
 
                     tsv = convert_df_to_tsv(results)
