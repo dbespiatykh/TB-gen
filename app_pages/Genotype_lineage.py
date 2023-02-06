@@ -236,9 +236,9 @@ def count_level1_variants(call_list):
     for item, count in d.values():
         if not item.startswith("L8"):
             if count > 1:
-                item = "{}".format(item)
+                item = f"{item}"
             elif count == 1:
-                item = "{} [{}]".format(item, "warning! only 1/2 snp is present")
+                item = f"{item} [warning! only 1/2 snp is present]"
         call_list.append(item)
 
     return call_list
@@ -262,17 +262,17 @@ def count_level2_variants(call_list):
     for item, count in d.values():
         if not item.startswith(("L2.2 (modern)", "L2.2 (ancient)")):
             if count > 1:
-                item = "{}".format(item)
+                item = f"{item}"
             elif count == 1:
-                item = "{} [{}]".format(item, "warning! only 1/2 snp is present")
+                item = f"{item} [warning! only 1/2 snp is present]"
         elif item.startswith(("L2.2 (modern)", "L2.2 (ancient)")):
             if count > 1:
-                item = "{}".format(item)
+                item = f"{item}"
             elif count == 1:
                 if not item.startswith("L2.2 (modern)"):
-                    item = "{} [{}]".format(item, "warning! only 1/2 snp is present")
+                    item = f"{item} [warning! only 1/2 snp is present]"
                 if item.startswith("L2.2 (modern)"):
-                    item = "{}".format(item)
+                    item = f"{item}"
         call_list.append(item)
 
     return call_list
@@ -448,20 +448,25 @@ def genotype_lineages(uploaded_file):
     return result
 
 
-if __name__ == "__main__":
-    set_page_config()
-    sidebar_image()
-    set_css()
-    home_page()
-    page_info()
-    info_ct = info_box()
-
+def get_uploaded_files():
     with st.sidebar.container():
         uploaded_files = st.file_uploader(
             "**Upload** **:blue[.VCF]** **file**",
             type=["vcf", "vcf.gz"],
             accept_multiple_files=True,
         )
+    return uploaded_files
+
+
+def main():
+    set_page_config()
+    sidebar_image()
+    set_css()
+    home_page()
+    page_info()
+
+    info_ct = info_box()
+    uploaded_files = get_uploaded_files()
 
     if st.sidebar.button("Genotype lineage", type="primary"):
         if len(uploaded_files) == 0:
@@ -469,7 +474,7 @@ if __name__ == "__main__":
 
         else:
             try:
-                t_start = time.time()
+                t_start = time.perf_counter()
                 results_list = []
 
                 for uploaded_file in uploaded_files:
@@ -509,9 +514,10 @@ if __name__ == "__main__":
                     )
 
                 else:
-                    t_end = time.time()
+                    t_end = time.perf_counter()
                     hours, rem = divmod(t_end - t_start, 3600)
                     minutes, seconds = divmod(rem, 60)
+                    elapsed = f"{int(hours):0>2}:{int(minutes):0>2}:{seconds:05.2f}"
 
                     placeholder = st.empty()
                     with placeholder.container():
@@ -520,14 +526,7 @@ if __name__ == "__main__":
                     placeholder.empty()
 
                     st.dataframe(results, width=900)
-
-                    st.success(
-                        "Done! "
-                        + "⏱️ "
-                        + "{:0>2}:{:0>2}:{:05.2f}".format(
-                            int(hours), int(minutes), seconds
-                        )
-                    )
+                    st.success(f"Done! ⏱️ {elapsed}")
 
                     tsv = convert_df_to_tsv(results)
                     csv = convert_df_to_csv(results)
@@ -562,3 +561,7 @@ if __name__ == "__main__":
         lottie_container(
             "Upload input data in the sidebar to start!", "info", None, lottie_arrow
         )
+
+
+if __name__ == "__main__":
+    main()
