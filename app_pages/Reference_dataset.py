@@ -346,14 +346,14 @@ def sample_stats():
     if st.checkbox("Show Variants"):
         with st.spinner("Loading VCF..."):
             try:
-                vcf_path = "./data/VCF/" + sample_filter + ".vcf.gz"
+                vcf_path = f"./data/VCF/{sample_filter}.vcf.gz"
                 vcf_df = vcf_to_df(vcf_path)
                 st.dataframe(vcf_df)
                 with open(vcf_path, "rb") as vcf:
                     st.download_button(
                         label="Download calls in VCF format",
                         data=vcf,
-                        file_name=sample_filter + ".vcf.gz",
+                        file_name=f"{sample_filter}.vcf.gz",
                     )
             except FileNotFoundError:
                 st.warning("VCF file in not available", icon="⚠️")
@@ -466,7 +466,7 @@ def get_chart():
         st.altair_chart(sample_chart, theme="streamlit", use_container_width=True)
 
 
-if __name__ == "__main__":
+def main():
     set_page_config()
     sidebar_image()
     set_css()
@@ -502,3 +502,7 @@ if __name__ == "__main__":
     get_map().to_streamlit(height=700)
 
     back_button("reference-dataset-of-mycobacterium-tuberculosis-complex-isolates")
+
+
+if __name__ == "__main__":
+    main()
