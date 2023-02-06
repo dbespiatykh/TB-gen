@@ -120,7 +120,7 @@ def show_dataset():
         return grid
 
 
-if __name__ == "__main__":
+def main():
     set_page_config()
     sidebar_image()
     set_css()
@@ -129,3 +129,7 @@ if __name__ == "__main__":
     page_info()
     show_dataset()
     back_button("mtbc-barcoding-snps")
+
+
+if __name__ == "__main__":
+    main()
