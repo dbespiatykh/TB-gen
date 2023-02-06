@@ -103,37 +103,37 @@ def read_index_html():
 
 
 def lottie_success():
-    with open("./assets/lottiefiles/success.json", "r") as f:
+    with open("./assets/lottiefiles/success.json") as f:
         animation = json.load(f)
         return st_lottie(animation, loop=False, key="success", height=150)
 
 
 def lottie_error():
-    with open("./assets/lottiefiles/error.json", "r") as f:
+    with open("./assets/lottiefiles/error.json") as f:
         animation = json.load(f)
         return st_lottie(animation, loop=True, key="error", height=100)
 
 
 def lottie_warning():
-    with open("./assets/lottiefiles/warning.json", "r") as f:
+    with open("./assets/lottiefiles/warning.json") as f:
         animation = json.load(f)
         return st_lottie(animation, loop=True, key="warning", height=100)
 
 
 def lottie_arrow():
-    with open("./assets/lottiefiles/arrow.json", "r") as f:
+    with open("./assets/lottiefiles/arrow.json") as f:
         animation = json.load(f)
         return st_lottie(animation, loop=False, key="initial", height=100, speed=1.5)
 
 
 def lottie_spinner():
-    with open("./assets/lottiefiles/spinner.json", "r") as f:
+    with open("./assets/lottiefiles/spinner.json") as f:
         animation = json.load(f)
         return st_lottie_spinner(animation, loop=True, height=100, key=get_random_key())
 
 
 def back_button(anchor: str):
-    link = "#" + anchor
+    link = f"#{anchor}"
     st.markdown(
         f"""
         <a
