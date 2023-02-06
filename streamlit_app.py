@@ -57,7 +57,7 @@ def show_svg_tree():
     st.markdown(svg_display, unsafe_allow_html=True)
 
 
-if __name__ == "__main__":
+def main():
     set_page_config()
     sidebar_image()
     set_css()
@@ -67,3 +67,7 @@ if __name__ == "__main__":
     add_vertical_space(1)
     buttons()
     show_svg_tree()
+
+
+if __name__ == "__main__":
+    main()
