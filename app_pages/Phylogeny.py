@@ -39,35 +39,35 @@ def page_info():
 
 @st.experimental_memo
 def show_lineage1_tree():
-    HtmlTree = open("./data/trees/lineage.1.tree.html", "r", encoding="utf-8")
+    HtmlTree = open("./data/trees/lineage.1.tree.html", encoding="utf-8")
     source_code = HtmlTree.read()
     components.html(source_code, height=1000, width=1800, scrolling=True)
 
 
 @st.experimental_memo
 def show_lineage2_tree():
-    HtmlTree = open("./data/trees/lineage.2.tree.html", "r", encoding="utf-8")
+    HtmlTree = open("./data/trees/lineage.2.tree.html", encoding="utf-8")
     source_code = HtmlTree.read()
     components.html(source_code, height=1000, width=1800, scrolling=True)
 
 
 @st.experimental_memo
 def show_lineage3_tree():
-    HtmlTree = open("./data/trees/lineage.3.tree.html", "r", encoding="utf-8")
+    HtmlTree = open("./data/trees/lineage.3.tree.html", encoding="utf-8")
     source_code = HtmlTree.read()
     components.html(source_code, height=1000, width=1800, scrolling=True)
 
 
 @st.experimental_memo
 def show_lineage4_tree():
-    HtmlTree = open("./data/trees/lineage.4.tree.html", "r", encoding="utf-8")
+    HtmlTree = open("./data/trees/lineage.4.tree.html", encoding="utf-8")
     source_code = HtmlTree.read()
     components.html(source_code, height=1000, width=1800, scrolling=True)
 
 
 @st.experimental_memo
 def show_lineage5_tree():
-    HtmlTree = open("./data/trees/lineage.5.Animal.tree.html", "r", encoding="utf-8")
+    HtmlTree = open("./data/trees/lineage.5.Animal.tree.html", encoding="utf-8")
     source_code = HtmlTree.read()
     components.html(source_code, height=1000, width=1600, scrolling=True)
 
@@ -99,7 +99,7 @@ def arrange_tabs():
         show_lineage5_tree()
 
 
-if __name__ == "__main__":
+def main():
     set_page_config()
     sidebar_image()
     set_css()
@@ -108,3 +108,7 @@ if __name__ == "__main__":
     page_info()
     arrange_tabs()
     back_button("mycobacterium-tuberculosis-complex-phylogeny")
+
+
+if __name__ == "__main__":
+    main()
