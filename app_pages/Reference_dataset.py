@@ -341,22 +341,22 @@ def sample_stats():
     # Dataframe filter
     sample_filter = st.selectbox("Select Sample", pd.unique(dataset["Sample"]))
     dataset = dataset[dataset["Sample"] == sample_filter]
-    add_vertical_space(2)
 
-    if st.checkbox("Show Variants"):
-        with st.spinner("Loading VCF..."):
-            try:
-                vcf_path = f"./data/VCF/{sample_filter}.vcf.gz"
-                vcf_df = vcf_to_df(vcf_path)
+    try:
+        with open(f"./data/VCF/{sample_filter}.vcf.gz", "rb") as vcf:
+            st.download_button(
+                label="💾 Download VCF",
+                data=vcf,
+                file_name=f"{sample_filter}.vcf.gz",
+            )
+
+        if st.checkbox("Show Variants"):
+            with st.spinner("Loading VCF..."):
+                vcf_df = vcf_to_df(f"./data/VCF/{sample_filter}.vcf.gz")
                 st.dataframe(vcf_df)
-                with open(vcf_path, "rb") as vcf:
-                    st.download_button(
-                        label="Download calls in VCF format",
-                        data=vcf,
-                        file_name=f"{sample_filter}.vcf.gz",
-                    )
-            except FileNotFoundError:
-                st.warning("VCF file in not available", icon="⚠️")
+
+    except FileNotFoundError:
+        st.warning("VCF file is not available", icon="⚠️")
 
     add_vertical_space(3)
 
