@@ -55,10 +55,17 @@ def info_box():
         )
         st.markdown(
             """
-            <p style="color: #737A7C">
+            <p style="color: #737a7c">
             <sub
                 >Example .VCF file can be downloaded from the
-                <span style="color: #a65aa3">Reference dataset </span>page</sub
+                <a
+                target="_self"
+                href="/Reference%20dataset"
+                style="color: #a65aa3; text-decoration: none"
+                >
+                Reference dataset</a
+                >
+                page</sub
             >
             </p>
             """,
