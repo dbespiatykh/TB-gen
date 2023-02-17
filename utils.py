@@ -15,7 +15,7 @@ def get_random_key(size=6, chars=string.ascii_lowercase + string.digits):
     return "".join(random.choice(chars) for _ in range(size))
 
 
-@st.experimental_memo(show_spinner=False)
+@st.cache_data(show_spinner=False)
 def set_pages():
     show_pages_from_config()
 
@@ -35,9 +35,8 @@ def set_page_config():
         raise e
 
 
-@st.experimental_memo(show_spinner=False)
+@st.cache_data(show_spinner=False)
 def sidebar_image():
-
     image_extension = "svg+xml"
 
     st.markdown(
@@ -56,7 +55,7 @@ def sidebar_image():
     )
 
 
-@st.experimental_memo(show_spinner=False)
+@st.cache_data(show_spinner=False)
 def author_link():
     with st.sidebar.container():
         st.markdown(
@@ -78,23 +77,22 @@ def author_link():
         )
 
 
-@st.experimental_memo(show_spinner=False)
+@st.cache_data(show_spinner=False)
 def set_css():
     with open("style.css") as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 
-@st.experimental_memo(experimental_allow_widgets=True, show_spinner=False)
+@st.cache_data(experimental_allow_widgets=True, show_spinner=False)
 def home_page():
     home = st.button("Home")
     if home:
         switch_page("home")
 
 
-@st.experimental_memo(experimental_allow_widgets=True, show_spinner=False)
+@st.cache_data(experimental_allow_widgets=True, show_spinner=False)
 def read_index_html():
     with open("index.html") as f:
-
         components.html(
             f.read(),
             height=0,
@@ -156,7 +154,7 @@ def back_button(anchor: str):
     )
 
 
-@st.experimental_memo(show_spinner=False)
+@st.cache_data(show_spinner=False)
 def get_cell_style():
     cellstyle_jscode = JsCode(
         """
