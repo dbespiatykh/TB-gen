@@ -64,24 +64,24 @@ def page_info():
             pass
 
 
-@st.experimental_memo
+@st.cache_data
 def load_dataset():
     df = pd.read_csv("./data/snp_barcode.tsv", sep="\t")
     return df
 
 
-@st.experimental_memo
+@st.cache_data
 def load_long_levels():
     df = pd.read_csv("./data/levels.tsv", sep="\t")
     return df
 
 
-@st.experimental_memo()
+@st.cache_data()
 def convert_df_to_tsv(df):
     return df.to_csv(sep="\t", index=False).encode("utf-8")
 
 
-@st.experimental_memo(show_spinner=False)
+@st.cache_data(show_spinner=False)
 def convert_df_to_csv(df):
     return df.to_csv(index=False).encode("utf-8")
 
