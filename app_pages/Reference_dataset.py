@@ -74,29 +74,29 @@ def page_info():
     )
 
 
-@st.experimental_memo()
+@st.cache_data()
 def convert_df_to_tsv(df):
     return df.to_csv(sep="\t", index=False).encode("utf-8")
 
 
-@st.experimental_memo(show_spinner=False)
+@st.cache_data(show_spinner=False)
 def convert_df_to_csv(df):
     return df.to_csv(index=False).encode("utf-8")
 
 
-@st.experimental_memo
+@st.cache_data
 def load_dataset():
     df = pd.read_csv("./data/samples_data.tsv", sep="\t")
     return df
 
 
-@st.experimental_memo
+@st.cache_data
 def load_country_shapes():
     df = geopandas.read_file("./data/world_countries.json")
     return df
 
 
-@st.experimental_memo
+@st.cache_data
 def load_regions():
     df = pd.read_csv("./data/regions.csv", usecols=["name", "region"]).rename(
         columns={"region": "Region"}
@@ -104,13 +104,13 @@ def load_regions():
     return df
 
 
-@st.experimental_memo
+@st.cache_data
 def load_country_coords():
     df = pd.read_csv("./data/countries.csv")
     return df
 
 
-@st.experimental_memo(show_spinner=False)
+@st.cache_data(show_spinner=False)
 def vcf_to_df(vcf_path):
     logging.getLogger("pdbio").setLevel(logging.WARNING)
     vcfdf = VcfDataFrame(path=vcf_path)
@@ -118,7 +118,7 @@ def vcf_to_df(vcf_path):
     return vcfdf.df
 
 
-@st.experimental_memo
+@st.cache_data
 def sample_count():
     dataset = load_dataset()
     sm1, mock = st.columns([2, 5])
@@ -133,7 +133,7 @@ def sample_count():
         pass
 
 
-@st.experimental_memo
+@st.cache_data
 def get_mapping_data():
     dataset = load_dataset()
     country_shapes = load_country_shapes()
@@ -187,7 +187,7 @@ def get_mapping_data():
     return smp_data, cnt_samples_poly
 
 
-@st.experimental_singleton
+@st.cache_resource
 def get_map():
     smp_data, cnt_samples_poly = get_mapping_data()
     m = leafmap.Map(
@@ -335,7 +335,7 @@ def show_dataset():
         return grid1
 
 
-@st.experimental_memo(experimental_allow_widgets=True, show_spinner=False)
+@st.cache_data(experimental_allow_widgets=True, show_spinner=False)
 def sample_stats():
     dataset = load_dataset()
     # Dataframe filter
@@ -417,7 +417,7 @@ def sample_stats():
     sd12.metric(label="Level 5", value=str(dataset["level 5"].item()))
 
 
-@st.experimental_memo
+@st.cache_data
 def get_chart():
     no_vars = (
         load_dataset()[["level 1", "no. of SNPs"]]
