@@ -11,6 +11,9 @@ from utils import (
     set_pages,
     read_index_html,
 )
+import warnings
+
+warnings.filterwarnings("ignore")
 
 
 def page_info():
@@ -20,7 +23,7 @@ def page_info():
     )
 
 
-@st.experimental_memo(experimental_allow_widgets=True, show_spinner=False)
+@st.cache_data(experimental_allow_widgets=True, show_spinner=False)
 def buttons():
     bt1, bt2, bt3, bt4, bt5, bt6 = st.columns([3, 1, 1, 1, 1, 3])
 
@@ -49,7 +52,7 @@ def buttons():
     read_index_html()
 
 
-@st.experimental_memo(show_spinner=False)
+@st.cache_data(show_spinner=False)
 def show_svg_tree():
     with open("./assets/mtbc_tree.svg", "rb") as f:
         base64_svg = base64.b64encode(f.read()).decode("utf-8")
