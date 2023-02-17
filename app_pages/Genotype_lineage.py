@@ -76,7 +76,6 @@ def info_box():
 
 def lottie_container(message_string, message_type, icon, lottie_function):
     with st.container():
-
         if icon is None:
             if message_type == "info":
                 st.info(message_string)
@@ -100,9 +99,8 @@ def lottie_container(message_string, message_type, icon, lottie_function):
             pass
 
 
-@st.experimental_memo()
+@st.cache_data()
 def get_levels_dictionary():
-
     temp_df = pd.read_csv("./data/levels.tsv", sep="\t")
     uniqueLevels = temp_df["level"].unique()
     levelsDict = {elem: pd.DataFrame() for elem in uniqueLevels}
@@ -144,17 +142,15 @@ def get_levels_dictionary():
     return lvl1, lvl2, lvl3, lvl4, lvl5
 
 
-@st.experimental_memo()
+@st.cache_data()
 def get_levels_positions():
-
     temp_df = pd.read_csv("./data/levels.tsv", sep="\t")
     pos = temp_df["POS"].values
     return pos
 
 
-@st.experimental_memo(show_spinner=False)
+@st.cache_data(show_spinner=False)
 def vcf_to_dataframe(vcf_file):
-
     pos_all = get_levels_positions()
     vcf_reader = Reader(vcf_file, "r")
     res = []
@@ -189,9 +185,8 @@ def vcf_to_dataframe(vcf_file):
     return res
 
 
-@st.experimental_memo()
+@st.cache_data()
 def lineage4_decision(call_list):
-
     lin4 = ["L4"]
     altList = []
 
@@ -207,9 +202,8 @@ def lineage4_decision(call_list):
     return altList
 
 
-@st.experimental_memo()
+@st.cache_data()
 def lineage4_9_decision(call_list):
-
     lin4_9 = ["L4.9"]
     altList = []
 
@@ -225,9 +219,8 @@ def lineage4_9_decision(call_list):
     return altList
 
 
-@st.experimental_memo()
+@st.cache_data()
 def count_level1_variants(call_list):
-
     d = OrderedDict()
 
     for item in call_list:
@@ -251,9 +244,8 @@ def count_level1_variants(call_list):
     return call_list
 
 
-@st.experimental_memo()
+@st.cache_data()
 def count_level2_variants(call_list):
-
     d = OrderedDict()
 
     for item in call_list:
@@ -285,9 +277,8 @@ def count_level2_variants(call_list):
     return call_list
 
 
-@st.experimental_memo()
+@st.cache_data()
 def lineage2_decision(call_list):
-
     lin2 = ["L2.2 (modern)", "L2.2 (ancient)"]
     altList = []
 
@@ -303,17 +294,17 @@ def lineage2_decision(call_list):
     return altList
 
 
-@st.experimental_memo()
+@st.cache_data()
 def convert_df_to_tsv(df):
     return df.to_csv(sep="\t", index=False).encode("utf-8")
 
 
-@st.experimental_memo()
+@st.cache_data()
 def convert_df_to_csv(df):
     return df.to_csv(index=False).encode("utf-8")
 
 
-@st.experimental_memo(show_spinner=False)
+@st.cache_data(show_spinner=False)
 def barcoding(uploaded_vcf):
     df = vcf_to_dataframe(uploaded_vcf)
     lvl1, lvl2, lvl3, lvl4, lvl5 = get_levels_dictionary()
@@ -416,7 +407,6 @@ def temporary_vcf_gz(uploaded_file):
         suffix=".vcf.gz",
         delete=False,
     ) as temp_vcf:
-
         temp_vcf.write(uploaded_file.getbuffer())
 
     return temp_vcf.name
@@ -428,13 +418,12 @@ def temporary_vcf(uploaded_file):
         suffix=".vcf",
         delete=False,
     ) as temp_vcf:
-
         temp_vcf.write(uploaded_file.getbuffer())
 
     return temp_vcf.name
 
 
-@st.experimental_memo(show_spinner=False)
+@st.cache_data(show_spinner=False)
 def genotype_lineages(uploaded_file):
     uploaded_extension = uploaded_file.name.split(".")[-1]
 
