@@ -37,35 +37,35 @@ def page_info():
     )
 
 
-@st.experimental_memo
+@st.cache_data
 def show_lineage1_tree():
     HtmlTree = open("./data/trees/lineage.1.tree.html", encoding="utf-8")
     source_code = HtmlTree.read()
     components.html(source_code, height=1000, width=1800, scrolling=True)
 
 
-@st.experimental_memo
+@st.cache_data
 def show_lineage2_tree():
     HtmlTree = open("./data/trees/lineage.2.tree.html", encoding="utf-8")
     source_code = HtmlTree.read()
     components.html(source_code, height=1000, width=1800, scrolling=True)
 
 
-@st.experimental_memo
+@st.cache_data
 def show_lineage3_tree():
     HtmlTree = open("./data/trees/lineage.3.tree.html", encoding="utf-8")
     source_code = HtmlTree.read()
     components.html(source_code, height=1000, width=1800, scrolling=True)
 
 
-@st.experimental_memo
+@st.cache_data
 def show_lineage4_tree():
     HtmlTree = open("./data/trees/lineage.4.tree.html", encoding="utf-8")
     source_code = HtmlTree.read()
     components.html(source_code, height=1000, width=1800, scrolling=True)
 
 
-@st.experimental_memo
+@st.cache_data
 def show_lineage5_tree():
     HtmlTree = open("./data/trees/lineage.5.Animal.tree.html", encoding="utf-8")
     source_code = HtmlTree.read()
