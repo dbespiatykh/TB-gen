@@ -335,7 +335,6 @@ def show_dataset():
         return grid1
 
 
-@st.cache_data(experimental_allow_widgets=True, show_spinner=False)
 def sample_stats():
     dataset = load_dataset()
     # Dataframe filter
