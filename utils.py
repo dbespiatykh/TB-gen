@@ -196,7 +196,7 @@ def get_cell_style():
                             'backgroundColor': '#00679633',
                         }
                     }
-                    var re = new RegExp("^L2|^Bmyc|^AA1|^lin2");
+                    var re = new RegExp("^L2|^Bmyc|^AA1|^lin2|2.2.1.2");
                     if (re.test(params.value)){
                         return {
                             'color': '#8A517E',
