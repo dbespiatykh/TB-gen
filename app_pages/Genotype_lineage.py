@@ -142,6 +142,25 @@ def get_levels_dictionary():
     return lvl1, lvl2, lvl3, lvl4, lvl5
 
 
+# @st.cache_data()
+# def get_lineage4_positions():
+#     temp_df = pd.read_csv("./data/levels.tsv", sep="\t")
+#     uniqueLevels = temp_df["level"].unique()
+#     levelsDict = {elem: pd.DataFrame() for elem in uniqueLevels}
+
+#     for key in levelsDict.keys():
+#         levelsDict[key] = temp_df[:][temp_df["level"] == key]
+
+#     lineage4_pos = np.concatenate(
+#         (
+#             levelsDict[1].loc[levelsDict[1]["lineage"] == "L4", "POS"].values,
+#             levelsDict[2].loc[levelsDict[2]["lineage"] == "L4.9", "POS"].values,
+#         )
+#     )
+
+#     return lineage4_pos
+
+
 @st.cache_data()
 def get_levels_positions():
     temp_df = pd.read_csv("./data/levels.tsv", sep="\t")
@@ -152,6 +171,7 @@ def get_levels_positions():
 @st.cache_data(show_spinner=False)
 def vcf_to_dataframe(vcf_file):
     pos_all = get_levels_positions()
+    # lineage4_pos = get_lineage4_positions()
     vcf_reader = Reader(vcf_file, "r")
     res = []
     cols = ["Sample", "REF", "ALT", "POS"]
@@ -178,9 +198,14 @@ def vcf_to_dataframe(vcf_file):
     )
 
     res = res.loc[res["POS"].isin(pos_all)]
-    res = res.drop(res[res["REF"] == res["ALT"]].index)
-    frames = [res]
-    res = pd.concat(frames)
+    # lineage4 = res.loc[res["POS"].isin(lineage4_pos)]
+    # lineage4 = lineage4[
+    #     ~lineage4.duplicated(["Sample", "POS"], keep=False)
+    #     | lineage4["ALT"].ne(lineage4["REF"])
+    # ]
+    # res = res.drop(res[res["REF"] == res["ALT"]].index)
+    # frames = [res, lineage4]
+    # res = pd.concat(frames)
     res["ALT"] = res["ALT"].str.split("/").str.get(-1)
     return res
 
