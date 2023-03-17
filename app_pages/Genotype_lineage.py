@@ -153,11 +153,17 @@ def vcf_to_dataframe(file: TextIO):
         genotypes = [genotype.split(":") for genotype in fields[9:]]
         for i, gt in enumerate(genotypes):
             if gt[0] == "." or gt[0] == "./." or gt[0] == ".|.":
-                allele = "NA"
+                allele = np.nan
             elif "/" in gt[0]:
-                allele = alleles[int(gt[0].split("/")[0])]
+                alleles_list = [
+                    alleles[int(x)] if x != "." else np.nan for x in gt[0].split("/")
+                ]
+                allele = "/".join([x for x in alleles_list if str(x) != "nan"])
             elif "|" in gt[0]:
-                allele = alleles[int(gt[0].split("|")[0])]
+                alleles_list = [
+                    alleles[int(x)] if x != "." else np.nan for x in gt[0].split("|")
+                ]
+                allele = "|".join([x for x in alleles_list if str(x) != "nan"])
             else:
                 allele = alleles[int(gt[0])]
             data.append([header[i], pos, ref, allele])
@@ -169,6 +175,9 @@ def vcf_to_dataframe(file: TextIO):
     df = df.astype(
         {"Sample": "object", "REF": "object", "ALT": "object", "POS": "int64"}
     )
+
+    # Strip "/" and "|"
+    df["ALT"] = df["ALT"].str.split(r"[/|]").str[-1]
 
     # Filter the DataFrame to only include rows with positions in the pos_all list
     df = df.loc[df["POS"].isin(pos_all)]
@@ -290,46 +299,46 @@ def barcoding(uploaded_vcf):
     return df
 
 
-# @st.cache_data(show_spinner=False)
-def genotype_lineages(uploaded_file):
-    # Determine the file extension of the uploaded file
-    uploaded_extension = uploaded_file.name.split(".")[-1]
-
-    # Choose the appropriate file opener based on the file extension
-    if uploaded_extension == "gz":
-        opener = gzopen
-    else:
-        opener = open
-
-    try:
-        # Create a temporary VCF file using the appropriate file extension
-        temp_vcf = NamedTemporaryFile(
-            dir=".",
-            suffix=f".vcf{'' if uploaded_extension == 'gz' else ''}",
-            delete=False,
-        )
+def temporary_vcf_gz(uploaded_file):
+    with NamedTemporaryFile(
+        dir=".",
+        suffix=".vcf.gz",
+        delete=False,
+    ) as temp_vcf:
         temp_vcf.write(uploaded_file.getbuffer())
 
-        # Open the temporary VCF file and perform the barcoding operation
-        with opener(temp_vcf.name, "rt") as uploaded_vcf:
+    return temp_vcf.name
+
+
+def temporary_vcf(uploaded_file):
+    with NamedTemporaryFile(
+        dir=".",
+        suffix=".vcf",
+        delete=False,
+    ) as temp_vcf:
+        temp_vcf.write(uploaded_file.getbuffer())
+
+    return temp_vcf.name
+
+
+@st.cache_data(show_spinner=False)
+def genotype_lineages(uploaded_file):
+    uploaded_extension = uploaded_file.name.split(".")[-1]
+
+    if uploaded_extension == "gz":
+        try:
+            temp_vcf = temporary_vcf_gz(uploaded_file)
+            uploaded_vcf = gzopen(temp_vcf, "rt")
             result = barcoding(uploaded_vcf)
-
-        # Return the result of the barcoding operation
-        return result
-
-    except (IOError, ValueError) as e:
-        # If an error occurs, display an error message using a lottie animation
-        message = str(e)
-        icon = "error"
-        symbol = "❗"
-        animation = lottie_error
-        info_box()
-        lottie_container(message, icon, symbol, animation)
-
-    finally:
-        # Delete the temporary VCF file after the operation has completed
-        os.remove(temp_vcf.name)
-
+        finally:
+            os.remove(temp_vcf)
+    else:
+        try:
+            temp_vcf = temporary_vcf(uploaded_file)
+            uploaded_vcf = open(temp_vcf)
+            result = barcoding(uploaded_vcf)
+        finally:
+            os.remove(temp_vcf)
     return result
 
 
