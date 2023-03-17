@@ -4,10 +4,9 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-from vcf import Reader
+from typing import TextIO
 from gzip import BadGzipFile
 from gzip import open as gzopen
-from collections import OrderedDict
 from tempfile import NamedTemporaryFile
 from utils import (
     set_page_config,
@@ -100,372 +99,237 @@ def lottie_container(message_string, message_type, icon, lottie_function):
 
 
 @st.cache_data()
-def get_levels_dictionary():
-    temp_df = pd.read_csv("./data/levels.tsv", sep="\t")
-    uniqueLevels = temp_df["level"].unique()
-    levelsDict = {elem: pd.DataFrame() for elem in uniqueLevels}
-
-    for key in levelsDict.keys():
-        levelsDict[key] = temp_df[:][temp_df["level"] == key]
-
-    lvl1 = (
-        levelsDict[1]["POS"].values,
-        levelsDict[1]["REF"].values,
-        levelsDict[1]["ALT"].values,
-        levelsDict[1]["lineage"].values,
-    )
-    lvl2 = (
-        levelsDict[2]["POS"].values,
-        levelsDict[2]["REF"].values,
-        levelsDict[2]["ALT"].values,
-        levelsDict[2]["lineage"].values,
-    )
-    lvl3 = (
-        levelsDict[3]["POS"].values,
-        levelsDict[3]["REF"].values,
-        levelsDict[3]["ALT"].values,
-        levelsDict[3]["lineage"].values,
-    )
-    lvl4 = (
-        levelsDict[4]["POS"].values,
-        levelsDict[4]["REF"].values,
-        levelsDict[4]["ALT"].values,
-        levelsDict[4]["lineage"].values,
-    )
-    lvl5 = (
-        levelsDict[5]["POS"].values,
-        levelsDict[5]["REF"].values,
-        levelsDict[5]["ALT"].values,
-        levelsDict[5]["lineage"].values,
-    )
-
-    return lvl1, lvl2, lvl3, lvl4, lvl5
-
-
-# @st.cache_data()
-# def get_lineage4_positions():
-#     temp_df = pd.read_csv("./data/levels.tsv", sep="\t")
-#     uniqueLevels = temp_df["level"].unique()
-#     levelsDict = {elem: pd.DataFrame() for elem in uniqueLevels}
-
-#     for key in levelsDict.keys():
-#         levelsDict[key] = temp_df[:][temp_df["level"] == key]
-
-#     lineage4_pos = np.concatenate(
-#         (
-#             levelsDict[1].loc[levelsDict[1]["lineage"] == "L4", "POS"].values,
-#             levelsDict[2].loc[levelsDict[2]["lineage"] == "L4.9", "POS"].values,
-#         )
-#     )
-
-#     return lineage4_pos
+def convert_df_to_file(df, file_format="csv", sep=","):
+    if file_format == "csv":
+        return df.to_csv(sep=sep, index=False).encode("utf-8")
+    elif file_format == "tsv":
+        return df.to_csv(sep="\t", index=False).encode("utf-8")
+    else:
+        raise ValueError(f"Unsupported file format: {file_format}")
 
 
 @st.cache_data()
-def get_levels_positions():
+def get_levels_data():
     temp_df = pd.read_csv("./data/levels.tsv", sep="\t")
+    uniqueLevels = temp_df["level"].unique()
+    levelsDict = {}
+
+    # For each unique level value, extract the relevant data and store it in the dictionary
+    for elem in uniqueLevels:
+        levelsDict[elem] = temp_df[temp_df["level"] == elem][
+            ["POS", "REF", "ALT", "lineage"]
+        ]
+
+    # Create a tuple of NumPy arrays, where each array contains the data for a different level
+    # Each array contains the positional data, the reference allele, the alternate allele,
+    # and the lineage (i.e., the level value) for each row in the data
+    # The tuple contains data for levels 1 through 5
+    levels_data = tuple(
+        levelsDict.get(i, pd.DataFrame())[["POS", "REF", "ALT", "lineage"]].to_numpy().T
+        for i in range(1, 6)
+    )
+
     pos = temp_df["POS"].values
-    return pos
+
+    return levels_data, pos
 
 
 @st.cache_data(show_spinner=False)
-def vcf_to_dataframe(vcf_file):
-    pos_all = get_levels_positions()
-    # lineage4_pos = get_lineage4_positions()
-    vcf_reader = Reader(vcf_file, "r")
-    res = []
-    cols = ["Sample", "REF", "ALT", "POS"]
+def vcf_to_dataframe(file: TextIO):
+    pos_all = get_levels_data()[1]
 
-    for rec in vcf_reader:
-        x = [rec.end]
-        for sample in rec.samples:
-            if sample.gt_bases is None:
-                # no call
-                row = [sample.sample, rec.REF, sample.gt_bases]
-            elif rec.REF != sample.gt_bases:
-                row = [sample.sample, rec.REF, sample.gt_bases] + x
+    # Remove all header lines from the input file
+    lines = [line.strip() for line in file if not line.startswith("##")]
+
+    # Extract the sample names from the first header line
+    header = lines.pop(0).split("\t")[9:]
+
+    # Extract data from each line of the input file and convert it to a list
+    data = []
+    for line in lines:
+        fields = line.split("\t")
+        pos, ref, alt = fields[1], fields[3], fields[4]
+        alleles = [ref] + alt.split(",")
+        genotypes = [genotype.split(":") for genotype in fields[9:]]
+        for i, gt in enumerate(genotypes):
+            if gt[0] == "." or gt[0] == "./." or gt[0] == ".|.":
+                allele = "NA"
+            elif "/" in gt[0]:
+                allele = alleles[int(gt[0].split("/")[0])]
+            elif "|" in gt[0]:
+                allele = alleles[int(gt[0].split("|")[0])]
             else:
-                # call is REF
-                row = [sample.sample, rec.REF, sample.gt_bases] + x
+                allele = alleles[int(gt[0])]
+            data.append([header[i], pos, ref, allele])
 
-            res.append(row)
+    # Convert the list of data to a Pandas DataFrame
+    df = pd.DataFrame(data, columns=["Sample", "POS", "REF", "ALT"])
 
-    res = pd.DataFrame(res, columns=cols)
-    res = res[~res.POS.isnull()]
-
-    res = res.astype(
+    # Set the data types for each column in the DataFrame
+    df = df.astype(
         {"Sample": "object", "REF": "object", "ALT": "object", "POS": "int64"}
     )
 
-    res = res.loc[res["POS"].isin(pos_all)]
-    # lineage4 = res.loc[res["POS"].isin(lineage4_pos)]
-    # lineage4 = lineage4[
-    #     ~lineage4.duplicated(["Sample", "POS"], keep=False)
-    #     | lineage4["ALT"].ne(lineage4["REF"])
-    # ]
-    # res = res.drop(res[res["REF"] == res["ALT"]].index)
-    # frames = [res, lineage4]
-    # res = pd.concat(frames)
-    res["ALT"] = res["ALT"].str.split("/").str.get(-1)
-    return res
+    # Filter the DataFrame to only include rows with positions in the pos_all list
+    df = df.loc[df["POS"].isin(pos_all)]
+
+    # Return the filtered DataFrame
+    return df
 
 
-@st.cache_data()
-def lineage4_decision(call_list):
-    lin4 = ["L4"]
+# This function takes a list of calls and a lineage as input and returns a new list
+# that either removes the lineage if it exists in the call or adds the lineage to the
+# call twice if it does not exist in the call.
+@st.cache_data(show_spinner=False)
+def lineage4_decision(call_list, lin):
     altList = []
-
     for item in call_list:
-        if any(i in item for i in lin4):
-            item = [x for x in item if x not in lin4]
-
+        if any(i in item for i in lin):
+            item = [x for x in item if x not in lin]
         else:
-            item.extend(["L4" for i in range(2)])
-
+            item.extend([lin[0] for i in range(2)])
         altList.append(item)
-
     return altList
 
 
-@st.cache_data()
-def lineage4_9_decision(call_list):
-    lin4_9 = ["L4.9"]
-    altList = []
-
+# This function takes a list of calls as input and returns a new list with each call
+# count and formatted as a string. If a prefix is provided, it only includes calls that
+# start with the prefix in the output.
+@st.cache_data(show_spinner=False)
+def count_variants(call_list, prefix=None):
+    d = {}
     for item in call_list:
-        if any(i in item for i in lin4_9):
-            item = [x for x in item if x not in lin4_9]
-
-        else:
-            item.extend(["L4.9" for i in range(2)])
-
-        altList.append(item)
-
-    return altList
-
-
-@st.cache_data()
-def count_level1_variants(call_list):
-    d = OrderedDict()
-
-    for item in call_list:
-        if not len(item) == 0:
+        if item:
             caseless = item.casefold()
-            try:
+            if caseless in d:
                 d[caseless][1] += 1
-            except KeyError:
+            else:
                 d[caseless] = [item, 1]
 
     call_list = []
-
     for item, count in d.values():
-        if not item.startswith("L8"):
-            if count > 1:
-                item = f"{item}"
-            elif count == 1:
-                item = f"{item} [warning! only 1/2 snp is present]"
+        if not item.startswith(prefix) if prefix else True:
+            item = (
+                f"{item}" if count > 1 else f"{item} [warning! only 1/2 snp is present]"
+            )
         call_list.append(item)
 
     return call_list
 
 
-@st.cache_data()
-def count_level2_variants(call_list):
-    d = OrderedDict()
-
-    for item in call_list:
-        if not len(item) == 0:
-            caseless = item.casefold()
-            try:
-                d[caseless][1] += 1
-            except KeyError:
-                d[caseless] = [item, 1]
-
-    call_list = []
-
-    for item, count in d.values():
-        if not item.startswith(("L2.2 (modern)", "L2.2 (ancient)")):
-            if count > 1:
-                item = f"{item}"
-            elif count == 1:
-                item = f"{item} [warning! only 1/2 snp is present]"
-        elif item.startswith(("L2.2 (modern)", "L2.2 (ancient)")):
-            if count > 1:
-                item = f"{item}"
-            elif count == 1:
-                if not item.startswith("L2.2 (modern)"):
-                    item = f"{item} [warning! only 1/2 snp is present]"
-                if item.startswith("L2.2 (modern)"):
-                    item = f"{item}"
-        call_list.append(item)
-
-    return call_list
-
-
-@st.cache_data()
+# This function takes a list of calls as input and returns a new list that either
+# removes the lineage "L2.2 (modern)" and "L2.2 (ancient)" if both exist in the call
+# or adds the lineage "L2.2 (modern)" if the call contains "L2.2 (ancient)".
+@st.cache_data(show_spinner=False)
 def lineage2_decision(call_list):
     lin2 = ["L2.2 (modern)", "L2.2 (ancient)"]
     altList = []
-
     for item in call_list:
-        if all(i in item for i in lin2) is True:
+        if all(i in item for i in lin2):
             item = list(set(item) - set(lin2))
-            item.append("L2.2 (modern)")
-        else:
-            item = item
-
+            item.append(lin2[0])
         altList.append(item)
-
     return altList
 
 
-@st.cache_data()
-def convert_df_to_tsv(df):
-    return df.to_csv(sep="\t", index=False).encode("utf-8")
-
-
-@st.cache_data()
-def convert_df_to_csv(df):
-    return df.to_csv(index=False).encode("utf-8")
-
-
+# This function takes a VCF file as input and returns a DataFrame with barcoding information.
 @st.cache_data(show_spinner=False)
 def barcoding(uploaded_vcf):
+    # Convert VCF to DataFrame
     df = vcf_to_dataframe(uploaded_vcf)
-    lvl1, lvl2, lvl3, lvl4, lvl5 = get_levels_dictionary()
 
-    exp = (
-        df["POS"].values[:, None],
-        df["REF"].values[:, None],
-        df["ALT"].values[:, None],
-    )
+    # Get levels dictionary and create a list of level names
+    levels = get_levels_data()[0]
+    level_names = [f"level_{i+1}" for i in range(len(levels))]
 
-    df["level_1"] = np.dot(
-        np.logical_and.reduce(
+    # Define a function to compute the level of each sample
+    def compute_level(level):
+        exp = (
+            df["POS"].values[:, None],
+            df["REF"].values[:, None],
+            df["ALT"].values[:, None],
+        )
+        mask = np.logical_and.reduce(
             [
-                np.equal(exp[0], lvl1[0]),
-                np.equal(exp[1], lvl1[1]),
-                np.equal(exp[2], lvl1[2]),
+                np.equal(exp[0], level[0]),
+                np.equal(exp[1], level[1]),
+                np.equal(exp[2], level[2]),
             ]
-        ),
-        lvl1[3],
+        )
+        return np.dot(mask, level[3])
+
+    # Compute the level of each sample for each level
+    for i, level in enumerate(levels):
+        df[level_names[i]] = compute_level(level)
+
+    # Drop the columns REF, ALT, and POS and replace empty strings with NaN
+    df.drop(["REF", "ALT", "POS"], axis=1, inplace=True)
+    df.replace("", np.nan, inplace=True)
+
+    # Group the data by sample and concatenate the level columns into comma-separated strings
+    df = df.groupby(["Sample"]).agg(lambda x: ",".join(x.dropna())).reset_index()
+
+    # Split the first two level columns into lists and apply lineage decision and count variants functions
+    df[level_names[:2]] = df[level_names[:2]].applymap(lambda x: x.split(","))
+    df[level_names[0]] = lineage4_decision(df[level_names[0]], ["L4"])
+    df[level_names[1]] = lineage4_decision(df[level_names[1]], ["L4.9"])
+    df[level_names[0]] = df[level_names[0]].apply(count_variants, prefix="L8")
+    df[level_names[1]] = df[level_names[1]].apply(
+        count_variants, prefix=("L2.2 (modern)", "L2.2 (ancient)")
     )
+    df[level_names[1]] = lineage2_decision(df[level_names[1]])
 
-    df["level_2"] = np.dot(
-        np.logical_and.reduce(
-            [
-                np.equal(exp[0], lvl2[0]),
-                np.equal(exp[1], lvl2[1]),
-                np.equal(exp[2], lvl2[2]),
-            ]
-        ),
-        lvl2[3],
-    )
+    # Convert the first two level columns back to comma-separated strings
+    df[level_names[:2]] = df[level_names[:2]].applymap(lambda x: ", ".join(map(str, x)))
 
-    df["level_3"] = np.dot(
-        np.logical_and.reduce(
-            [
-                np.equal(exp[0], lvl3[0]),
-                np.equal(exp[1], lvl3[1]),
-                np.equal(exp[2], lvl3[2]),
-            ]
-        ),
-        lvl3[3],
-    )
+    # Sort the dataframe by level and reset the index
+    df.sort_values(level_names, inplace=True)
+    df.reset_index(drop=True, inplace=True)
 
-    df["level_4"] = np.dot(
-        np.logical_and.reduce(
-            [
-                np.equal(exp[0], lvl4[0]),
-                np.equal(exp[1], lvl4[1]),
-                np.equal(exp[2], lvl4[2]),
-            ]
-        ),
-        lvl4[3],
-    )
-
-    df["level_5"] = np.dot(
-        np.logical_and.reduce(
-            [
-                np.equal(exp[0], lvl5[0]),
-                np.equal(exp[1], lvl5[1]),
-                np.equal(exp[2], lvl5[2]),
-            ]
-        ),
-        lvl5[3],
-    )
-
-    df = df.drop(["REF", "ALT", "POS"], axis=1)
-    df = df.replace("", np.nan)
-
-    df = (
-        df.groupby(["Sample"])
-        .agg(lambda x: ",".join(x.dropna()))
-        .reset_index()
-        .reindex(columns=df.columns)
-    )
-
-    df2 = df.copy()
-
-    df2["level_1"] = df2["level_1"].str.split(",")
-    df2["level_2"] = df2["level_2"].str.split(",")
-    df2["level_1"] = lineage4_decision(df2["level_1"])
-    df2["level_2"] = lineage4_9_decision(df2["level_2"])
-    df2["level_1"] = [count_level1_variants(item) for item in df2["level_1"]]
-    df2["level_2"] = [count_level2_variants(item) for item in df2["level_2"]]
-    df2["level_2"] = lineage2_decision(df2["level_2"])
-
-    df2[["level_1", "level_2"]] = df2[["level_1", "level_2"]].applymap(
-        lambda x: ", ".join(map(str, x))
-    )
-
-    df2 = df2.sort_values(
-        by=["level_1", "level_2", "level_3", "level_4", "level_5"]
-    ).reset_index(drop=True)
-
-    return df2
+    # Return the final dataframe
+    return df
 
 
-def temporary_vcf_gz(uploaded_file):
-    with NamedTemporaryFile(
-        dir=".",
-        suffix=".vcf.gz",
-        delete=False,
-    ) as temp_vcf:
-        temp_vcf.write(uploaded_file.getbuffer())
-
-    return temp_vcf.name
-
-
-def temporary_vcf(uploaded_file):
-    with NamedTemporaryFile(
-        dir=".",
-        suffix=".vcf",
-        delete=False,
-    ) as temp_vcf:
-        temp_vcf.write(uploaded_file.getbuffer())
-
-    return temp_vcf.name
-
-
-@st.cache_data(show_spinner=False)
+# @st.cache_data(show_spinner=False)
 def genotype_lineages(uploaded_file):
+    # Determine the file extension of the uploaded file
     uploaded_extension = uploaded_file.name.split(".")[-1]
 
+    # Choose the appropriate file opener based on the file extension
     if uploaded_extension == "gz":
-        try:
-            temp_vcf = temporary_vcf_gz(uploaded_file)
-            uploaded_vcf = gzopen(temp_vcf, "rt")
-            result = barcoding(uploaded_vcf)
-        finally:
-            os.remove(temp_vcf)
+        opener = gzopen
     else:
-        try:
-            temp_vcf = temporary_vcf(uploaded_file)
-            uploaded_vcf = open(temp_vcf)
+        opener = open
+
+    try:
+        # Create a temporary VCF file using the appropriate file extension
+        temp_vcf = NamedTemporaryFile(
+            dir=".",
+            suffix=f".vcf{'' if uploaded_extension == 'gz' else ''}",
+            delete=False,
+        )
+        temp_vcf.write(uploaded_file.getbuffer())
+
+        # Open the temporary VCF file and perform the barcoding operation
+        with opener(temp_vcf.name, "rt") as uploaded_vcf:
             result = barcoding(uploaded_vcf)
-        finally:
-            os.remove(temp_vcf)
+
+        # Return the result of the barcoding operation
+        return result
+
+    except (IOError, ValueError) as e:
+        # If an error occurs, display an error message using a lottie animation
+        message = str(e)
+        icon = "error"
+        symbol = "❗"
+        animation = lottie_error
+        info_box()
+        lottie_container(message, icon, symbol, animation)
+
+    finally:
+        # Delete the temporary VCF file after the operation has completed
+        os.remove(temp_vcf.name)
+
     return result
 
 
@@ -491,7 +355,11 @@ def main():
 
     if st.sidebar.button("Genotype lineage", type="primary"):
         if len(uploaded_files) == 0:
-            lottie_container("No data was uploaded!", "warning", "⚠️", lottie_warning)
+            message = "No data was uploaded!"
+            icon = "warning"
+            symbol = "⚠️"
+            animation = lottie_warning
+            lottie_container(message, icon, symbol, animation)
 
         else:
             try:
@@ -506,17 +374,19 @@ def main():
 
                 results = pd.concat(results_list).reset_index(drop=True)
 
-            except ValueError:
+            except (ValueError, BadGzipFile, StopIteration, IndexError) as e:
+                error_messages = {
+                    ValueError: "Wrong file type!",
+                    BadGzipFile: "File is not gzipped!",
+                    StopIteration: "VCF file is malformed!",
+                    IndexError: "VCF file is malformed!",
+                }
+                message = error_messages.get(type(e), "An unknown error occurred")
+                icon = "error"
+                symbol = "❗️"
+                animation = lottie_error
                 info_box()
-                lottie_container("Wrong file type!", "warning", "⚠️", lottie_warning)
-
-            except BadGzipFile:
-                info_box()
-                lottie_container("File is not gzipped!", "error", "❗", lottie_error)
-
-            except StopIteration:
-                info_box()
-                lottie_container("VCF file is malformed!", "error", "❗", lottie_error)
+                lottie_container(message, icon, symbol, animation)
 
             else:
                 if (
@@ -529,10 +399,12 @@ def main():
                     )
                     is True
                 ):
+                    message = "No genotypes were called"
+                    icon = "warning"
+                    symbol = "⚠️"
+                    animation = lottie_warning
                     info_box()
-                    lottie_container(
-                        "No genotypes were called", "warning", "⚠️", lottie_warning
-                    )
+                    lottie_container(message, icon, symbol, animation)
 
                 else:
                     t_end = time.perf_counter()
@@ -549,8 +421,8 @@ def main():
                     st.dataframe(results, width=900)
                     st.success(f"Done! ⏱️ {elapsed}")
 
-                    tsv = convert_df_to_tsv(results)
-                    csv = convert_df_to_csv(results)
+                    tsv = convert_df_to_file(results, file_format="tsv")
+                    csv = convert_df_to_file(results)
 
                     dwn1, dwn2, mock = st.columns([1, 1, 4])
 
@@ -574,14 +446,18 @@ def main():
                         pass
 
     elif len(uploaded_files) != 0:
-        lottie_container(
-            "Press the <Genotype lineage> button!", "info", None, lottie_arrow
-        )
+        message = "Press the <Genotype lineage> button!"
+        icon = "info"
+        symbol = None
+        animation = lottie_arrow
+        lottie_container(message, icon, symbol, animation)
 
     elif len(uploaded_files) == 0:
-        lottie_container(
-            "Upload input data in the sidebar to start!", "info", None, lottie_arrow
-        )
+        message = "Upload input data in the sidebar to start!"
+        icon = "info"
+        symbol = None
+        animation = lottie_arrow
+        lottie_container(message, icon, symbol, animation)
 
 
 if __name__ == "__main__":
