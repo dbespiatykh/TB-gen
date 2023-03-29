@@ -126,8 +126,6 @@ def sample_count():
         st.metric(
             label="Total Samples",
             value=int(dataset["Sample"].count()),
-            help="""Number of currently availible samples in the dataset
-                """,
         )
     with mock:
         pass
@@ -366,17 +364,11 @@ def sample_stats():
     sd1.metric(
         label="SNPs",
         value=int(dataset["no. of SNPs"]),
-        help="""Number of single nucteotide polymorphisms (SNPs) 
-                relative to the _M. tuberculosis_ H37Rv genome 
-               (GenBank accession no. [NC_000962.3](https://www.ncbi.nlm.nih.gov/nuccore/NC_000962.3/)
-            """,
     )
 
     sd2.metric(
         label="GC %",
         value=int(dataset["%GC"]),
-        help="""GC-content (guanine-cytosine content) in the sample
-            """,
     )
 
     sd3.metric(label="Total Sequences", value=int(dataset["Total sequences"]))
@@ -389,17 +381,11 @@ def sample_stats():
     sd5.metric(
         label="Mapped Reads %",
         value=float(round(dataset["%Reads mapped"], 2)),
-        help="""Percenatege of the reads mapped to the _M. tuberculosis_ H37Rv genome 
-            (GenBank accession no. [NC_000962.3](https://www.ncbi.nlm.nih.gov/nuccore/NC_000962.3/)
-            """,
     )
 
     sd6.metric(
         label="Average coverage depth",
         value=float(round(dataset["Average coverage depth"], 2)),
-        help="""Mean depth of the sample mapped to the _M. tuberculosis_ H37Rv genome 
-            (GenBank accession no. [NC_000962.3](https://www.ncbi.nlm.nih.gov/nuccore/NC_000962.3/)
-            """,
     )
 
     # Create another six columns
@@ -409,11 +395,17 @@ def sample_stats():
         label="Country of Isolation", value=str(dataset["Country of isolation"].item())
     )
 
-    sd8.metric(label="Level 1", value=str(dataset["level 1"].item()))
-    sd9.metric(label="Level 2", value=str(dataset["level 2"].item()))
-    sd10.metric(label="Level 3", value=str(dataset["level 3"].item()))
-    sd11.metric(label="Level 4", value=str(dataset["level 4"].item()))
-    sd12.metric(label="Level 5", value=str(dataset["level 5"].item()))
+    # Show "level" metric only if the column is not empty in the input DataFrame
+    if not dataset["level 1"].isnull().all():
+        sd8.metric(label="Level 1", value=str(dataset["level 1"].item()))
+    if not dataset["level 2"].isnull().all():
+        sd9.metric(label="Level 2", value=str(dataset["level 2"].item()))
+    if not dataset["level 3"].isnull().all():
+        sd10.metric(label="Level 3", value=str(dataset["level 3"].item()))
+    if not dataset["level 4"].isnull().all():
+        sd11.metric(label="Level 4", value=str(dataset["level 4"].item()))
+    if not dataset["level 5"].isnull().all():
+        sd12.metric(label="Level 5", value=str(dataset["level 5"].item()))
 
 
 @st.cache_data
