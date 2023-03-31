@@ -235,10 +235,10 @@ def get_cell_style():
                     var re = new RegExp("^L6");
                     if (re.test(params.value)){
                         return {
-                            'color': '#696969',
+                            'color': '#82181A',
                             'font-weight': 'bold',
                             'font-family':' sans-serif',
-                            'backgroundColor': '#69696933',
+                            'backgroundColor': '#82181A33',
                         }
                     }
                     if (params.value == 'L7') {
@@ -268,10 +268,10 @@ def get_cell_style():
                     var re = new RegExp("^M.");
                     if (re.test(params.value)){
                         return {
-                            'color': '#82181A',
+                            'color': '#696969',
                             'font-weight': 'bold',
                             'font-family':' sans-serif',
-                            'backgroundColor': '#82181A33',
+                            'backgroundColor': '#69696933',
                         }
                     }
                 }
