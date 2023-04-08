@@ -410,6 +410,26 @@ def sample_stats():
 
 @st.cache_data
 def get_chart():
+    lineages_order = [
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "L5",
+        "L6",
+        "L7",
+        "L8",
+        "L9",
+        "M. bovis",
+        "M. caprae",
+        "M. microti",
+        "M. mungi",
+        "M. orygis",
+        "M. pinnipedii",
+        "M. suricattae",
+        "Chimpanzee bacillus",
+        "Dassie bacillus",
+    ]
     no_vars = (
         load_dataset()[["level 1", "no. of SNPs"]]
         .groupby(["level 1"])
@@ -430,7 +450,11 @@ def get_chart():
         alt.Chart(no_vars)
         .mark_bar(cornerRadiusTopLeft=3, cornerRadiusTopRight=3)
         .encode(
-            x=alt.X("Main lineage", axis=alt.Axis(title="")),
+            x=alt.X(
+                "Main lineage",
+                axis=alt.Axis(title="", labelLimit=200),
+                sort=lineages_order,
+            ),
             y="Number of SNPs",
             color=alt.value("#A65AA3"),
         )
@@ -440,7 +464,11 @@ def get_chart():
         alt.Chart(no_samples)
         .mark_bar(cornerRadiusTopLeft=3, cornerRadiusTopRight=3)
         .encode(
-            x=alt.X("Main lineage", axis=alt.Axis(title="")),
+            x=alt.X(
+                "Main lineage",
+                axis=alt.Axis(title="", labelLimit=200),
+                sort=lineages_order,
+            ),
             y="Number of Samples",
             color=alt.value("#88AAC7"),
         )
