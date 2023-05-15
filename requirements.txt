@@ -9,3 +9,4 @@ streamlit_lottie==0.0.3
 st-pages==0.3.1
 mapclassify==2.5.0
 pdbio==0.4.2
+altair<5
