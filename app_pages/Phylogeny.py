@@ -25,7 +25,10 @@ def page_info():
         <p>
         The exterior vertical bars and names indicate lineage:
         </br>
-        <span style="color: #333333; font-weight: bold"> black</span> – this study
+        <span style="color: #333333; font-weight: bold"> black</span> –
+        <a href="https://doi.org/10.1128/msphere.00169-23" style="color: #333333; text-decoration: none">
+            Shitikov & Bespiatykh (2023)</a
+        >
         </br>
         <span style="color: #be9a5a; font-weight: bold"> golden</span> –
         <a href="https://doi.org/10.1186/S13073-020-00817-3" style="color: #be9a5a; text-decoration: none">
