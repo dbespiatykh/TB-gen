@@ -2,6 +2,7 @@
 
 # Web-app to explore _Mycobacterium tuberculosis_ complex
 
+[![citation](https://img.shields.io/badge/DOI-10.1128%2FmSphere.00169--23-9f1d21)](https://doi.org/10.1128/msphere.00169-23)
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://tb-gen.streamlit.app)
 [![Tests](https://github.com/dbespiatykh/TB-gen/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/dbespiatykh/TB-gen/actions/workflows/main.yml)
 [![TB-gen](https://img.shields.io/endpoint?url=https://cloud.cypress.io/badge/simple/tsa7nt/main&style=flat&logo=cypress)](https://cloud.cypress.io/projects/tsa7nt/runs)
@@ -35,6 +36,6 @@ pip install -r requirements.txt
 streamlit run streamlit_app.py
 ```
 
-
 ## License
+
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdbespiatykh%2FTB-gen.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdbespiatykh%2FTB-gen?ref=badge_large)
