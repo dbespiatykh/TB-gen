@@ -17,7 +17,7 @@ from utils import (
     set_css,
     home_page,
     author_link,
-    back_button,
+    # back_button,
 )
 
 
@@ -33,45 +33,45 @@ def page_info():
         """,
         unsafe_allow_html=True,
     )
-    st.markdown(
-        """
-        <a style="text-decoration: none" href="#dataset">
-        <span style="color: #7a3777; font-size: 20px; font-weight: bold"
-            >&#x278A; </span
-        ><span style="color: #a65aa3; font-size: 20px; font-weight: bold"
-            >Dataset</span
-        ></a
-        >
-        </br>
-        <a style="text-decoration: none" href="#statistics">
-        <span style="color: #7a3777; font-size: 20px; font-weight: bold"
-            >&#x278B; </span
-        ><span style="color: #a65aa3; font-size: 20px; font-weight: bold"
-            >Statistics</span
-        ></a
-        >
-        </br>
-        <a
-        style="text-decoration: none"
-        href="#map-showing-the-distribution-of-samples"
-        >
-        <span style="color: #7a3777; font-size: 20px; font-weight: bold"
-            >&#x278C; </span
-        ><span style="color: #a65aa3; font-size: 20px; font-weight: bold"
-            >Map</span
-        ></a
-        >
-        <hr
-        style="
-            height: 2px;
-            border-width: 0;
-            color: #A9A5D1;
-            background-color: #A9A5D1;
-        "
-        />
-        """,
-        unsafe_allow_html=True,
-    )
+    # st.markdown(
+    #     """
+    #     <a style="text-decoration: none" href="#dataset">
+    #     <span style="color: #7a3777; font-size: 20px; font-weight: bold"
+    #         >&#x278A; </span
+    #     ><span style="color: #a65aa3; font-size: 20px; font-weight: bold"
+    #         >Dataset</span
+    #     ></a
+    #     >
+    #     </br>
+    #     <a style="text-decoration: none" href="#statistics">
+    #     <span style="color: #7a3777; font-size: 20px; font-weight: bold"
+    #         >&#x278B; </span
+    #     ><span style="color: #a65aa3; font-size: 20px; font-weight: bold"
+    #         >Statistics</span
+    #     ></a
+    #     >
+    #     </br>
+    #     <a
+    #     style="text-decoration: none"
+    #     href="#map-showing-the-distribution-of-samples"
+    #     >
+    #     <span style="color: #7a3777; font-size: 20px; font-weight: bold"
+    #         >&#x278C; </span
+    #     ><span style="color: #a65aa3; font-size: 20px; font-weight: bold"
+    #         >Map</span
+    #     ></a
+    #     >
+    #     <hr
+    #     style="
+    #         height: 2px;
+    #         border-width: 0;
+    #         color: #A9A5D1;
+    #         background-color: #A9A5D1;
+    #     "
+    #     />
+    #     """,
+    #     unsafe_allow_html=True,
+    # )
 
 
 @st.cache_data()
@@ -520,7 +520,7 @@ def main():
     )
     get_map().to_streamlit(height=700)
 
-    back_button("reference-dataset-of-mycobacterium-tuberculosis-complex-isolates")
+    # back_button("reference-dataset-of-mycobacterium-tuberculosis-complex-isolates")
 
 
 if __name__ == "__main__":

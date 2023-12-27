@@ -7,7 +7,7 @@ from utils import (
     set_css,
     home_page,
     author_link,
-    back_button,
+    # back_button,
 )
 
 
@@ -110,7 +110,7 @@ def main():
     home_page()
     page_info()
     arrange_tabs()
-    back_button("mycobacterium-tuberculosis-complex-phylogeny")
+    # back_button("mycobacterium-tuberculosis-complex-phylogeny")
 
 
 if __name__ == "__main__":

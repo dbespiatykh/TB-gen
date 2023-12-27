@@ -10,7 +10,7 @@ from utils import (
     home_page,
     get_cell_style,
     author_link,
-    back_button,
+    # back_button,
 )
 
 
@@ -128,7 +128,7 @@ def main():
     author_link()
     page_info()
     show_dataset()
-    back_button("mtbc-barcoding-snps")
+    # back_button("mtbc-barcoding-snps")
 
 
 if __name__ == "__main__":

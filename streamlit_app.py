@@ -23,9 +23,8 @@ def page_info():
     )
 
 
-@st.cache_data(experimental_allow_widgets=True, show_spinner=False)
 def buttons():
-    bt1, bt2, bt3, bt4, bt5, bt6 = st.columns([3, 1, 1, 1, 1, 3])
+    bt1, bt2, bt3, bt4, bt5, bt6 = st.columns([3, 0.9, 0.9, 0.9, 0.9, 3])
 
     with bt1:
         pass
