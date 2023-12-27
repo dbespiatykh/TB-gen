@@ -246,9 +246,23 @@ def show_dataset():
     get_toggle_switch()
     dataset = load_dataset()
     gd = GridOptionsBuilder.from_dataframe(
-        dataset, enableRowGroup=True, enableValue=True, enablePivot=True
+        dataset,
+        enableRowGroup=True,
+        enableValue=True,
+        enablePivot=True,
+        custom_css={
+            "#gridToolBar": {
+                "padding-bottom": "0px !important",
+            }
+        },
     )
-    gd.configure_grid_options(domLayout="normal", autoHeight=True)
+    gd.configure_grid_options(
+        domLayout="normal",
+        autoHeight=True,
+        alwaysShowHorizontalScroll=True,
+        pagination=True,
+        paginationPageSize=10000,
+    )
     gd.configure_selection(selection_mode="multiple", use_checkbox=True)
     gd.configure_default_column(editable=False, groupable=True)
     gd.configure_side_bar()
@@ -264,6 +278,11 @@ def show_dataset():
             height=600,
             width="100%",
             theme="alpine",
+            custom_css={
+                "#gridToolBar": {
+                    "padding-bottom": "0px !important",
+                }
+            },
         )
         tsv = convert_df_to_tsv(dataset)
         csv = convert_df_to_csv(dataset)
@@ -300,6 +319,11 @@ def show_dataset():
             domLayout="autoHeight",
             theme="alpine",
             enable_enterprise_modules=False,
+            custom_css={
+                "#gridToolBar": {
+                    "padding-bottom": "0px !important",
+                }
+            },
         )
         try:
             dataset_sel = dataset_sel.drop(columns=["_selectedRowNodeInfo"])
