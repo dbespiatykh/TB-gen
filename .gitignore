@@ -89,7 +89,7 @@ tags
 [._]*.un~
 
 ### VisualStudioCode ###
-.vscode/*
+.vscode/
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
@@ -115,4 +115,6 @@ node_modules/
 cypress/videos/
 cypress/screenshots/
 
+### Python 
+venv/
 # End of https://www.toptal.com/developers/gitignore/api/macos,visualstudiocode,sublimetext,vim
