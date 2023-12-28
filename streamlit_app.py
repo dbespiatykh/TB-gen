@@ -55,7 +55,7 @@ def buttons():
 def show_svg_tree():
     with open("./assets/mtbc_tree.svg", "rb") as f:
         base64_svg = base64.b64encode(f.read()).decode("utf-8")
-    svg_display = f'<center><iframe src="data:image/svg+xml;base64,{base64_svg}" width="750" height="750"></iframe></center>'
+    svg_display = f'<center><iframe src="data:image/svg+xml;base64,{base64_svg}" width="650" height="650"></iframe></center>'
     st.markdown(svg_display, unsafe_allow_html=True)
 
 
