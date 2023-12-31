@@ -7,7 +7,6 @@ import streamlit as st
 import leafmap.foliumap as leafmap
 
 from pdbio.vcfdataframe import VcfDataFrame
-from streamlit_toggle import st_toggle_switch
 from streamlit_extras.colored_header import colored_header
 from st_aggrid import AgGrid, GridUpdateMode, GridOptionsBuilder
 from streamlit_extras.add_vertical_space import add_vertical_space
@@ -226,24 +225,30 @@ def get_map():
     return m
 
 
-def get_toggle_switch():
+def get_toggle_switch_dataset():
     switch, mock = st.columns([1, 5])
     with switch:
-        st_toggle_switch(
+        st.toggle(
             label="Show full dataset",
-            key="toggle",
-            default_value=False,
-            label_after=True,
-            inactive_color="#CFDED8",
-            active_color="#A65AA3",
-            track_color="#BCC3DB",
+            key="toggle_dataset",
+        )
+    with mock:
+        pass
+
+
+def get_toggle_switch_variants():
+    switch, mock = st.columns([1, 5])
+    with switch:
+        st.toggle(
+            label="Show Variants",
+            key="toggle_variants",
         )
     with mock:
         pass
 
 
 def show_dataset():
-    get_toggle_switch()
+    get_toggle_switch_dataset()
     dataset = load_dataset()
     gd = GridOptionsBuilder.from_dataframe(
         dataset,
@@ -267,7 +272,7 @@ def show_dataset():
     gd.configure_default_column(editable=False, groupable=True)
     gd.configure_side_bar()
 
-    if st.session_state["toggle"] is True:
+    if st.session_state["toggle_dataset"] is True:
         grid1 = AgGrid(
             dataset,
             gridOptions=gd.build(),
@@ -358,6 +363,7 @@ def show_dataset():
 
 
 def sample_stats():
+    get_toggle_switch_variants()
     dataset = load_dataset()
     # Dataframe filter
     sample_filter = st.selectbox("Select Sample", pd.unique(dataset["Sample"]))
@@ -371,7 +377,7 @@ def sample_stats():
                 file_name=f"{sample_filter}.vcf.gz",
             )
 
-        if st.checkbox("Show Variants"):
+        if st.session_state["toggle_variants"] is True:
             with st.spinner("Loading VCF..."):
                 vcf_df = vcf_to_df(f"./data/VCF/{sample_filter}.vcf.gz")
                 st.dataframe(vcf_df)
