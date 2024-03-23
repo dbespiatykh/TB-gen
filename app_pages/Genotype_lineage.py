@@ -345,7 +345,7 @@ def genotype_lineages(uploaded_file):
 def get_uploaded_files():
     with st.sidebar.container():
         uploaded_files = st.file_uploader(
-            "**Upload** **:blue[.VCF]** **file**",
+            "**Upload** **:blue[.VCF]** **file(s)**",
             type=["vcf", "vcf.gz"],
             accept_multiple_files=True,
         )
