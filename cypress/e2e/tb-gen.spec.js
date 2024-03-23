@@ -20,7 +20,7 @@ context("Actions", () => {
     const fileName = "all.filtered.trimmed.vcf.gz";
 
     cy.fixture(fileName, "base64").then((fileContent) => {
-      cy.get('[data-testid="stFileUploadDropzone"] > div')
+      cy.get('[data-testid="stFileUploaderDropzone"] > div')
         .first()
         .attachFile(
           {
