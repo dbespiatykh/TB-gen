@@ -1,7 +1,7 @@
 geopandas==0.14.1
-leafmap==0.30.0
+leafmap==0.31.5
 numpy==1.26.2
-streamlit==1.29.0
+streamlit==1.32.2
 streamlit_extras==0.3.6
 streamlit-aggrid==0.3.4.post3
 streamlit_lottie==0.0.5
