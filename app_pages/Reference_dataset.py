@@ -255,11 +255,11 @@ def show_dataset():
         enableRowGroup=True,
         enableValue=True,
         enablePivot=True,
-        # custom_css={
-        #     "#gridToolBar": {
-        #         "padding-bottom": "0px !important",
-        #     }
-        # },
+        custom_css={
+            "#gridToolBar": {
+                "padding-bottom": "0px !important",
+            }
+        },
     )
     gd.configure_grid_options(
         domLayout="normal",
@@ -283,11 +283,11 @@ def show_dataset():
             height=600,
             width="100%",
             theme="alpine",
-            # custom_css={
-            #     "#gridToolBar": {
-            #         "padding-bottom": "0px !important",
-            #     }
-            # },
+            custom_css={
+                "#gridToolBar": {
+                    "padding-bottom": "0px !important",
+                }
+            },
         )
         tsv = convert_df_to_tsv(dataset)
         csv = convert_df_to_csv(dataset)
@@ -324,11 +324,11 @@ def show_dataset():
             domLayout="autoHeight",
             theme="alpine",
             enable_enterprise_modules=False,
-            # custom_css={
-            #     "#gridToolBar": {
-            #         "padding-bottom": "0px !important",
-            #     }
-            # },
+            custom_css={
+                "#gridToolBar": {
+                    "padding-bottom": "0px !important",
+                }
+            },
         )
         try:
             dataset_sel = dataset_sel.drop(columns=["_selectedRowNodeInfo"])
