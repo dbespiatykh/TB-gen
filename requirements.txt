@@ -3,7 +3,7 @@ leafmap==0.32.1
 numpy==1.26.4
 streamlit==1.35.0
 streamlit_extras==0.4.3
-streamlit-aggrid==1.0.5
+streamlit-aggrid==0.3.4.post3
 streamlit_lottie==0.0.5
 st-pages==0.4.5
 mapclassify==2.6.1
