@@ -10,3 +10,4 @@ mapclassify==2.6.1
 pdbio==0.4.2
 altair==4.2.2
 pandas==2.2.2
+matplotlib==3.8.2
